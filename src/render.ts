@@ -1,6 +1,6 @@
 import {HTMLAttributes} from 'react'
 import {Tree} from './my-react-types'
-import {div} from './my-react-elements'
+import {div} from './zeact-elements'
 
 export function render(tree: Tree, target: HTMLElement) {
   renderInternal(tree, null, target, '', 0)

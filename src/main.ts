@@ -1,5 +1,5 @@
 import {render} from './render'
-import {div, text} from './my-react-elements'
+import {div, text} from './zeact-elements'
 import {MyCustomComponent} from './custom-component'
 import {myNodes} from './test-tsx'
 

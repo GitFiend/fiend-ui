@@ -1,9 +1,9 @@
-import {NodeBase, Tree} from './my-react-types'
+import {TreeBase, Tree} from './my-react-types'
 import {renderInternal} from './render'
-import {div, text} from './my-react-elements'
+import {div, text} from './zeact-elements'
 
 //
-export class CustomComponent<P> implements NodeBase {
+export class CustomComponent<P> implements TreeBase {
   type = 'custom' as const
 
   target: HTMLElement | null = null
