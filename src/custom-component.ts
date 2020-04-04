@@ -1,4 +1,4 @@
-import {TreeBase, Tree} from './my-react-types'
+import {TreeBase, Tree} from './zeact-types'
 import {renderInternal} from './render'
 import {div, text} from './zeact-elements'
 

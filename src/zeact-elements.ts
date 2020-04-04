@@ -1,5 +1,5 @@
 import {HTMLAttributes} from 'react'
-import {DivElement, TextElement, Tree} from './my-react-types'
+import {DivElement, TextElement, Tree} from './zeact-types'
 
 export function div(
   props: HTMLAttributes<HTMLDivElement>,

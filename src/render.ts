@@ -1,5 +1,5 @@
 import {HTMLAttributes} from 'react'
-import {Tree} from './my-react-types'
+import {Tree} from './zeact-types'
 import {div} from './zeact-elements'
 
 export function render(tree: Tree, target: HTMLElement) {
@@ -18,7 +18,21 @@ export function renderInternal(
   tree.target = target
 
   switch (tree.type) {
-    case 'div':
+    case 'custom':
+      /*
+
+      Get the old tree somehow and determine if it's the same or recurse into it?
+
+       */
+      const {prev, curr} = tree.renderComponent()
+
+      renderInternal(curr, prev, target, tree.key, 0)
+      break
+
+    case 'text':
+      target.appendChild(document.createTextNode(tree.text))
+      break
+    default:
       const {type, props, children, key} = tree
 
       const element = document.createElement(type)
@@ -47,19 +61,6 @@ export function renderInternal(
 
       target.appendChild(element)
 
-      break
-    case 'text':
-      target.appendChild(document.createTextNode(tree.text))
-      break
-    case 'custom':
-      /*
-
-      Get the old tree somehow and determine if it's the same or recurse into it?
-
-       */
-      const {prev, curr} = tree.renderComponent()
-
-      renderInternal(curr, prev, target, tree.key, 0)
       break
   }
 }
