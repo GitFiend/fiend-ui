@@ -1,12 +1,15 @@
 import {render} from './render'
 import {div, text} from './my-react-elements'
 import {MyCustomComponent} from './custom-component'
+import {myNodes} from './test-tsx'
 
 function main(): void {
   const root = document.getElementById('root')
 
   if (root !== null) {
     console.time('render')
+
+    myNodes
 
     render(
       div(

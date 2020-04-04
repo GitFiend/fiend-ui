@@ -1,9 +1,9 @@
 import {HTMLAttributes} from 'react'
-import {DivElement, TextElement, VNode} from './my-react-types'
+import {DivElement, TextElement, Tree} from './my-react-types'
 
 export function div(
   props: HTMLAttributes<HTMLDivElement>,
-  children: VNode[],
+  children: Tree[],
   key?: string
 ): DivElement {
   return {
@@ -21,4 +21,14 @@ export function text(text: string): TextElement {
     text,
     target: null
   }
+}
+
+export function createTree(
+  type: string,
+  props: Record<string, unknown> | null,
+  children?: Tree[]
+): Tree | null {
+  console.log(arguments)
+
+  return null
 }

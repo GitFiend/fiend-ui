@@ -1,4 +1,4 @@
-import {NodeBase, VNode} from './my-react-types'
+import {NodeBase, Tree} from './my-react-types'
 import {renderInternal} from './render'
 import {div, text} from './my-react-elements'
 
@@ -8,16 +8,16 @@ export class CustomComponent<P> implements NodeBase {
 
   target: HTMLElement | null = null
 
-  private prev: VNode | null = null
-  private curr: VNode | null = null
+  private prev: Tree | null = null
+  private curr: Tree | null = null
 
-  constructor(public props: P, public children: VNode[], public key: string) {}
+  constructor(public props: P, public children: Tree[], public key: string) {}
 
-  render(): VNode | null {
+  render(): Tree | null {
     return null
   }
 
-  renderComponent(): {curr: VNode | null; prev: VNode | null} {
+  renderComponent(): {curr: Tree | null; prev: Tree | null} {
     this.prev = this.curr
     this.curr = this.render()
 

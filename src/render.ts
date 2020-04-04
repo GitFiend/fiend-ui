@@ -1,14 +1,14 @@
 import {HTMLAttributes} from 'react'
-import {VNode} from './my-react-types'
+import {Tree} from './my-react-types'
 import {div} from './my-react-elements'
 
-export function render(tree: VNode, target: HTMLElement) {
+export function render(tree: Tree, target: HTMLElement) {
   renderInternal(tree, null, target, '', 0)
 }
 
 export function renderInternal(
-  tree: VNode,
-  prevTree: VNode | null,
+  tree: Tree,
+  prevTree: Tree | null,
   target: HTMLElement,
   parentId: string,
   index: number
@@ -35,7 +35,7 @@ export function renderInternal(
       }
 
       children?.forEach((child, i) => {
-        let prevChild: VNode | null = null
+        let prevChild: Tree | null = null
 
         if (prevTree !== null && prevTree.children !== undefined) {
           const c = prevTree.children[i]
