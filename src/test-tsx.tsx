@@ -1,4 +1,4 @@
-import {createTree} from './zeact-elements'
+import {createTree} from './create-tree'
 
 export const myNodes = (
   <div
@@ -8,5 +8,10 @@ export const myNodes = (
     key={'adf'}
   >
     Some Text
+    <Something />
   </div>
 )
+
+function Something() {
+  return null
+}

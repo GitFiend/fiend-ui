@@ -1,5 +1,5 @@
 import {render} from './render'
-import {div, text} from './zeact-elements'
+import {div, text} from './create-tree'
 import {MyCustomComponent} from './custom-component'
 import {myNodes} from './test-tsx'
 
