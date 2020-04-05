@@ -1,6 +1,6 @@
 import {render} from './render'
 import {div, text} from './create-tree'
-import {MyCustomComponent} from './custom-component'
+
 import {myNodes} from './test-tsx'
 
 function main(): void {
@@ -9,28 +9,29 @@ function main(): void {
   if (root !== null) {
     console.time('render')
 
-    myNodes
+    console.log(myNodes)
 
-    render(
-      div(
-        {
-          id: 'div1',
-          style: {}
-        },
-        [
-          div(
-            {
-              id: 'div2',
-              style: {}
-            },
-            []
-          ),
-          text('omg'),
-          new MyCustomComponent({}, [], 'yep')
-        ]
-      ),
-      root
-    )
+    // render(
+    //   div(
+    //     {
+    //       id: 'div1',
+    //       style: {}
+    //     },
+    //     [
+    //       div(
+    //         {
+    //           id: 'div2',
+    //           style: {}
+    //         },
+    //         []
+    //       ),
+    //       text('omg'),
+    //       new MyCustomComponent({}, [], 'yep')
+    //     ]
+    //   ),
+    //   root
+    // )
+    render(myNodes, root)
 
     console.timeEnd('render')
   }

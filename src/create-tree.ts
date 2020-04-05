@@ -1,12 +1,16 @@
 import {HTMLAttributes} from 'react'
-import {CustomComponent} from './custom-component'
 
-export type Tree = DivElement | null | TextElement | CustomComponent<unknown>
+export type Tree = HostComponent // | DivElement | null | TextElement | CustomComponent<unknown>
 
 export interface TreeBase {
   type: unknown
-  target: HTMLElement | null
-  children?: Tree[]
+  target?: HTMLElement
+  children?: Tree[] | string
+}
+
+export interface HostComponent extends TreeBase {
+  type: keyof HTMLElementTagNameMap
+  props: null | Record<string, unknown>
 }
 
 export interface DivElement extends TreeBase {
@@ -30,7 +34,7 @@ export function div(
     props,
     children,
     key,
-    target: null
+    target: undefined
   }
 }
 
@@ -38,23 +42,34 @@ export function text(text: string): TextElement {
   return {
     type: 'text',
     text,
-    target: null
+    target: undefined
   }
 }
 
 export function createTree(
-  type: keyof HTMLElementTagNameMap | Function,
+  typeOrConstructor: keyof HTMLElementTagNameMap | Function,
   props: Record<string, unknown> | null,
   children?: Tree[]
 ): Tree | null {
   console.log(arguments)
 
-  if (typeof type === 'string') {
-    // Host component?
+  if (typeof typeOrConstructor === 'string') {
+    // Host component
+    return {
+      type: typeOrConstructor,
+      props,
+      children,
+      target: undefined
+    }
   } else {
-    // Custom component?
+    // typeof type === 'function'
+
+    if (typeOrConstructor.prototype.render !== undefined) {
+      // class component
+    } else {
+      // function component
+    }
   }
 
-  // TODO: Construct Tree
   return null
 }

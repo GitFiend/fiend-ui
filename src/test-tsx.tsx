@@ -1,4 +1,5 @@
-import {createTree} from './create-tree'
+import {createTree, Tree} from './create-tree'
+import {Choochoo} from './custom-component'
 
 export const myNodes = (
   <div
@@ -8,7 +9,8 @@ export const myNodes = (
     key={'adf'}
   >
     Some Text
-    <Something />
+    {/*<Something />*/}
+    {/*<Choochoo />*/}
   </div>
 )
 
