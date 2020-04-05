@@ -1,5 +1,5 @@
 import {renderInternal} from './render'
-import {div, text, Tree, TreeBase} from './create-tree'
+import {Tree, TreeBase} from './create-tree'
 
 //
 export class CustomComponent<P> implements TreeBase {

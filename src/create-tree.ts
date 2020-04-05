@@ -1,11 +1,12 @@
 import {HTMLAttributes} from 'react'
 
-export type Tree = HostComponent // | DivElement | null | TextElement | CustomComponent<unknown>
+export type Tree = HostComponent | string
 
 export interface TreeBase {
   type: unknown
-  target?: HTMLElement
   children?: Tree[] | string
+  target?: HTMLElement
+  id?: string
 }
 
 export interface HostComponent extends TreeBase {
@@ -13,45 +14,45 @@ export interface HostComponent extends TreeBase {
   props: null | Record<string, unknown>
 }
 
-export interface DivElement extends TreeBase {
-  type: 'div'
-  props: HTMLAttributes<HTMLDivElement>
-  key?: string
-}
+// export interface DivElement extends TreeBase {
+//   type: 'div'
+//   props: HTMLAttributes<HTMLDivElement>
+//   key?: string
+// }
 
-export interface TextElement extends TreeBase {
-  type: 'text'
-  text: string
-}
-
-export function div(
-  props: HTMLAttributes<HTMLDivElement>,
-  children: Tree[],
-  key?: string
-): DivElement {
-  return {
-    type: 'div',
-    props,
-    children,
-    key,
-    target: undefined
-  }
-}
-
-export function text(text: string): TextElement {
-  return {
-    type: 'text',
-    text,
-    target: undefined
-  }
-}
+// export interface TextElement extends TreeBase {
+//   type: 'text'
+//   text: string
+// }
+//
+// export function div(
+//   props: HTMLAttributes<HTMLDivElement>,
+//   children: Tree[],
+//   key?: string
+// ): DivElement {
+//   return {
+//     type: 'div',
+//     props,
+//     children,
+//     key,
+//     target: undefined
+//   }
+// }
+//
+// export function text(text: string): TextElement {
+//   return {
+//     type: 'text',
+//     text,
+//     target: undefined
+//   }
+// }
 
 export function createTree(
   typeOrConstructor: keyof HTMLElementTagNameMap | Function,
   props: Record<string, unknown> | null,
-  children?: Tree[]
+  ...children: Tree[]
 ): Tree | null {
-  console.log(arguments)
+  // console.log(arguments)
 
   if (typeof typeOrConstructor === 'string') {
     // Host component

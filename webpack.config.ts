@@ -20,7 +20,7 @@ const config = (env: Env, argv: Argv): Configuration => {
 
   return {
     entry: {
-      main: path.join(__dirname, 'src', 'main.ts')
+      main: path.join(__dirname, 'src', 'main.tsx')
     },
     watchOptions: {
       poll: true
