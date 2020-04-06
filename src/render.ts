@@ -73,24 +73,6 @@ function createElement(tree: Tree) {
   return document.createElement(tree.type)
 }
 
-// function compareChildren(
-//   curr: Tree | string | undefined,
-//   prev: Tree | string | undefined,
-//   element: HTMLElement
-// ) {
-//   if (curr !== undefined && prev !== undefined) {
-//     //
-//     if (typeof curr === 'string' && typeof prev === 'string') {
-//       if (curr !== prev) {
-//       }
-//     }
-//   } else if (curr !== undefined) {
-//     //
-//   } else if (prev !== undefined) {
-//     //
-//   }
-// }
-
 function setAttributesFromProps(element: HTMLElement, props: Record<string, unknown>) {
   const propNames = Object.keys(props)
   const el = element as any
