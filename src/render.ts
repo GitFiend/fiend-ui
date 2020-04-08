@@ -1,6 +1,6 @@
-import {Tree} from './create-tree'
+import {Tree, TreeType} from './create-tree'
 
-export function render(tree: Tree, target: HTMLElement) {
+export function render(tree: any, target: HTMLElement) {
   renderInternal(tree, null, target, '', 0)
 }
 
@@ -13,38 +13,31 @@ export function renderInternal(
 ) {
   if (tree === null) return
 
-  const element = compareTree(tree, prevTree, target, index) as HTMLElement
-  target.appendChild(element)
+  const shouldAppend = compareTree(tree, prevTree, target, index)
 
-  if (typeof tree === 'string') return
+  if (!shouldAppend) return
 
-  tree.target = target
-
-  // tree can't be a string
-  const {type, props, children} = tree
-  const key = props?.key
-
-  const id = `${parentId}${key !== undefined ? key : index}`
-
-  if (props !== null) setAttributesFromProps(element, props)
-
-  if (typeof children === 'string') {
-    renderInternal(children, null, element, id, 0)
+  if (tree.type === TreeType.text) {
+    const element = document.createTextNode(tree.text)
+    target.appendChild(element)
   } else {
-    children?.forEach((child, i) => {
-      renderInternal(child, getPrevChild(prevTree, i), element, id, i)
+    const element = document.createElement(tree.tag)
+    target.appendChild(element)
+
+    tree.target = target
+
+    // tree can't be a string
+    const {props, children} = tree
+    const key = props?.key
+
+    const id = `${parentId}${key !== undefined ? key : index}`
+
+    if (tree.props !== null) setAttributesFromProps(element, tree.props)
+
+    children.forEach((child, i) => {
+      renderInternal(child, prevTree?.children[i] || null, element, id, i)
     })
   }
-}
-
-function getPrevChild(prevTree: Tree | null, index: number) {
-  if (prevTree === null) return null
-  if (typeof prevTree === 'string') return null
-  if (typeof prevTree.children === 'string') {
-    return prevTree.children
-  }
-  if (prevTree.children !== undefined) return prevTree.children[index] || null
-  return null
 }
 
 // Don't worry about perf yet. Rethink naming where the work is done.
@@ -59,18 +52,11 @@ function compareTree(tree: Tree | null, prevTree: Tree | null, target: HTMLEleme
         target.childNodes[index].remove()
       }
     }
-    return createElement(tree)
+    return true
   } else if (tree !== null) {
-    return createElement(tree)
+    return true
   }
-  return null
-}
-
-function createElement(tree: Tree) {
-  if (typeof tree === 'string') {
-    return document.createTextNode(tree)
-  }
-  return document.createElement(tree.type)
+  return false
 }
 
 function setAttributesFromProps(element: HTMLElement, props: Record<string, unknown>) {

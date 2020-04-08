@@ -1,32 +1,55 @@
 //
-export type Tree = HostComponent | string
+export type Tree = HostComponent | TextComponent
 
 export interface TreeBase {
-  type: unknown
-  children?: Tree[] | string
-  target?: HTMLElement
-  id?: string
+  type: TreeType
+  text: string
+  tag: null | keyof HTMLElementTagNameMap
+  props: null | Record<string, unknown>
+  children: Tree[]
+  target: HTMLElement | null
+  id: string | null
 }
 
 export interface HostComponent extends TreeBase {
-  type: keyof HTMLElementTagNameMap
+  type: TreeType.host
+  text: ''
+  tag: keyof HTMLElementTagNameMap
   props: null | Record<string, unknown>
+}
+
+export interface TextComponent extends TreeBase {
+  type: TreeType.text
+  text: string
+  tag: null
+  props: null
+  children: []
+  id: null
+}
+
+export enum TreeType {
+  text,
+  host,
+  custom
 }
 
 export function createTree(
   typeOrConstructor: keyof HTMLElementTagNameMap | Function,
   props: Record<string, unknown> | null,
-  ...children: Tree[]
+  ...children: (Tree | string)[]
 ): Tree | null {
-  // console.log(arguments)
+  // console.log(arguments, normaliseChildren(children))
 
   if (typeof typeOrConstructor === 'string') {
     // Host component
     return {
-      type: typeOrConstructor,
+      type: TreeType.host,
+      text: '',
+      tag: typeOrConstructor,
       props,
-      children,
-      target: undefined
+      children: normaliseChildren(children),
+      target: null,
+      id: null
     }
   } else {
     // typeof type === 'function'
@@ -39,4 +62,30 @@ export function createTree(
   }
 
   return null
+}
+
+function normaliseChildren(children: (Tree | string)[] | string | undefined): Tree[] {
+  if (typeof children === 'string') {
+    return [makeTextNode(children)]
+  } else if (children !== undefined) {
+    return children.map(c => {
+      if (typeof c === 'string') {
+        return makeTextNode(c)
+      }
+      return c
+    })
+  }
+  return []
+}
+
+function makeTextNode(text: string): TextComponent {
+  return {
+    type: TreeType.text,
+    text: text,
+    tag: null,
+    props: null,
+    children: [],
+    id: null,
+    target: null
+  }
 }
