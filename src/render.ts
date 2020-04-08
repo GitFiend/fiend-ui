@@ -35,7 +35,15 @@ export function renderInternal(
     if (tree.props !== null) setAttributesFromProps(element, tree.props)
 
     children.forEach((child, i) => {
-      renderInternal(child, prevTree?.children[i] || null, element, id, i)
+      if (prevTree !== null) {
+        if (prevTree.type !== TreeType.text) {
+          renderInternal(child, prevTree.children[i] || null, element, id, i)
+        }
+      }
+      // if (prevTree?.type === TreeType.text)
+      renderInternal(child, null, element, id, i)
+      // else
+      // renderInternal(child, prevTree?.children[i] || null, element, id, i)
     })
   }
 }

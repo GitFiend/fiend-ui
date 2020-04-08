@@ -3,28 +3,25 @@ export type Tree = HostComponent | TextComponent
 
 export interface TreeBase {
   type: TreeType
-  text: string
-  tag: null | keyof HTMLElementTagNameMap
+  // tag: null | keyof HTMLElementTagNameMap
+  // props: null | Record<string, unknown>
+  // children: Tree[]
+  // target: HTMLElement | null
+  // id: string | null
+}
+
+export interface HostComponent extends TreeBase {
+  type: TreeType.host
+  tag: keyof HTMLElementTagNameMap
   props: null | Record<string, unknown>
   children: Tree[]
   target: HTMLElement | null
   id: string | null
 }
 
-export interface HostComponent extends TreeBase {
-  type: TreeType.host
-  text: ''
-  tag: keyof HTMLElementTagNameMap
-  props: null | Record<string, unknown>
-}
-
 export interface TextComponent extends TreeBase {
   type: TreeType.text
   text: string
-  tag: null
-  props: null
-  children: []
-  id: null
 }
 
 export enum TreeType {
@@ -41,13 +38,15 @@ export function createTree(
   // console.log(arguments, normaliseChildren(children))
 
   if (typeof typeOrConstructor === 'string') {
+    // console.time('normalise')
+    const children2 = normaliseChildren(children)
+    // console.timeEnd('normalise')
     // Host component
     return {
       type: TreeType.host,
-      text: '',
       tag: typeOrConstructor,
       props,
-      children: normaliseChildren(children),
+      children: children2,
       target: null,
       id: null
     }
@@ -81,11 +80,6 @@ function normaliseChildren(children: (Tree | string)[] | string | undefined): Tr
 function makeTextNode(text: string): TextComponent {
   return {
     type: TreeType.text,
-    text: text,
-    tag: null,
-    props: null,
-    children: [],
-    id: null,
-    target: null
+    text: text
   }
 }

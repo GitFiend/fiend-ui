@@ -28,6 +28,72 @@ function main(): void {
           <div>a</div>
           <div>b</div>
           <div>c</div>
+          <div>a</div>
+          <div>b</div>
+          <div>c</div>
+          <div>a</div>
+          <div>b</div>
+          <div>c</div>
+          <div
+            style={{
+              background: 'pink'
+            }}
+            key={'adf'}
+          >
+            <h1>Hello</h1>
+            Some <b>Text</b>
+            <div>
+              <div>a</div>
+              <div>b</div>
+              <div>c</div>
+              <div>a</div>
+              <div>b</div>
+              <div>c</div>
+              <div>a</div>
+              <div>b</div>
+              <div>c</div>
+              <div
+                style={{
+                  background: 'pink'
+                }}
+                key={'adf'}
+              >
+                <h1>Hello</h1>
+                Some <b>Text</b>
+                <div>
+                  <div>a</div>
+                  <div>b</div>
+                  <div>c</div>
+                  <div>a</div>
+                  <div>b</div>
+                  <div>c</div>
+                  <div>a</div>
+                  <div>b</div>
+                  <div>c</div>
+                  <div
+                    style={{
+                      background: 'pink'
+                    }}
+                    key={'adf'}
+                  >
+                    <h1>Hello</h1>
+                    Some <b>Text</b>
+                    <div>
+                      <div>a</div>
+                      <div>b</div>
+                      <div>c</div>
+                      <div>a</div>
+                      <div>b</div>
+                      <div>c</div>
+                      <div>a</div>
+                      <div>b</div>
+                      <div>c</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>,
       root
