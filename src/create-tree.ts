@@ -3,11 +3,6 @@ export type Tree = HostComponent | TextComponent
 
 export interface TreeBase {
   type: TreeType
-  // tag: null | keyof HTMLElementTagNameMap
-  // props: null | Record<string, unknown>
-  // children: Tree[]
-  // target: HTMLElement | null
-  // id: string | null
 }
 
 export interface HostComponent extends TreeBase {
@@ -31,36 +26,39 @@ export enum TreeType {
 }
 
 export function createTree(
-  typeOrConstructor: keyof HTMLElementTagNameMap | Function,
+  // typeOrConstructor: keyof HTMLElementTagNameMap | Function,
+  typeOrConstructor: keyof HTMLElementTagNameMap,
   props: Record<string, unknown> | null,
   ...children: (Tree | string)[]
-): Tree | null {
+): Tree {
   // console.log(arguments, normaliseChildren(children))
 
-  if (typeof typeOrConstructor === 'string') {
-    // console.time('normalise')
-    const children2 = normaliseChildren(children)
-    // console.timeEnd('normalise')
-    // Host component
-    return {
-      type: TreeType.host,
-      tag: typeOrConstructor,
-      props,
-      children: children2,
-      target: null,
-      id: null
-    }
-  } else {
-    // typeof type === 'function'
+  // if (typeof typeOrConstructor === 'string') {
+  // console.time('normalise')
+  const children2 = normaliseChildren(children)
+  // console.timeEnd('normalise')
 
-    if (typeOrConstructor.prototype.render !== undefined) {
-      // class component
-    } else {
-      // function component
-    }
-  }
-
-  return null
+  return makeHostNode(typeOrConstructor, props, children2, null, null)
+  // Host component
+  // return {
+  //   type: TreeType.host,
+  //   tag: typeOrConstructor,
+  //   props,
+  //   children: children2,
+  //   target: null,
+  //   id: null
+  // }
+  // } else {
+  //   // typeof type === 'function'
+  //
+  //   if (typeOrConstructor.prototype.render !== undefined) {
+  //     // class component
+  //   } else {
+  //     // function component
+  //   }
+  // }
+  //
+  // return null
 }
 
 function normaliseChildren(children: (Tree | string)[] | string | undefined): Tree[] {
@@ -77,7 +75,24 @@ function normaliseChildren(children: (Tree | string)[] | string | undefined): Tr
   return []
 }
 
-function makeTextNode(text: string): TextComponent {
+function makeHostNode(
+  tag: keyof HTMLElementTagNameMap,
+  props: null | Record<string, unknown>,
+  children: Tree[],
+  target: HTMLElement | null,
+  id: string | null
+): HostComponent {
+  return {
+    type: TreeType.host,
+    tag,
+    props,
+    children,
+    target,
+    id
+  }
+}
+
+export function makeTextNode(text: string): TextComponent {
   return {
     type: TreeType.text,
     text: text

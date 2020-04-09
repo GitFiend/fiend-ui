@@ -103,5 +103,9 @@ function main(): void {
   }
 }
 
-setTimeout(main, 500)
-setTimeout(reactMain, 520)
+setTimeout(() => {
+  main()
+  main()
+  main()
+}, 500)
+// setTimeout(reactMain, 520)
