@@ -2,41 +2,47 @@
 export type Tree = HostComponent | string
 
 export interface TreeBase {
-  type: unknown
-  children?: Tree[] | string
-  target?: HTMLElement
+  type: TreeType
+  tag: unknown
+  children: Tree[]
+  element?: HTMLElement
   id?: string
 }
 
 export interface HostComponent extends TreeBase {
-  type: keyof HTMLElementTagNameMap
+  tag: keyof HTMLElementTagNameMap
   props: null | Record<string, unknown>
 }
 
+export enum TreeType {
+  host
+}
+
 export function createTree(
-  typeOrConstructor: keyof HTMLElementTagNameMap | Function,
+  typeOrConstructor: keyof HTMLElementTagNameMap,
   props: Record<string, unknown> | null,
   ...children: Tree[]
-): Tree | null {
+): Tree {
   // console.log(arguments)
 
-  if (typeof typeOrConstructor === 'string') {
-    // Host component
-    return {
-      type: typeOrConstructor,
-      props,
-      children,
-      target: undefined
-    }
-  } else {
-    // typeof type === 'function'
-
-    if (typeOrConstructor.prototype.render !== undefined) {
-      // class component
-    } else {
-      // function component
-    }
+  // if (typeof typeOrConstructor === 'string') {
+  // Host component
+  return {
+    type: TreeType.host,
+    tag: typeOrConstructor,
+    props,
+    children
+    // target: undefined
   }
+  // } else {
+  // typeof type === 'function'
 
-  return null
+  //   if (typeOrConstructor.prototype.render !== undefined) {
+  //     // class component
+  //   } else {
+  //     // function component
+  //   }
+  // }
+  //
+  // return null
 }

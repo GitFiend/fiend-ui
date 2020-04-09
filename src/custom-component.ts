@@ -2,38 +2,38 @@ import {renderInternal} from './render'
 import {Tree, TreeBase} from './create-tree'
 
 //
-export class CustomComponent<P> implements TreeBase {
-  type = 'custom' as const
-
-  target?: HTMLElement
-
-  private prev: Tree | null = null
-  private curr: Tree | null = null
-
-  constructor(public props: P, public children: Tree[], public key: string) {}
-
-  render(): Tree | null {
-    return null
-  }
-
-  renderComponent(): {curr: Tree | null; prev: Tree | null} {
-    this.prev = this.curr
-    this.curr = this.render()
-
-    return {
-      prev: this.prev,
-      curr: this.curr
-    }
-  }
-
-  update() {
-    if (this.target !== null) {
-      const {curr, prev} = this.renderComponent()
-
-      if (this.target !== undefined) renderInternal(curr, prev, this.target, this.key, 0)
-    }
-  }
-}
+// export class CustomComponent<P> implements TreeBase {
+//   tag = 'custom' as const
+//
+//   target?: HTMLElement
+//
+//   private prev: Tree | null = null
+//   private curr: Tree | null = null
+//
+//   constructor(public props: P, public children: Tree[], public key: string) {}
+//
+//   render(): Tree | null {
+//     return null
+//   }
+//
+//   renderComponent(): {curr: Tree | null; prev: Tree | null} {
+//     this.prev = this.curr
+//     this.curr = this.render()
+//
+//     return {
+//       prev: this.prev,
+//       curr: this.curr
+//     }
+//   }
+//
+//   update() {
+//     if (this.target !== null) {
+//       const {curr, prev} = this.renderComponent()
+//
+//       if (this.target !== undefined) renderInternal(curr, prev, this.target, this.key, 0)
+//     }
+//   }
+// }
 //
 
 // export class MyCustomComponent extends CustomComponent<{}> {
