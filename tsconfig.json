@@ -15,7 +15,8 @@
   },
   "include": [
     "src",
-    "test"
+    "test",
+    "globals.d.ts"
   ],
   "exclude": [
     "node_modules",

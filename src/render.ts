@@ -1,6 +1,6 @@
 import {HostComponent, Tree, TreeType} from './create-tree'
 
-export function render(tree: any, target: HTMLElement) {
+export function render(tree: Tree, target: HTMLElement) {
   renderInternal(tree, null, target, '', 0)
 }
 

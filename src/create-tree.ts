@@ -3,7 +3,7 @@ export type Tree = HostComponent | string
 
 export interface TreeBase {
   type: TreeType
-  tag: unknown
+  tag: any
   children: Tree[]
   element?: HTMLElement
   id?: string
@@ -15,7 +15,8 @@ export interface HostComponent extends TreeBase {
 }
 
 export enum TreeType {
-  host
+  host,
+  custom
 }
 
 export function createTree(
