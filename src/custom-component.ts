@@ -1,5 +1,5 @@
 import {renderInternal} from './render'
-import {HostComponent, Tree, TreeBase, TreeType} from './create-tree'
+import {Tree, TreeBase, TreeType} from './create-tree'
 
 export class ZComponent<P> implements TreeBase {
   // tag = 'custom' as const
@@ -20,7 +20,7 @@ export class ZComponent<P> implements TreeBase {
     return null
   }
 
-  renderComponent(): {curr: Tree | null; prev: Tree | null} {
+  renderTree(): {curr: Tree | null; prev: Tree | null} {
     this.prev = this.curr
     this.curr = this.render()
 
@@ -32,7 +32,7 @@ export class ZComponent<P> implements TreeBase {
 
   forceUpdate(): void {
     if (this.target !== null) {
-      const {curr, prev} = this.renderComponent()
+      const {curr, prev} = this.renderTree()
 
       if (this.target !== undefined) renderInternal(curr, prev, this.target, '', 0)
     }

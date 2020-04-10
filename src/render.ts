@@ -1,4 +1,4 @@
-import {HostComponent, Tree, TreeType} from './create-tree'
+import {Tree, TreeType} from './create-tree'
 
 export function render(tree: Tree, target: HTMLElement) {
   renderInternal(tree, null, target, '', 0)
@@ -41,7 +41,7 @@ function apply(
 
   if (prevTree === null) {
     // tree not null, could be a string.
-    return addElement(tree, target)
+    return addElement(tree, target, index)
   }
 
   // Both tree and prevTree not null.
@@ -71,9 +71,14 @@ function apply(
   return replaceElement(tree, target, index)
 }
 
-function addElement(tree: Tree, target: HTMLElement): HTMLElement | null {
+function addElement(tree: Tree, target: HTMLElement, index: number): HTMLElement | null {
   if (typeof tree === 'string') {
     target.appendChild(document.createTextNode(tree))
+    return null
+  } else if (tree.type === TreeType.custom) {
+    const {curr, prev} = tree.renderTree()
+
+    renderInternal(curr, prev, target, '', index)
     return null
   } else {
     const el = document.createElement(tree.tag)
@@ -88,7 +93,7 @@ function addElement(tree: Tree, target: HTMLElement): HTMLElement | null {
 function replaceElement(tree: Tree, target: HTMLElement, index: number) {
   removeFollowingElements(target, index)
 
-  return addElement(tree, target)
+  return addElement(tree, target, index)
 }
 
 function updateElement(
@@ -105,7 +110,7 @@ function updateElement(
   return el as HTMLElement
 }
 
-function getPrevChild(prevTree: Tree | null, index: number): string | HostComponent | null {
+function getPrevChild(prevTree: Tree | null, index: number): Tree | null {
   if (prevTree === null) return null
 
   if (typeof prevTree === 'string') return null
