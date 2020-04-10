@@ -1,7 +1,7 @@
 //
-import {CustomComponent} from './custom-component'
+import {ZComponent} from './custom-component'
 
-export type Tree = HostComponent | string //| CustomComponent<unknown>
+export type Tree = HostComponent | string | ZComponent<unknown>
 
 export interface TreeBase {
   type: TreeType
@@ -12,6 +12,7 @@ export interface TreeBase {
 }
 
 export interface HostComponent extends TreeBase {
+  type: TreeType.host
   tag: keyof HTMLElementTagNameMap
   props: null | Record<string, unknown>
 }
@@ -22,30 +23,28 @@ export enum TreeType {
 }
 
 export function createTree(
-  typeOrConstructor: keyof HTMLElementTagNameMap,
+  typeOrConstructor: keyof HTMLElementTagNameMap | typeof ZComponent,
   props: Record<string, unknown> | null,
   ...children: Tree[]
-): Tree {
-  // console.log(arguments)
+): Tree | any {
+  console.log(arguments)
 
-  // if (typeof typeOrConstructor === 'string') {
-  // Host component
-  return {
-    type: TreeType.host,
-    tag: typeOrConstructor,
-    props,
-    children
-    // target: undefined
+  if (typeof typeOrConstructor === 'string') {
+    // Host component
+    return {
+      type: TreeType.host,
+      tag: typeOrConstructor,
+      props,
+      children
+      // target: undefined
+    }
+  } else {
+    return new typeOrConstructor(props, children)
+    // typeof type === 'function'
+    // if (typeOrConstructor.prototype.render !== undefined) {
+    //   // class component
+    // } else {
+    //   // function component
+    // }
   }
-  // } else {
-  // typeof type === 'function'
-
-  //   if (typeOrConstructor.prototype.render !== undefined) {
-  //     // class component
-  //   } else {
-  //     // function component
-  //   }
-  // }
-  //
-  // return null
 }

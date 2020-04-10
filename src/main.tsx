@@ -1,7 +1,13 @@
 import {render} from './render'
-import {createTree, HostComponent} from './create-tree'
+import {createTree} from './create-tree'
 import {reactMain} from './react-compare'
-import {CustomComponent} from './custom-component'
+import {ZComponent} from './custom-component'
+
+class Mine extends ZComponent<{}> {
+  render() {
+    return <div>Hello from custom component</div>
+  }
+}
 
 function main(): void {
   const root = document.getElementById('root')
@@ -17,6 +23,7 @@ function main(): void {
         key={'adf'}
       >
         <h1>Hello</h1>
+        <Mine />
         Some <b>Text</b>
         <div>
           <div>a</div>
@@ -79,11 +86,3 @@ function main(): void {
 
 setTimeout(main, 500)
 setTimeout(reactMain, 520)
-
-// class Mine extends CustomComponent<{}> {
-//   render(): HostComponent | string | null {
-//     return <div>
-//
-//     </div>
-//   }
-// }

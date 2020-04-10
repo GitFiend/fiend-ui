@@ -58,7 +58,9 @@ function apply(
   if (tree.type !== prevTree.type) {
     return replaceElement(tree, target, index)
   }
-  if (tree.type === TreeType.host) {
+  if (tree.type === TreeType.custom) {
+  }
+  if (tree.type === TreeType.host && prevTree.type === TreeType.host) {
     if (tree.tag === prevTree.tag) {
       if (equalProps(tree.props, prevTree.props)) {
         return prevTree.element || null
