@@ -18,9 +18,14 @@ export function renderInternal(
   tree.element = element
 
   // TODO: Need to check for prev children to delete (prev children array longer).
-  tree.children.forEach((child, i) => {
-    renderInternal(child, getPrevChild(prevTree, i), element, '', i)
-  })
+  // Also: May be able to speed this up slightly if already know that prev children is null?
+  const len = tree.children.length
+
+  for (let i = 0; i < len; i++) {
+    const c = tree.children[i]
+
+    renderInternal(c, getPrevChild(prevTree, i), element, '', i)
+  }
 }
 
 function apply(
