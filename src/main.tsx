@@ -1,13 +1,7 @@
 import {render} from './render'
 import {createTree} from './create-tree'
-import {reactMain} from './react-compare'
-import {ZComponent} from './custom-component'
-
-class Mine extends ZComponent<{}> {
-  render() {
-    return <div>Hello from custom component</div>
-  }
-}
+import {reactMain} from './test/react-compare'
+import {Mine} from './test/test-component'
 
 function main(): void {
   const root = document.getElementById('root')

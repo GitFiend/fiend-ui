@@ -2,7 +2,6 @@ import {renderInternal} from './render'
 import {Tree, TreeBase, TreeType} from './create-tree'
 
 export class ZComponent<P> implements TreeBase {
-  // tag = 'custom' as const
   type = TreeType.custom as const
 
   target?: HTMLElement

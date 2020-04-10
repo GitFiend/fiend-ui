@@ -27,7 +27,7 @@ export function createTree(
   props: Record<string, unknown> | null,
   ...children: Tree[]
 ): Tree | any {
-  console.log(arguments)
+  // console.log(arguments)
 
   if (typeof typeOrConstructor === 'string') {
     // Host component
