@@ -1,9 +1,11 @@
 //
-export type Tree = HostComponent | string
+import {CustomComponent} from './custom-component'
+
+export type Tree = HostComponent | string //| CustomComponent<unknown>
 
 export interface TreeBase {
   type: TreeType
-  tag: any
+  // tag: any
   children: Tree[]
   element?: HTMLElement
   id?: string

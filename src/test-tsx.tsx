@@ -1,5 +1,4 @@
 import {createTree, Tree} from './create-tree'
-import {Choochoo} from './custom-component'
 
 export const myTree = (
   <div
