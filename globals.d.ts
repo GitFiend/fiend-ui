@@ -1,5 +1,5 @@
-import {HostComponent} from './src/create-tree'
-import {ZComponent} from './src/custom-component'
+import {HostComponent} from './src/lib/component-types/host'
+import {ZComponent} from './src/lib/component-types/custom'
 
 declare global {
   namespace JSX {

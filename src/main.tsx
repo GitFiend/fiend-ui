@@ -1,7 +1,7 @@
-import {render} from './render'
-import {createTree} from './create-tree'
+import {render} from './lib/render'
+import {createTree} from './lib/create-tree'
 import {reactMain} from './test/react-compare'
-import {Mine} from './test/test-component'
+import {TestComponent} from './test/test-component'
 
 function main(): void {
   const root = document.getElementById('root')
@@ -17,11 +17,11 @@ function main(): void {
         key={'adf'}
       >
         <h1>Hello</h1>
-        <Mine />
-        <Mine />
-        <Mine />
-        <Mine />
-        <Mine />
+        <TestComponent />
+        <TestComponent />
+        <TestComponent />
+        <TestComponent />
+        <TestComponent />
       </div>,
       root
     )

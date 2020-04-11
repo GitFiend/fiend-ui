@@ -1,6 +1,6 @@
-import {render} from '../render'
-import {createTree} from '../create-tree'
-import {Mine} from './test-component'
+import {render} from '../lib/render'
+import {createTree} from '../lib/create-tree'
+import {TestComponent} from './test-component'
 
 export function lotsOfElements(): void {
   const root = document.getElementById('root')
@@ -16,8 +16,8 @@ export function lotsOfElements(): void {
         key={'adf'}
       >
         <h1>Hello</h1>
-        <Mine />
-        <Mine />
+        <TestComponent />
+        <TestComponent />
         Some <b>Text</b>
         <div>
           <div>a</div>

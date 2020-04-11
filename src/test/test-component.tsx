@@ -1,8 +1,9 @@
-import {OComponent} from '../custom-component'
-import {createTree, Tree} from '../create-tree'
-import {observable, runInAction} from 'mobx'
+import {createTree} from '../lib/create-tree'
+import {action, observable} from 'mobx'
+import {Tree} from '../lib/component-types/host'
+import {OComponent} from '../lib/component-types/observer'
 
-export class Mine extends OComponent<{}> {
+export class TestComponent extends OComponent<{}> {
   @observable
   num = 0
 
@@ -15,21 +16,15 @@ export class Mine extends OComponent<{}> {
         }}
       >
         <h3>Hello from custom component</h3>
-        <button
-          onClick={() => {
-            // console.log('omg')
-            runInAction(() => {
-              this.num += 1
-              // console.log('new num:', this.num)
-            })
-            // this.forceUpdate()
-          }}
-        >
-          {`${this.num}`}
-        </button>
+        <button onClick={this.increment}>{`${this.num}`}</button>
         <TestComponent2 num={this.num} />
       </div>
     )
+  }
+
+  @action
+  increment = () => {
+    this.num += 1
   }
 }
 

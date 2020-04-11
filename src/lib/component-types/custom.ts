@@ -1,8 +1,5 @@
-import {renderInternal} from './render'
-import {Tree, TreeBase, TreeType} from './create-tree'
-import {autorun, IReactionDisposer, reaction} from 'mobx'
-
-export type Component = typeof ZComponent | typeof OComponent
+import {Tree, TreeBase, TreeType} from './host'
+import {renderInternal} from '../render'
 
 export enum CustomComponentType {
   standard,
@@ -41,6 +38,7 @@ export class ZComponent<P> implements TreeBase {
 
   forceUpdate(): void {
     if (this.target !== undefined) {
+      console.log('forceUpdate')
       const {curr, prev} = this.renderTree()
 
       renderInternal(curr, prev, this.target, '', 0)
@@ -53,27 +51,6 @@ export class ZComponent<P> implements TreeBase {
   context: any
   refs = {}
   state = {}
+
   setState(state: unknown, callback?: () => void): void {}
-}
-
-export class OComponent<P> extends ZComponent<P> {
-  disposers: IReactionDisposer[] = []
-  customType = CustomComponentType.mobx as const
-
-  setupObserving() {
-    console.log('setup observing. target: ', this.target)
-
-    this.disposers.push(
-      autorun(() => {
-        console.log('autorun')
-
-        this.forceUpdate()
-      })
-    )
-  }
-
-  // TODO
-  componentWillUnmount() {
-    this.disposers.forEach(d => d())
-  }
 }

@@ -1,5 +1,6 @@
-import {Tree, TreeType} from './create-tree'
-import {CustomComponentType, OComponent} from './custom-component'
+import {Tree, TreeType} from './component-types/host'
+import {CustomComponentType} from './component-types/custom'
+import {OComponent} from './component-types/observer'
 
 export function render(tree: Tree, target: HTMLElement) {
   renderInternal(tree, null, target, '', 0)
