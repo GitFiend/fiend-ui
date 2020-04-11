@@ -18,58 +18,10 @@ function main(): void {
       >
         <h1>Hello</h1>
         <Mine />
-        Some <b>Text</b>
-        <div>
-          <div>a</div>
-          <div>b</div>
-          <div>c</div>
-          <div>a</div>
-          <div>b</div>
-          <div>c</div>
-          <div>a</div>
-          <div>b</div>
-          <div>c</div>
-          <div
-            style={{
-              background: 'pink'
-            }}
-            key={'adf'}
-          >
-            <h1>Hello</h1>
-            Some <b>Text</b>
-            <div>
-              <div>a</div>
-              <div>b</div>
-              <div>c</div>
-              <div>a</div>
-              <div>b</div>
-              <div>c</div>
-              <div>a</div>
-              <div>b</div>
-              <div>c</div>
-              <div
-                style={{
-                  background: 'pink'
-                }}
-                key={'adf'}
-              >
-                <h1>Hello</h1>
-                Some <b>Text</b>
-                <div>
-                  <div>a</div>
-                  <div>b</div>
-                  <div>c</div>
-                  <div>a</div>
-                  <div>b</div>
-                  <div>c</div>
-                  <div>a</div>
-                  <div>b</div>
-                  <div>c</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Mine />
+        <Mine />
+        <Mine />
+        <Mine />
       </div>,
       root
     )
@@ -79,4 +31,4 @@ function main(): void {
 }
 
 setTimeout(main, 500)
-setTimeout(reactMain, 520)
+// setTimeout(reactMain, 520)

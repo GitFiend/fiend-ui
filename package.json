@@ -28,6 +28,7 @@
         "eslint-plugin-react": "^7.19.0",
         "fork-ts-checker-webpack-plugin": "^4.0.5",
         "jest": "^25.1.0",
+        "mobx": "^5.15.4",
         "prettier": "^1.19.1",
         "react": "^16.8.6",
         "react-dom": "^16.8.6",

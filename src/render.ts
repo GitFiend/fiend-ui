@@ -16,6 +16,9 @@ export function renderInternal(
   if (typeof tree === 'string' || tree === null || element === null) return
 
   tree.element = element
+  // if (tree.type === TreeType.custom) {
+  //   tree.target = target
+  // }
 
   // TODO: Need to check for prev children to delete (prev children array longer).
   // Also: May be able to speed this up slightly if already know that prev children is null?
@@ -59,6 +62,8 @@ function apply(
     return replaceElement(tree, target, index)
   }
   if (tree.type === TreeType.custom) {
+    // TODO
+    // tree.target = target
   }
   if (tree.type === TreeType.host && prevTree.type === TreeType.host) {
     if (tree.tag === prevTree.tag) {
@@ -76,6 +81,7 @@ function addElement(tree: Tree, target: HTMLElement, index: number): HTMLElement
     target.appendChild(document.createTextNode(tree))
     return null
   } else if (tree.type === TreeType.custom) {
+    tree.target = target
     const {curr, prev} = tree.renderTree()
 
     renderInternal(curr, prev, target, '', index)

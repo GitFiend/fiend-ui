@@ -1,8 +1,19 @@
-import {ZComponent} from '../custom-component'
-import {createTree} from '../create-tree'
+import {OComponent} from '../custom-component'
+import {createTree, Tree} from '../create-tree'
+import {observable, runInAction} from 'mobx'
 
-export class Mine extends ZComponent<{}> {
+export class Mine extends OComponent<{}> {
+  @observable
+  num = 0
+
+  constructor(props: {}, children: Tree[]) {
+    super(props, children)
+    // console.log('contructor')
+  }
+
   render() {
+    // console.log('render', this.num)
+
     return (
       <div
         style={{
@@ -14,9 +25,14 @@ export class Mine extends ZComponent<{}> {
         <button
           onClick={() => {
             console.log('omg')
+            runInAction(() => {
+              this.num += 1
+              // console.log('new num:', this.num)
+            })
+            this.forceUpdate()
           }}
         >
-          Click me
+          {`${this.num}`}
         </button>
       </div>
     )

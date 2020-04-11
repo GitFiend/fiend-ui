@@ -1,4 +1,3 @@
-//
 import {ZComponent} from './custom-component'
 
 export type Tree = HostComponent | string | ZComponent<unknown>
@@ -39,7 +38,10 @@ export function createTree(
       // target: undefined
     }
   } else {
-    return new typeOrConstructor(props, children)
+    console.time('construct')
+    const c = new typeOrConstructor(props, children)
+    console.timeEnd('construct')
+    return c
     // typeof type === 'function'
     // if (typeOrConstructor.prototype.render !== undefined) {
     //   // class component
