@@ -31,4 +31,4 @@ function main(): void {
 }
 
 setTimeout(main, 500)
-// setTimeout(reactMain, 520)
+setTimeout(reactMain, 520)

@@ -56,6 +56,7 @@ export class OComponent<P> extends ZComponent<P> {
 
     this.disposers.push(
       autorun(() => {
+        console.log('autorun')
         this.forceUpdate()
       })
       // reaction(

@@ -25,28 +25,20 @@ export function createTree(
   typeOrConstructor: keyof HTMLElementTagNameMap | typeof ZComponent,
   props: Record<string, unknown> | null,
   ...children: Tree[]
-): Tree | any {
+): Tree {
   // console.log(arguments)
 
   if (typeof typeOrConstructor === 'string') {
-    // Host component
     return {
       type: TreeType.host,
       tag: typeOrConstructor,
       props,
       children
-      // target: undefined
     }
   } else {
     console.time('construct')
     const c = new typeOrConstructor(props, children)
     console.timeEnd('construct')
     return c
-    // typeof type === 'function'
-    // if (typeOrConstructor.prototype.render !== undefined) {
-    //   // class component
-    // } else {
-    //   // function component
-    // }
   }
 }

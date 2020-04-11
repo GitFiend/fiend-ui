@@ -16,9 +16,6 @@ export function renderInternal(
   if (typeof tree === 'string' || tree === null || element === null) return
 
   tree.element = element
-  // if (tree.type === TreeType.custom) {
-  //   tree.target = target
-  // }
 
   // TODO: Need to check for prev children to delete (prev children array longer).
   // Also: May be able to speed this up slightly if already know that prev children is null?
