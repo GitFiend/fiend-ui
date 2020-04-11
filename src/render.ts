@@ -1,4 +1,5 @@
 import {Tree, TreeType} from './create-tree'
+import {CustomComponentType, OComponent} from './custom-component'
 
 export function render(tree: Tree, target: HTMLElement) {
   renderInternal(tree, null, target, '', 0)
@@ -79,9 +80,15 @@ function addElement(tree: Tree, target: HTMLElement, index: number): HTMLElement
     return null
   } else if (tree.type === TreeType.custom) {
     tree.target = target
-    const {curr, prev} = tree.renderTree()
 
-    renderInternal(curr, prev, target, '', index)
+    if (tree.customType === CustomComponentType.mobx) {
+      ;(tree as OComponent<unknown>).setupObserving()
+    } else {
+      tree.forceUpdate()
+    }
+    // const {curr, prev} = tree.renderTree()
+    //
+    // renderInternal(curr, prev, target, '', index)
     return null
   } else {
     const el = document.createElement(tree.tag)

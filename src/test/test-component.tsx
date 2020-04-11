@@ -6,14 +6,7 @@ export class Mine extends OComponent<{}> {
   @observable
   num = 0
 
-  // constructor(props: {}, children: Tree[]) {
-  //   super(props, children)
-  //   // console.log('contructor')
-  // }
-
   render() {
-    // console.log('render', this.num)
-
     return (
       <div
         style={{
@@ -34,7 +27,16 @@ export class Mine extends OComponent<{}> {
         >
           {`${this.num}`}
         </button>
+        <TestComponent2 num={this.num} />
       </div>
     )
+  }
+}
+
+export class TestComponent2 extends OComponent<{num: number}> {
+  render(): Tree | null {
+    const {num} = this.props
+
+    return <div>{num.toString()}</div>
   }
 }

@@ -1,10 +1,9 @@
-import {ZComponent} from './custom-component'
+import {Component, CustomComponentType, OComponent, ZComponent} from './custom-component'
 
-export type Tree = HostComponent | string | ZComponent<unknown>
+export type Tree = HostComponent | string | ZComponent<unknown> | OComponent<unknown>
 
 export interface TreeBase {
   type: TreeType
-  // tag: any
   children: Tree[]
   element?: HTMLElement
   id?: string
