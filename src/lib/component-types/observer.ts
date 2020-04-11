@@ -10,11 +10,11 @@ export class OComponent<P> extends ZComponent<P> {
 
     this.disposers.push(
       autorun(() => {
-        console.time('autorun')
+        // console.time('autorun')
 
         this.forceUpdate()
 
-        console.timeEnd('autorun')
+        // console.timeEnd('autorun')
       })
     )
 

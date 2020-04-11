@@ -38,7 +38,7 @@ export class ZComponent<P> implements TreeBase {
 
   forceUpdate(): void {
     if (this.target !== undefined) {
-      console.log('forceUpdate')
+      // console.log('forceUpdate')
       const {curr, prev} = this.renderTree()
 
       renderInternal(curr, prev, this.target, '', 0)

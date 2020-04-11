@@ -1,4 +1,4 @@
-import {Tree, TreeType} from './component-types/host'
+import {mkTextNode, Tree, TreeType} from './component-types/host'
 import {CustomComponentType} from './component-types/custom'
 import {OComponent} from './component-types/observer'
 
@@ -15,7 +15,12 @@ export function renderInternal(
 ) {
   const element = apply(tree, prevTree, target, index)
 
-  if (typeof tree === 'string' || tree === null || element === null) return
+  if (
+    /*typeof tree === 'string' || */ tree === null ||
+    element === null ||
+    tree.type === TreeType.text
+  )
+    return
 
   tree.element = element
 
@@ -26,7 +31,11 @@ export function renderInternal(
   for (let i = 0; i < len; i++) {
     const c = tree.children[i]
 
+    // if (typeof c === 'string') {
+    //   renderInternal(mkTextNode(c), getPrevChild(prevTree, i), element, '', i)
+    // } else {
     renderInternal(c, getPrevChild(prevTree, i), element, '', i)
+    // }
   }
 }
 
@@ -76,8 +85,8 @@ function apply(
 }
 
 function addElement(tree: Tree, target: HTMLElement, index: number): HTMLElement | null {
-  if (typeof tree === 'string') {
-    target.appendChild(document.createTextNode(tree))
+  if (tree.type === TreeType.text) {
+    target.appendChild(tree.element)
     return null
   } else if (tree.type === TreeType.custom) {
     tree.target = target
@@ -124,7 +133,7 @@ function updateElement(
 function getPrevChild(prevTree: Tree | null, index: number): Tree | null {
   if (prevTree === null) return null
 
-  if (typeof prevTree === 'string') return null
+  if (prevTree.type === TreeType.text) return null
 
   if (prevTree.children !== undefined) {
     return prevTree.children[index] || null
@@ -155,7 +164,8 @@ function setAttributesFromProps(element: HTMLElement, props: Record<string, unkn
 
 function removeFollowingElements(target: HTMLElement, index: number): void {
   if (index === 0) {
-    target.innerHTML = ''
+    // target.innerHTML = ''
+    while (target.childNodes.length > 0) target.childNodes[0].remove()
   } else {
     const {length} = target.childNodes
 
