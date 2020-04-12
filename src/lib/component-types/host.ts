@@ -1,4 +1,5 @@
 import {ParentTree, Tree, TreeBase, TreeType} from './base'
+import {removeFollowingElements2} from '../render'
 
 export class HostComponent implements TreeBase {
   type = TreeType.host as const
@@ -11,26 +12,31 @@ export class HostComponent implements TreeBase {
     public children: Tree[]
   ) {}
 
-  remove(): void {}
-}
+  remove(): void {
+    this.element?.remove()
 
-// TODO: Duplicate calls to this in some branches.
-export function completeTree(tree: Tree, parent: ParentTree, element: HTMLElement) {
-  tree.element = element
-  tree.parent = parent
+    for (const c of this.children) c.remove()
+  }
 }
 
 export function applyHostChanges(
   parent: ParentTree,
   tree: HostComponent,
   prevTree: Tree | null,
-  target: HTMLElement,
   index: number
 ) {
   if (prevTree !== null) {
-    if (prevTree.type === TreeType.host) {
+    if (prevTree.type === TreeType.host && prevTree.tag === tree.tag) {
       // prevTree is the same type, update it if needed.
-      // TODO
+
+      // TODO: Update it.
+      if (prevTree.element) {
+        tree.element = prevTree.element
+      }
+      return tree.element
+    } else {
+      // The type of prevTree is different. Delete it and following elements
+      removeFollowingElements2(parent, index)
     }
   }
 
@@ -38,9 +44,8 @@ export function applyHostChanges(
 
   if (tree.props) setAttributesFromProps(el, tree.props)
 
-  target.appendChild(el)
+  parent.element?.appendChild(el)
   tree.element = el
-  tree.parent = parent
 
   return el
 }

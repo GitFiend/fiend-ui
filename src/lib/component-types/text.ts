@@ -8,11 +8,6 @@ export class TextComponent implements TreeBase {
 
   constructor(public text: string) {}
 
-  finalise(parent: ParentTree, element: Text) {
-    this.parent = parent
-    this.element = element
-  }
-
   remove(): void {
     this.element?.remove()
   }
@@ -30,12 +25,14 @@ export function applyTextChanges(
     if (prevTree.type === TreeType.text) {
       // Update it
       if (prevTree.text === tree.text) {
-        if (prevTree.element) tree.finalise(parent, prevTree.element)
+        if (prevTree.element) {
+          tree.element = prevTree.element
+        }
         return null
       } else {
         if (prevTree.element) {
           prevTree.element.nodeValue = tree.text
-          tree.finalise(parent, prevTree.element)
+          tree.element = prevTree.element
         }
         return null
       }
@@ -47,7 +44,7 @@ export function applyTextChanges(
 
   const element = document.createTextNode(tree.text)
   parent.element?.appendChild(element)
-  tree.finalise(parent, element)
+  tree.element = element
 
   return null
 }
