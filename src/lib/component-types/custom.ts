@@ -46,6 +46,10 @@ export class ZComponent<P> implements TreeBase {
     }
   }
 
+  remove(): void {
+    this.element?.remove()
+  }
+
   // Required by JSX.ElementClass for now. Can we override this type?
   context: any
   refs = {}

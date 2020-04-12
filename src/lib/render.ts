@@ -11,14 +11,16 @@ import {OComponent} from './component-types/observer'
 import {applyTextChanges} from './component-types/text'
 
 export function render(tree: Tree, target: HTMLElement) {
-  const root: HostComponent = {
-    type: TreeType.host,
-    tag: 'div',
-    props: null,
-    element: target,
-    children: [tree],
-    parent: null,
-  }
+  // const root: HostComponent = {
+  //   type: TreeType.host,
+  //   tag: 'div',
+  //   props: null,
+  //   element: target,
+  //   children: [tree],
+  //   parent: null,
+  // }
+  const root = new HostComponent('div', null, [tree])
+  root.element = target
 
   renderInternal(root, tree, null, target, 0)
 }

@@ -21,8 +21,13 @@ export class OComponent<P> extends ZComponent<P> {
     // console.timeEnd('setupObserving')
   }
 
+  remove(): void {
+    super.remove()
+    this.disposers.forEach((d) => d())
+  }
+
   // TODO
   componentWillUnmount() {
-    this.disposers.forEach(d => d())
+    // this.disposers.forEach(d => d())
   }
 }

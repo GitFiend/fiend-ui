@@ -13,20 +13,35 @@ export enum TreeType {
 }
 
 export interface TreeBase {
-  parent: Tree | null
+  parent: ParentTree | null
   type: TreeType
+  remove(): void
 }
 
-export interface HostComponent extends TreeBase {
-  type: TreeType.host
-  tag: keyof HTMLElementTagNameMap
-  props: Record<string, unknown> | null
-  element: HTMLElement | null
-  children: Tree[]
+// export interface HostComponent extends TreeBase {
+//   type: TreeType.host
+//   tag: keyof HTMLElementTagNameMap
+//   props: Record<string, unknown> | null
+//   element: HTMLElement | null
+//   children: Tree[]
+// }
+
+export class HostComponent implements TreeBase {
+  type = TreeType.host as const
+  parent: ParentTree | null = null
+  element: HTMLElement | null = null
+
+  constructor(
+    public tag: keyof HTMLElementTagNameMap,
+    public props: Record<string, unknown> | null,
+    public children: Tree[]
+  ) {}
+
+  remove(): void {}
 }
 
 // TODO: Duplicate calls to this in some branches.
-export function completeTree(tree: Tree, parent: Tree, element: HTMLElement) {
+export function completeTree(tree: Tree, parent: ParentTree, element: HTMLElement) {
   tree.element = element
   tree.parent = parent
 }
