@@ -3,14 +3,14 @@ import {CustomComponentType} from './component-types/custom'
 import {OComponent} from './component-types/observer'
 
 export function render(tree: Tree, target: HTMLElement) {
-  renderInternal(tree, null, target, '', 0)
+  renderInternal(null, tree, null, target, 0)
 }
 
 export function renderInternal(
+  parent: Tree | null,
   tree: Tree | null,
   prevTree: Tree | null,
   target: HTMLElement,
-  parentId: string,
   index: number
 ) {
   const element = apply(tree, prevTree, target, index)
@@ -34,7 +34,7 @@ export function renderInternal(
     // if (typeof c === 'string') {
     //   renderInternal(mkTextNode(c), getPrevChild(prevTree, i), element, '', i)
     // } else {
-    renderInternal(c, getPrevChild(prevTree, i), element, '', i)
+    renderInternal(tree, c, getPrevChild(prevTree, i), element, i)
     // }
   }
 }
