@@ -1,7 +1,7 @@
 import {createTree} from '../lib/create-tree'
 import {action, observable} from 'mobx'
-import {Tree} from '../lib/component-types/host'
 import {OComponent} from '../lib/component-types/observer'
+import {Tree} from '../lib/component-types/base'
 
 export class TestComponent extends OComponent<{}> {
   @observable
@@ -12,7 +12,7 @@ export class TestComponent extends OComponent<{}> {
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
         }}
       >
         <h3>Hello from custom component</h3>

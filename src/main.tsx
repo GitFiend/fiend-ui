@@ -2,7 +2,6 @@ import {render} from './lib/render'
 import {createTree} from './lib/create-tree'
 import {reactMain} from './test/react-compare'
 import {TestComponent} from './test/test-component'
-import {lotsOfElements} from './test/lots-of-elements'
 
 function main(): void {
   const root = document.getElementById('root')
@@ -21,7 +20,7 @@ function customComponents(root: HTMLElement) {
   render(
     <div
       style={{
-        background: 'pink'
+        background: 'pink',
       }}
       key={'adf'}
     >

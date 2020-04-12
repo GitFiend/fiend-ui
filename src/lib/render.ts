@@ -2,23 +2,14 @@ import {
   applyHostChanges,
   completeTree,
   HostComponent,
-  ParentTree,
-  Tree,
-  TreeType,
+  setAttributesFromProps,
 } from './component-types/host'
 import {applyCustomChanges, CustomComponentType} from './component-types/custom'
 import {OComponent} from './component-types/observer'
 import {applyTextChanges} from './component-types/text'
+import {ParentTree, Tree, TreeType} from './component-types/base'
 
 export function render(tree: Tree, target: HTMLElement) {
-  // const root: HostComponent = {
-  //   type: TreeType.host,
-  //   tag: 'div',
-  //   props: null,
-  //   element: target,
-  //   children: [tree],
-  //   parent: null,
-  // }
   const root = new HostComponent('div', null, [tree])
   root.element = target
 
@@ -183,27 +174,6 @@ function getPrevChild(prevTree: Tree | null, index: number): Tree | null {
     return prevTree.children[index] || null
   }
   return null
-}
-
-function setAttributesFromProps(element: HTMLElement, props: Record<string, unknown>) {
-  const propNames = Object.keys(props)
-  const el = element as any
-
-  for (const prop of propNames) {
-    if (prop.startsWith('on')) {
-      element.addEventListener(prop.slice(2).toLowerCase(), props[prop] as any)
-    } else if (prop === 'style') {
-      const styles = props[prop] as any
-
-      const styleKeys = Object.keys(styles)
-
-      for (const s of styleKeys) {
-        el.style[s] = styles[s]
-      }
-    } else {
-      el[prop] = props[prop]
-    }
-  }
 }
 
 function removeFollowingElements(target: HTMLElement, index: number): void {

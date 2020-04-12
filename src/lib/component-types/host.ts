@@ -1,30 +1,4 @@
-import {ZComponent} from './custom'
-import {OComponent} from './observer'
-import {TextComponent} from './text'
-
-export type Tree = TextComponent | HostComponent | ZComponent<unknown> | OComponent<unknown>
-
-export type ParentTree = Exclude<Tree, TextComponent>
-
-export enum TreeType {
-  host,
-  custom,
-  text,
-}
-
-export interface TreeBase {
-  parent: ParentTree | null
-  type: TreeType
-  remove(): void
-}
-
-// export interface HostComponent extends TreeBase {
-//   type: TreeType.host
-//   tag: keyof HTMLElementTagNameMap
-//   props: Record<string, unknown> | null
-//   element: HTMLElement | null
-//   children: Tree[]
-// }
+import {ParentTree, Tree, TreeBase, TreeType} from './base'
 
 export class HostComponent implements TreeBase {
   type = TreeType.host as const
@@ -53,5 +27,37 @@ export function applyHostChanges(
   target: HTMLElement,
   index: number
 ) {
-  return null
+  if (prevTree !== null) {
+  }
+
+  const el = document.createElement(tree.tag)
+
+  if (tree.props) setAttributesFromProps(el, tree.props)
+
+  target.appendChild(el)
+  tree.element = el
+  tree.parent = parent
+
+  return el
+}
+
+export function setAttributesFromProps(element: HTMLElement, props: Record<string, unknown>) {
+  const propNames = Object.keys(props)
+  const el = element as any
+
+  for (const prop of propNames) {
+    if (prop.startsWith('on')) {
+      element.addEventListener(prop.slice(2).toLowerCase(), props[prop] as any)
+    } else if (prop === 'style') {
+      const styles = props[prop] as any
+
+      const styleKeys = Object.keys(styles)
+
+      for (const s of styleKeys) {
+        el.style[s] = styles[s]
+      }
+    } else {
+      el[prop] = props[prop]
+    }
+  }
 }

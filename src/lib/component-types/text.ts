@@ -1,33 +1,27 @@
-import {ParentTree, Tree, TreeBase, TreeType} from './host'
-
-// export interface TextComponent extends TreeBase {
-//   type: TreeType.text
-//   element: Text
-//   text: string
-// }
+import {ParentTree, Tree, TreeBase, TreeType} from './base'
 
 export class TextComponent implements TreeBase {
   type = TreeType.text as const
   parent: ParentTree | null = null
-  element: Text
+  element: Text | null = null
 
   constructor(public text: string) {
-    this.element = document.createTextNode(text)
+    // this.element = document.createTextNode(text)
+  }
+
+  create() {
+    this.element = document.createTextNode(this.text)
+  }
+
+  update(prev: Text, newText: string) {
+    prev.nodeValue = newText
+    this.element = prev
   }
 
   remove(): void {
-    this.element.remove()
+    this.element?.remove()
   }
 }
-
-// export function mkTextNode(text: string): TextComponent {
-//   return {
-//     parent: null,
-//     type: TreeType.text,
-//     text,
-//     element: document.createTextNode(text),
-//   }
-// }
 
 export function applyTextChanges(
   parent: ParentTree,
@@ -37,7 +31,14 @@ export function applyTextChanges(
   index: number
 ) {
   if (prevTree !== null) {
-    if (prevTree.type === TreeType.text && prevTree.text === tree.text) return null
+    if (prevTree.type === TreeType.text) {
+      if (prevTree.text === tree.text) {
+        return null
+      } else {
+      }
+    }
+
+    // TODO: Update case
 
     const siblings = parent.children
     const len = siblings.length
@@ -47,7 +48,8 @@ export function applyTextChanges(
       s.remove()
     }
   }
-  target.appendChild(tree.element)
+  // TODO
+  // target.appendChild(tree.element)
 
   return null
 }

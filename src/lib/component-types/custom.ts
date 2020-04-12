@@ -1,5 +1,5 @@
-import {ParentTree, Tree, TreeBase, TreeType} from './host'
 import {renderInternal} from '../render'
+import {ParentTree, Tree, TreeBase, TreeType} from './base'
 
 export enum CustomComponentType {
   standard,
