@@ -1,6 +1,14 @@
-import {completeTree, HostComponent, Tree, TreeType} from './component-types/host'
-import {CustomComponentType} from './component-types/custom'
+import {
+  applyHostChanges,
+  completeTree,
+  HostComponent,
+  ParentTree,
+  Tree,
+  TreeType,
+} from './component-types/host'
+import {applyCustomChanges, CustomComponentType} from './component-types/custom'
 import {OComponent} from './component-types/observer'
+import {applyTextChanges} from './component-types/text'
 
 export function render(tree: Tree, target: HTMLElement) {
   const root: HostComponent = {
@@ -9,14 +17,14 @@ export function render(tree: Tree, target: HTMLElement) {
     props: null,
     element: target,
     children: [tree],
-    parent: null
+    parent: null,
   }
 
   renderInternal(root, tree, null, target, 0)
 }
 
 export function renderInternal(
-  parent: Tree,
+  parent: ParentTree,
   tree: Tree | null,
   prevTree: Tree | null,
   target: HTMLElement,
@@ -44,8 +52,30 @@ export function renderInternal(
   }
 }
 
+function applyChanges(
+  parent: ParentTree,
+  tree: Tree | null,
+  prevTree: Tree | null,
+  target: HTMLElement,
+  index: number
+) {
+  if (tree === null) {
+    // delete everything in prevTree
+    return null
+  }
+
+  switch (tree.type) {
+    case TreeType.text:
+      return applyTextChanges(parent, tree, prevTree, target, index)
+    case TreeType.host:
+      return applyHostChanges(parent, tree, prevTree, target, index)
+    case TreeType.custom:
+      return applyCustomChanges(parent, tree, prevTree, target, index)
+  }
+}
+
 function apply(
-  parent: Tree,
+  parent: ParentTree,
   tree: Tree | null,
   prevTree: Tree | null,
   target: HTMLElement,
@@ -91,7 +121,7 @@ function apply(
 }
 
 function addElement(
-  parent: Tree,
+  parent: ParentTree,
   tree: Tree,
   target: HTMLElement,
   index: number
@@ -122,7 +152,7 @@ function addElement(
   }
 }
 
-function replaceElement(parent: Tree, tree: Tree, target: HTMLElement, index: number) {
+function replaceElement(parent: ParentTree, tree: Tree, target: HTMLElement, index: number) {
   removeFollowingElements(target, index)
 
   return addElement(parent, tree, target, index)

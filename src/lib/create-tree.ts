@@ -1,5 +1,6 @@
-import {mkTextNode, Tree, TreeType} from './component-types/host'
+import {Tree, TreeType} from './component-types/host'
 import {ZComponent} from './component-types/custom'
+import {mkTextNode} from './component-types/text'
 
 export function createTree(
   typeOrConstructor: keyof HTMLElementTagNameMap | typeof ZComponent,
@@ -15,7 +16,7 @@ export function createTree(
       props,
       children: normaliseChildren(children),
       element: null,
-      parent: null
+      parent: null,
     }
   } else {
     console.time('construct')

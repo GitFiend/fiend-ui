@@ -1,14 +1,15 @@
 import {ZComponent} from './custom'
 import {OComponent} from './observer'
-
-export type Part = null
+import {TextComponent} from './text'
 
 export type Tree = TextComponent | HostComponent | ZComponent<unknown> | OComponent<unknown>
+
+export type ParentTree = Exclude<Tree, TextComponent>
 
 export enum TreeType {
   host,
   custom,
-  text
+  text,
 }
 
 export interface TreeBase {
@@ -24,22 +25,18 @@ export interface HostComponent extends TreeBase {
   children: Tree[]
 }
 
-export interface TextComponent extends TreeBase {
-  type: TreeType.text
-  element: Text
-  text: string
-}
-
-export function mkTextNode(text: string): TextComponent {
-  return {
-    parent: null,
-    type: TreeType.text,
-    text,
-    element: document.createTextNode(text)
-  }
-}
-
+// TODO: Duplicate calls to this in some branches.
 export function completeTree(tree: Tree, parent: Tree, element: HTMLElement) {
   tree.element = element
   tree.parent = parent
+}
+
+export function applyHostChanges(
+  parent: ParentTree,
+  tree: HostComponent,
+  prevTree: Tree | null,
+  target: HTMLElement,
+  index: number
+) {
+  return null
 }

@@ -1,10 +1,10 @@
-import {Tree, TreeBase, TreeType} from './host'
+import {ParentTree, Tree, TreeBase, TreeType} from './host'
 import {renderInternal} from '../render'
 
 export enum CustomComponentType {
   standard,
   mobx,
-  pure
+  pure,
 }
 
 export class ZComponent<P> implements TreeBase {
@@ -13,7 +13,7 @@ export class ZComponent<P> implements TreeBase {
 
   target: HTMLElement | null = null
   element: HTMLElement | null = null
-  parent: Tree | null = null
+  parent: ParentTree | null = null
 
   private prev: Tree | null = null
   private curr: Tree | null = null
@@ -33,7 +33,7 @@ export class ZComponent<P> implements TreeBase {
 
     return {
       prev: this.prev,
-      curr: this.curr
+      curr: this.curr,
     }
   }
 
@@ -52,4 +52,14 @@ export class ZComponent<P> implements TreeBase {
   state = {}
 
   setState(state: unknown, callback?: () => void): void {}
+}
+
+export function applyCustomChanges(
+  parent: ParentTree,
+  tree: ZComponent<unknown>,
+  prevTree: Tree | null,
+  target: HTMLElement,
+  index: number
+) {
+  return null
 }
