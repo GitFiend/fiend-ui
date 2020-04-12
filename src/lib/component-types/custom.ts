@@ -11,8 +11,9 @@ export class ZComponent<P> implements TreeBase {
   type = TreeType.custom as const
   customType: CustomComponentType = CustomComponentType.standard
 
-  target?: HTMLElement
-  element?: HTMLElement
+  target: HTMLElement | null = null
+  element: HTMLElement | null = null
+  parent: Tree | null = null
 
   private prev: Tree | null = null
   private curr: Tree | null = null
@@ -37,15 +38,13 @@ export class ZComponent<P> implements TreeBase {
   }
 
   forceUpdate(): void {
-    if (this.target !== undefined) {
+    if (this.target !== null && this.parent !== null) {
       // console.log('forceUpdate')
       const {curr, prev} = this.renderTree()
 
-      renderInternal(curr, prev, this.target, '', 0)
+      renderInternal(this.parent, curr, prev, this.target, 0)
     }
   }
-
-  // didMount() {}
 
   // Required by JSX.ElementClass for now. Can we override this type?
   context: any

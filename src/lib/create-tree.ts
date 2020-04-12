@@ -13,12 +13,14 @@ export function createTree(
       type: TreeType.host,
       tag: typeOrConstructor,
       props,
-      children: normaliseChildren(children)
+      children: normaliseChildren(children),
+      element: null,
+      parent: null
     }
   } else {
-    // console.time('construct')
+    console.time('construct')
     const c = new typeOrConstructor(props, normaliseChildren(children))
-    // console.timeEnd('construct')
+    console.timeEnd('construct')
     return c
   }
 }

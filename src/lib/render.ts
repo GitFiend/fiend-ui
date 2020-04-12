@@ -1,28 +1,33 @@
-import {mkTextNode, Tree, TreeType} from './component-types/host'
+import {completeTree, HostComponent, Tree, TreeType} from './component-types/host'
 import {CustomComponentType} from './component-types/custom'
 import {OComponent} from './component-types/observer'
 
 export function render(tree: Tree, target: HTMLElement) {
-  renderInternal(null, tree, null, target, 0)
+  const root: HostComponent = {
+    type: TreeType.host,
+    tag: 'div',
+    props: null,
+    element: target,
+    children: [tree],
+    parent: null
+  }
+
+  renderInternal(root, tree, null, target, 0)
 }
 
 export function renderInternal(
-  parent: Tree | null,
+  parent: Tree,
   tree: Tree | null,
   prevTree: Tree | null,
   target: HTMLElement,
   index: number
 ) {
-  const element = apply(tree, prevTree, target, index)
+  const element = apply(parent, tree, prevTree, target, index)
 
-  if (
-    /*typeof tree === 'string' || */ tree === null ||
-    element === null ||
-    tree.type === TreeType.text
-  )
-    return
+  if (tree === null || element === null || tree.type === TreeType.text) return
 
-  tree.element = element
+  completeTree(tree, parent, element)
+  // tree.element = element
 
   // TODO: Need to check for prev children to delete (prev children array longer).
   // Also: May be able to speed this up slightly if already know that prev children is null?
@@ -40,6 +45,7 @@ export function renderInternal(
 }
 
 function apply(
+  parent: Tree,
   tree: Tree | null,
   prevTree: Tree | null,
   target: HTMLElement,
@@ -52,22 +58,22 @@ function apply(
 
   if (prevTree === null) {
     // tree not null, could be a string.
-    return addElement(tree, target, index)
+    return addElement(parent, tree, target, index)
   }
 
   // Both tree and prevTree not null.
   if (typeof tree === 'string') {
     if (tree !== prevTree) {
-      return replaceElement(tree, target, index)
+      return replaceElement(parent, tree, target, index)
     }
     return null // equal strings
   }
   if (typeof prevTree === 'string') {
-    return replaceElement(tree, target, index)
+    return replaceElement(parent, tree, target, index)
   }
 
   if (tree.type !== prevTree.type) {
-    return replaceElement(tree, target, index)
+    return replaceElement(parent, tree, target, index)
   }
   if (tree.type === TreeType.custom) {
     // TODO
@@ -81,14 +87,20 @@ function apply(
       return updateElement(tree, prevTree, target, index)
     }
   }
-  return replaceElement(tree, target, index)
+  return replaceElement(parent, tree, target, index)
 }
 
-function addElement(tree: Tree, target: HTMLElement, index: number): HTMLElement | null {
+function addElement(
+  parent: Tree,
+  tree: Tree,
+  target: HTMLElement,
+  index: number
+): HTMLElement | null {
   if (tree.type === TreeType.text) {
     target.appendChild(tree.element)
     return null
   } else if (tree.type === TreeType.custom) {
+    tree.parent = parent
     tree.target = target
 
     if (tree.customType === CustomComponentType.mobx) {
@@ -110,10 +122,10 @@ function addElement(tree: Tree, target: HTMLElement, index: number): HTMLElement
   }
 }
 
-function replaceElement(tree: Tree, target: HTMLElement, index: number) {
+function replaceElement(parent: Tree, tree: Tree, target: HTMLElement, index: number) {
   removeFollowingElements(target, index)
 
-  return addElement(tree, target, index)
+  return addElement(parent, tree, target, index)
 }
 
 function updateElement(
