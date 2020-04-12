@@ -28,6 +28,10 @@ export function applyHostChanges(
   index: number
 ) {
   if (prevTree !== null) {
+    if (prevTree.type === TreeType.host) {
+      // prevTree is the same type, update it if needed.
+      // TODO
+    }
   }
 
   const el = document.createElement(tree.tag)

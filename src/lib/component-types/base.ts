@@ -12,8 +12,9 @@ export enum TreeType {
   text,
 }
 
-export interface TreeBase<T = null> {
-  parent: ParentTree | null
+export interface TreeBase {
+  parent: unknown
+  element: unknown
   type: TreeType
 
   remove(): void

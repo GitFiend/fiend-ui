@@ -1,21 +1,16 @@
 import {ParentTree, Tree, TreeBase, TreeType} from './base'
+import {removeFollowingElements2} from '../render'
 
 export class TextComponent implements TreeBase {
   type = TreeType.text as const
   parent: ParentTree | null = null
   element: Text | null = null
 
-  constructor(public text: string) {
-    // this.element = document.createTextNode(text)
-  }
+  constructor(public text: string) {}
 
-  create() {
-    this.element = document.createTextNode(this.text)
-  }
-
-  update(prev: Text, newText: string) {
-    prev.nodeValue = newText
-    this.element = prev
+  finalise(parent: ParentTree, element: Text) {
+    this.parent = parent
+    this.element = element
   }
 
   remove(): void {
@@ -27,29 +22,32 @@ export function applyTextChanges(
   parent: ParentTree,
   tree: TextComponent,
   prevTree: Tree | null,
-  target: HTMLElement,
   index: number
 ) {
   if (prevTree !== null) {
+    // prevTree exists
+
     if (prevTree.type === TreeType.text) {
+      // Update it
       if (prevTree.text === tree.text) {
+        if (prevTree.element) tree.finalise(parent, prevTree.element)
         return null
       } else {
+        if (prevTree.element) {
+          prevTree.element.nodeValue = tree.text
+          tree.finalise(parent, prevTree.element)
+        }
+        return null
       }
-    }
-
-    // TODO: Update case
-
-    const siblings = parent.children
-    const len = siblings.length
-
-    for (let i = index; i < len; i++) {
-      const s = siblings[i]
-      s.remove()
+    } else {
+      // The type of prevTree is different. Delete it and following elements
+      removeFollowingElements2(parent, index)
     }
   }
-  // TODO
-  // target.appendChild(tree.element)
+
+  const element = document.createTextNode(tree.text)
+  parent.element?.appendChild(element)
+  tree.finalise(parent, element)
 
   return null
 }

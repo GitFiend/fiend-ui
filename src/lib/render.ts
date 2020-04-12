@@ -59,7 +59,7 @@ function applyChanges(
 
   switch (tree.type) {
     case TreeType.text:
-      return applyTextChanges(parent, tree, prevTree, target, index)
+      return applyTextChanges(parent, tree, prevTree, index)
     case TreeType.host:
       return applyHostChanges(parent, tree, prevTree, target, index)
     case TreeType.custom:
@@ -186,6 +186,15 @@ function removeFollowingElements(target: HTMLElement, index: number): void {
     for (let i = index; i < length; i++) {
       target.childNodes[index].remove()
     }
+  }
+}
+
+export function removeFollowingElements2(parent: ParentTree, index: number): void {
+  const siblings = parent.children
+  const len = siblings.length
+
+  for (let i = index; i < len; i++) {
+    siblings[i].remove()
   }
 }
 
