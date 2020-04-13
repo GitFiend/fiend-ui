@@ -5,10 +5,14 @@ import {observer} from 'mobx-react'
 
 const createTree = React.createElement
 
-@observer
-class Mine2 extends React.Component<{}> {
-  @observable
-  num = 0
+// @observer
+class Mine2 extends React.Component<{}, {num: number}> {
+  // @observable
+  // num = 0
+
+  state = {
+    num: 0,
+  }
 
   render() {
     // console.log('render', this.num)
@@ -17,21 +21,24 @@ class Mine2 extends React.Component<{}> {
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
         }}
       >
         <h3>Hello from custom component</h3>
         <button
           onClick={() => {
-            // console.log('omg')
-            runInAction(() => {
-              this.num += 1
-              // console.log('new num:', this.num)
+            this.setState({
+              num: this.state.num + 1,
             })
+            // console.log('omg')
+            // runInAction(() => {
+            //   this.num += 1
+            //   // console.log('new num:', this.num)
+            // })
             // this.forceUpdate()
           }}
         >
-          {`${this.num}`}
+          {`${this.state.num}`}
         </button>
       </div>
     )
@@ -44,10 +51,11 @@ export function reactMain(): void {
   if (root !== null) {
     console.time('render')
 
+    // @ts-ignore
     render(
       <div
         style={{
-          background: 'pink'
+          background: 'pink',
         }}
         key={'adf'}
       >

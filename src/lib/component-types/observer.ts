@@ -1,7 +1,7 @@
-import {CustomComponentType, ZComponent} from './custom'
+import {CustomComponentType, Component} from './custom'
 import {autorun, IReactionDisposer} from 'mobx'
 
-export class OComponent<P> extends ZComponent<P> {
+export class OComponent<P> extends Component<P> {
   disposers: IReactionDisposer[] = []
   customType = CustomComponentType.mobx as const
 

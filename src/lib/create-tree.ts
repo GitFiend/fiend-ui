@@ -1,10 +1,10 @@
 import {HostComponent} from './component-types/host'
-import {ZComponent} from './component-types/custom'
+import {Component} from './component-types/custom'
 import {TextComponent} from './component-types/text'
 import {Tree} from './component-types/base'
 
 export function createTree(
-  typeOrConstructor: keyof HTMLElementTagNameMap | typeof ZComponent,
+  typeOrConstructor: keyof HTMLElementTagNameMap | typeof Component,
   props: Record<string, unknown> | null,
   ...children: Tree[]
 ): Tree {

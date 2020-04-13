@@ -8,7 +8,7 @@ export enum CustomComponentType {
   pure,
 }
 
-export class ZComponent<P> implements TreeBase {
+export class Component<P> implements TreeBase {
   type = TreeType.custom as const
   customType: CustomComponentType = CustomComponentType.standard
 
@@ -25,6 +25,17 @@ export class ZComponent<P> implements TreeBase {
 
   render(): ParentTree | null {
     return null
+  }
+
+  /*
+  TODO: Think about how to batch actions
+
+  Could we complain if a force update happened without an action?
+   */
+  action(callback: () => void): void {
+    // console.log(arguments)
+    callback()
+    this.forceUpdate()
   }
 
   renderTree(): {curr: ParentTree | null; prev: ParentTree | null} {
@@ -64,7 +75,7 @@ export class ZComponent<P> implements TreeBase {
 
 export function applyCustomChanges(
   parent: ParentTree,
-  tree: ZComponent<unknown>,
+  tree: Component<unknown>,
   prevTree: Tree | null,
   index: number
 ) {
