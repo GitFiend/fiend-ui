@@ -56,10 +56,9 @@ export class ZComponent<P> implements TreeBase {
 
   // Required by JSX.ElementClass for now. Can we override this type?
   context: any
-  refs = {}
-  state = {}
-
-  setState(state: unknown, callback?: () => void): void {}
+  refs: any
+  state: any
+  setState: any
 }
 
 export function applyCustomChanges(
