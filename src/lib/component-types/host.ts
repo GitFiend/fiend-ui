@@ -1,5 +1,5 @@
 import {ParentTree, Tree, TreeBase, TreeType} from './base'
-import {removeFollowingElements2} from '../render'
+import {removeFollowingElements} from '../render'
 
 export class HostComponent implements TreeBase {
   type = TreeType.host as const
@@ -36,7 +36,7 @@ export function applyHostChanges(
       return tree.element
     } else {
       // The type of prevTree is different. Delete it and following elements
-      removeFollowingElements2(parent, index)
+      removeFollowingElements(parent, index)
     }
   }
 

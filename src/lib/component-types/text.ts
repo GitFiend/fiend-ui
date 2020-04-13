@@ -1,5 +1,5 @@
 import {ParentTree, Tree, TreeBase, TreeType} from './base'
-import {removeFollowingElements2} from '../render'
+import {removeFollowingElements} from '../render'
 
 export class TextComponent implements TreeBase {
   type = TreeType.text as const
@@ -38,7 +38,7 @@ export function applyTextChanges(
       }
     } else {
       // The type of prevTree is different. Delete it and following elements
-      removeFollowingElements2(parent, index)
+      removeFollowingElements(parent, index)
     }
   }
 

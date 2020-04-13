@@ -172,7 +172,7 @@ function getPrevChild(prevTree: Tree | null, index: number): Tree | null {
 //   }
 // }
 
-export function removeFollowingElements2(parent: ParentTree, index: number): void {
+export function removeFollowingElements(parent: ParentTree, index: number): void {
   const siblings = parent.children
   const len = siblings.length
 

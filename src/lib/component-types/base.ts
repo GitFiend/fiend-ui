@@ -19,3 +19,12 @@ export interface TreeBase {
 
   remove(): void
 }
+
+export function checkPrevTree(tree: Tree) {
+  console.assert(tree.parent !== null, 'prevTree has parent')
+  console.assert(tree.element !== null, 'prevTree element set')
+
+  if (tree.parent === null || tree.element === null) {
+    debugger
+  }
+}

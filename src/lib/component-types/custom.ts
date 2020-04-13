@@ -1,5 +1,5 @@
-import {removeFollowingElements2, renderInternal} from '../render'
-import {ParentTree, Tree, TreeBase, TreeType} from './base'
+import {removeFollowingElements, renderInternal} from '../render'
+import {checkPrevTree, ParentTree, Tree, TreeBase, TreeType} from './base'
 import {OComponent} from './observer'
 
 export enum CustomComponentType {
@@ -15,19 +15,19 @@ export class ZComponent<P> implements TreeBase {
   element: HTMLElement | null = null
   parent: ParentTree | null = null
 
-  private prev: Tree | null = null
-  private curr: Tree | null = null
+  prev: ParentTree | null = null
+  curr: ParentTree | null = null
 
   constructor(
     public props: P,
     public children: Tree[] // public key: string
   ) {}
 
-  render(): Tree | null {
+  render(): ParentTree | null {
     return null
   }
 
-  renderTree(): {curr: Tree | null; prev: Tree | null} {
+  renderTree(): {curr: ParentTree | null; prev: ParentTree | null} {
     this.prev = this.curr
     this.curr = this.render()
 
@@ -39,12 +39,13 @@ export class ZComponent<P> implements TreeBase {
 
   forceUpdate(): void {
     if (this.parent !== null && this.parent.element !== null) {
-      // console.log('forceUpdate')
       const {curr, prev} = this.renderTree()
 
-      console.log(curr, prev)
-
       renderInternal(this.parent, curr, prev, 0)
+
+      if (curr?.element) {
+        this.element = curr.element
+      }
     }
   }
 
@@ -68,6 +69,8 @@ export function applyCustomChanges(
   index: number
 ) {
   if (prevTree !== null) {
+    // checkPrevTree(prevTree)
+
     if (prevTree.type === TreeType.custom) {
       // Update it.
 
@@ -75,6 +78,8 @@ export function applyCustomChanges(
 
       if (prevTree.element) {
         tree.element = prevTree.element
+        tree.prev = prevTree.prev
+        tree.curr = prevTree.curr
       }
 
       // if (tree.customType === CustomComponentType.standard) {
@@ -84,7 +89,7 @@ export function applyCustomChanges(
       return null
     } else {
       // The type of prevTree is different. Delete it and following elements
-      removeFollowingElements2(parent, index)
+      removeFollowingElements(parent, index)
     }
   }
 

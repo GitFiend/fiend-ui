@@ -1,7 +1,7 @@
 import {createTree} from '../lib/create-tree'
 import {action, observable} from 'mobx'
 import {OComponent} from '../lib/component-types/observer'
-import {Tree} from '../lib/component-types/base'
+import {ParentTree, Tree} from '../lib/component-types/base'
 
 export class TestComponent extends OComponent<{}> {
   @observable
@@ -29,7 +29,7 @@ export class TestComponent extends OComponent<{}> {
 }
 
 export class TestComponent2 extends OComponent<{num: number}> {
-  render(): Tree | null {
+  render(): ParentTree | null {
     const {num} = this.props
 
     return <div>{num.toString()}</div>
