@@ -8,7 +8,7 @@ export enum CustomComponentType {
   pure,
 }
 
-export class Component<P> implements TreeBase {
+export class Component<P = {}, E = {}> implements TreeBase {
   type = TreeType.custom as const
   customType: CustomComponentType = CustomComponentType.standard
 
@@ -18,10 +18,14 @@ export class Component<P> implements TreeBase {
   prev: ParentTree | null = null
   curr: ParentTree | null = null
 
+  derived: E
+
   constructor(
     public props: P,
     public children: Tree[] // public key: string
-  ) {}
+  ) {
+    this.derived = this.calcDerived(props)
+  }
 
   render(): ParentTree | null {
     return null
@@ -38,6 +42,10 @@ export class Component<P> implements TreeBase {
     this.forceUpdate()
   }
 
+  calcDerived(props: P): E {
+    return {} as E
+  }
+
   renderTree(): {curr: ParentTree | null; prev: ParentTree | null} {
     this.prev = this.curr
     this.curr = this.render()
@@ -50,6 +58,8 @@ export class Component<P> implements TreeBase {
 
   forceUpdate(): void {
     if (this.parent !== null && this.parent.element !== null) {
+      // TODO: Do we have new props at this point?
+      this.derived = this.calcDerived(this.props)
       const {curr, prev} = this.renderTree()
 
       renderInternal(this.parent, curr, prev, 0)
