@@ -20,7 +20,7 @@ export function createTree(
   }
 }
 
-function normaliseChildren(children: (Tree | string)[]): Tree[] {
+function normaliseChildren(children: (Tree | string | number)[]): Tree[] {
   const len = children.length
   const newChildren: Tree[] = new Array(children.length)
 
@@ -29,6 +29,8 @@ function normaliseChildren(children: (Tree | string)[]): Tree[] {
 
     if (typeof c === 'string') {
       newChildren[i] = new TextComponent(c)
+    } else if (typeof c === 'number') {
+      newChildren[i] = new TextComponent(c.toString())
     } else {
       newChildren[i] = c
     }
