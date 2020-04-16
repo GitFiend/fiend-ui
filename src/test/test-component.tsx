@@ -41,13 +41,18 @@ interface TC2State {
 }
 
 export class TestComponent2 extends Component<TC2Props, TC2State> {
+  myNum = 0
+
   render(): ParentTree | null {
     const {num} = this.props
     const {moreNum} = this.derived
 
+    this.myNum++
+
     return (
       <div>
         {num.toString()}, {moreNum.toString()}
+        <div>Num renders: {this.myNum}</div>
       </div>
     )
   }
