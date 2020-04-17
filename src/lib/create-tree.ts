@@ -3,7 +3,27 @@ import {Component} from './component-types/custom'
 import {TextComponent} from './component-types/text'
 import {Tree} from './component-types/base'
 
-export function createTree(
+//
+export type TreeSlice = [
+  keyof HTMLElementTagNameMap | typeof Component,
+  Record<string, unknown> | null,
+  ...(TreeSlice | string | number)[]
+]
+
+export enum SlicePart {
+  type,
+  props,
+}
+
+export function createTree(...args: TreeSlice) {
+  // console.log(args)
+
+  // console.log(args[SlicePart.type], args[SlicePart.props])
+
+  return args
+}
+
+export function createTree2(
   typeOrConstructor: keyof HTMLElementTagNameMap | typeof Component,
   props: Record<string, unknown> | null,
   ...children: Tree[]

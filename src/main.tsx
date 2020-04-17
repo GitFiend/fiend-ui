@@ -10,8 +10,8 @@ function main(): void {
   if (root !== null) {
     // lotsOfElements(root)
     // lotsOfElements(root)
-    // lotsOfElements(root)
-    customComponents(root)
+    lotsOfElements(root)
+    // customComponents(root)
   }
 }
 
