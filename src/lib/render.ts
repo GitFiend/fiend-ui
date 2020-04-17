@@ -38,7 +38,6 @@ function applyChanges(parent: ParentTree, tree: Tree | null, prevTree: Tree | nu
     prevTree?.remove()
     return null
   }
-
   tree.parent = parent
 
   switch (tree.type) {
