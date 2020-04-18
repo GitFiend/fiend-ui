@@ -1,14 +1,15 @@
 import {render} from '../lib/render'
 import {createTree} from '../lib/create-tree'
 import {TestComponent} from './test-component'
+import {render2} from '../lib/render2'
 
 export function lotsOfElements(root: HTMLElement): void {
   console.time('render')
 
-  render(
+  render2(
     <div
       style={{
-        background: 'pink'
+        background: 'pink',
       }}
       key={'adf'}
     >
@@ -26,7 +27,7 @@ export function lotsOfElements(root: HTMLElement): void {
         <div>c</div>
         <div
           style={{
-            background: 'pink'
+            background: 'pink',
           }}
           key={'adf'}
         >
@@ -44,7 +45,7 @@ export function lotsOfElements(root: HTMLElement): void {
             <div>c</div>
             <div
               style={{
-                background: 'pink'
+                background: 'pink',
               }}
               key={'adf'}
             >

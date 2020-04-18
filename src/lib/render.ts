@@ -4,11 +4,11 @@ import {applyTextChanges} from './component-types/text'
 import {ParentTree, Tree, TreeType} from './component-types/base'
 
 export function render(tree: Tree, target: HTMLElement) {
-  console.log(tree)
-  // const root = new HostComponent('div', null, [tree])
-  // root.element = target
-  //
-  // renderInternal(root, tree, null, 0)
+  // console.log(tree)
+  const root = new HostComponent('div', null, [tree])
+  root.element = target
+
+  renderInternal(root, tree, null, 0)
 }
 
 export function renderInternal(

@@ -10,18 +10,20 @@ export type TreeSlice = [
   ...(TreeSlice | string | number)[]
 ]
 
-export enum SlicePart {
-  type,
-  props,
-}
+// export enum SlicePart {
+//   type,
+//   props,
+// }
 
-export function createTree(...args: TreeSlice) {
-  // console.log(args)
+export const createTree = (...slice: TreeSlice) => slice
 
-  // console.log(args[SlicePart.type], args[SlicePart.props])
-
-  return args
-}
+// export function createTree(...slice: TreeSlice): TreeSlice {
+//   // console.log(args)
+//
+//   // console.log(args[SlicePart.type], args[SlicePart.props])
+//
+//   return slice
+// }
 
 export function createTree2(
   typeOrConstructor: keyof HTMLElementTagNameMap | typeof Component,
