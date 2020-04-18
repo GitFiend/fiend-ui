@@ -4,13 +4,14 @@ import {OComponent} from './observer'
 import {HostComponent} from './host'
 import {Host2} from './host2'
 import {Text2} from './text2'
+import {Custom2} from './custom2'
 
 export type Tree = TextComponent | HostComponent | Component<unknown> | OComponent<unknown>
 export type ParentTree = Exclude<Tree, TextComponent>
 
 export type Tree2 = Host2 | Text2
 
-export type ParentTree2 = Host2 | RootNode
+export type ParentTree2 = Host2 | RootNode | Custom2
 
 export type TreeSlice2 = [
   keyof HTMLElementTagNameMap,
