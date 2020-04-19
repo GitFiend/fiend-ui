@@ -5,15 +5,30 @@ import {render2} from '../lib/render2'
 interface Test2Props {}
 
 export class Test2 extends Custom2<Test2Props> {
+  num = 0
+
   render() {
-    return <div>OMG</div>
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <h3>{`Num clicks: ${this.num}`}</h3>
+        <button
+          onClick={() => {
+            this.action(() => {
+              this.num++
+            })
+          }}
+        >
+          Click Me
+        </button>
+      </div>
+    )
   }
 }
 
 export function test2(root: HTMLElement) {
   console.time('render')
 
-  render2(<Test2 />, root)
+  render2(<Test2>OMG1</Test2>, root)
 
   console.timeEnd('render')
 }

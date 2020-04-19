@@ -1,23 +1,19 @@
 import {ParentTree2, Tree2, TreeBase, TreeSlice2, TreeType} from './base'
-import {renderChildren, renderInternal2} from '../render2'
+import {renderInternal2} from '../render2'
 
 export class Custom2<P = {}, E = {}> implements TreeBase {
   type = TreeType.custom as const
   element: HTMLElement
-  // children: Tree2[]
-
   subtree: Tree2 | null = null
 
   constructor(
     public props: P,
     public parent: ParentTree2,
-    childrenSlices: (TreeSlice2 | string | number)[]
+    public children: (TreeSlice2 | string | number)[]
   ) {
     this.element = parent.element
-    // this.children = createChildren(childrenSlices, this)
-    const res = this.render()
 
-    if (res !== null) this.subtree = renderInternal2(parent, res, null, 0)
+    // this.update()
   }
 
   render(): TreeSlice2 | null {
@@ -25,15 +21,40 @@ export class Custom2<P = {}, E = {}> implements TreeBase {
   }
 
   remove(): void {
-    // this.element.remove()
-    // for (const c of this.children) c.remove()
+    this.subtree?.remove()
   }
 
-  forceUpdate() {}
+  update() {
+    const res = this.render()
 
-  // Required by JSX.ElementClass for now. Can we override this type?
-  context: any
-  refs: any
-  state: any
-  setState: any
+    if (res !== null) this.subtree = renderInternal2(this.parent, res, null, 0)
+  }
+
+  /*
+  TODO: Think about how to batch actions
+
+  Could we complain if a force update happened without an action?
+   */
+  action(callback: () => void): void {
+    callback()
+    this.update()
+  }
+
+  // Required by JSX
+  private context: any
+  private refs: any
+  private state: any
+  private setState: any
+  private forceUpdate: any
+}
+
+export function makeCustomComponent<P>(
+  cons: typeof Custom2,
+  props: P,
+  parent: ParentTree2,
+  children: (TreeSlice2 | string | number)[]
+) {
+  const component = new cons<P>(props, parent, children)
+  component.update()
+  return component
 }

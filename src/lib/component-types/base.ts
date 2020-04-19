@@ -18,6 +18,8 @@ export type TreeSlice2 = [
   ...(TreeSlice2 | string | number)[]
 ]
 
+// export type Subtree = TreeSlice2 | string | number | Subtree[]
+
 export enum TreeType {
   host,
   custom,
