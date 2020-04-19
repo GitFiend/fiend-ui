@@ -28,7 +28,13 @@ export class Test2 extends Custom2<Test2Props> {
 export function test2(root: HTMLElement) {
   console.time('render')
 
-  render2(<Test2>OMG1</Test2>, root)
+  render2(
+    <div>
+      <Test2>OMG1</Test2>
+      <Test2>OMG2</Test2>
+    </div>,
+    root
+  )
 
   console.timeEnd('render')
 }

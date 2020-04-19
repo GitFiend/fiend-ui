@@ -1,6 +1,6 @@
 import {ParentTree2, Subtree, Tree2, TreeBase, TreeType} from './base'
 import {setAttributesFromProps} from './host'
-import {removeSubtrees, renderChildInternal, renderChildren} from '../render2'
+import {removeSubtrees, renderChildInternal} from '../render2'
 
 export class Host2 implements TreeBase {
   type = TreeType.host as const
@@ -19,17 +19,13 @@ export class Host2 implements TreeBase {
 
     parent.element.appendChild(this.element)
 
-    this.children = renderChildren(childrenSlices, this)
+    this.children = renderHostChildren(childrenSlices, [], this)
   }
 
   remove(): void {
     this.element.remove()
 
     for (const c of this.children) c.remove()
-  }
-
-  update() {
-    // TODO
   }
 }
 
