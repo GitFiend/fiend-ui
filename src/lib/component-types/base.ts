@@ -15,10 +15,10 @@ export type ParentTree2 = Host2 | RootNode | Custom2<unknown, unknown>
 export type TreeSlice2 = [
   keyof HTMLElementTagNameMap | typeof Custom2,
   Record<string, unknown> | null,
-  ...(TreeSlice2 | string | number)[]
+  ...Subtree[]
 ]
 
-// export type Subtree = TreeSlice2 | string | number | Subtree[]
+export type Subtree = TreeSlice2 | string | number
 
 export enum TreeType {
   host,
@@ -46,6 +46,7 @@ export function checkPrevTree(tree: Tree) {
 export class RootNode implements TreeBase {
   type = TreeType.host as const
   parent: null
+  children: Tree2[] = []
 
   constructor(public element: HTMLElement) {}
 
