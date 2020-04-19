@@ -53,19 +53,21 @@ export function reactMain(): void {
 
     // @ts-ignore
     render(
-      <div
-        style={{
-          background: 'pink',
-        }}
-        key={'adf'}
-      >
-        <h1>Hello</h1>
-        {/*<Mine2 />*/}
-        {/*<Mine2 />*/}
-        {/*<Mine2 />*/}
-        {/*<Mine2 />*/}
-        {/*<Mine2 />*/}
-      </div>,
+      (
+        <div
+          style={{
+            background: 'pink',
+          }}
+          key={'adf'}
+        >
+          <h1>Hello</h1>
+          {/*<Mine2 />*/}
+          {/*<Mine2 />*/}
+          {/*<Mine2 />*/}
+          {/*<Mine2 />*/}
+          {/*<Mine2 />*/}
+        </div>
+      ) as any,
       root
     )
 

@@ -1,93 +1,53 @@
-import {
-  ParentTree,
-  ParentTree2,
-  RootNode,
-  Tree,
-  Tree2,
-  TreeSlice2,
-  TreeType,
-} from './component-types/base'
-import {TreeSlice} from './create-tree'
-import {HostComponent} from './component-types/host'
-import {TextComponent} from './component-types/text'
+import {ParentTree2, RootNode, Tree2, TreeSlice2} from './component-types/base'
 import {Host2} from './component-types/host2'
+import {Text2} from './component-types/text2'
 
-export function render2(slice: TreeSlice2 | any, target: HTMLElement) {
+export function render2(slice: TreeSlice2, target: HTMLElement): void {
   const root = new RootNode(target)
 
-  const [typeOrConstructor, props, ...children] = slice
-
-  new Host2(typeOrConstructor, props, root, children)
-
-  // console.log(tree)
-  // const root = new HostComponent('div', null, [tree])
-  // root.element = target
-  //
-  // renderInternal(root, tree, null, 0)
+  renderInternal2(root, slice, null, 0)
 }
-//
+
 export function renderInternal2(
   parent: ParentTree2,
   slice: TreeSlice2,
   prevTree: Tree2 | null,
   index: number
-) {
-  if (prevTree === null) {
-    const [typeOrConstructor, props, ...children] = slice
-
-    new Host2(typeOrConstructor, props, parent, children)
-  } else {
-  }
-}
-
-/*
-
-renderNode creates dom nodes as we go.
-
-if prevTree doesn't exist:
-Convert slice into a tree. Recurse into children
-
-
-Plan is to create or reuse. If we reuse, we need to also check for attributes to update.
-
-How do we create children? We can't do it until current tree has been created.
- */
-function renderNode(parent: ParentTree, slice: TreeSlice, prevTree: Tree | null, index: number) {
-  if (prevTree === null) {
-    // Make tree and return it.
-    const tree = createTree3(slice)
-  }
-
+): Tree2 | null {
   const [typeOrConstructor, props, ...children] = slice
 
-  if (typeof typeOrConstructor === 'string') {
-    // host component
-  }
-}
-
-export function createTree3(slice: TreeSlice): Tree {
-  const [typeOrConstructor, props, ...children] = slice
-
-  if (typeof typeOrConstructor === 'string') {
-    return new HostComponent(typeOrConstructor, props, createChildren(children))
-  }
-  return new typeOrConstructor(props, createChildren(children))
-}
-
-function createChildren(children: (TreeSlice | string | number)[]): Tree[] {
-  const len = children.length
-  const newChildren: Tree[] = new Array(children.length)
-
-  for (let i = 0; i < len; i++) {
-    const c = children[i]
-
-    if (typeof c === 'string') {
-      newChildren[i] = new TextComponent(c)
-    } else if (typeof c === 'number') {
-      newChildren[i] = new TextComponent(c.toString())
+  if (prevTree === null) {
+    if (typeof typeOrConstructor === 'string') {
+      return new Host2(typeOrConstructor, props, parent, children)
     } else {
-      newChildren[i] = createTree3(c)
+      return new typeOrConstructor(props, parent, children)
     }
   }
-  return newChildren
+  // Check if it needs to be replaced
+
+  return null
+}
+
+export function renderChildren(
+  childrenSlices: (TreeSlice2 | string | number)[],
+  parent: ParentTree2
+): Tree2[] {
+  const childrenTrees: Tree2[] = new Array(childrenSlices.length)
+
+  for (let i = 0; i < childrenSlices.length; i++) {
+    const c = childrenSlices[i]
+
+    if (typeof c === 'string') {
+      childrenTrees[i] = new Text2(c, parent)
+    } else if (typeof c === 'number') {
+      childrenTrees[i] = new Text2(c.toString(), parent)
+    } else {
+      const [tag, props, ...children] = c
+
+      if (typeof tag === 'string') childrenTrees[i] = new Host2(tag, props, parent, children)
+      else childrenTrees[i] = new tag(props, parent, children)
+    }
+  }
+
+  return childrenTrees
 }

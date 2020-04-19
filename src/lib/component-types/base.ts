@@ -9,12 +9,11 @@ import {Custom2} from './custom2'
 export type Tree = TextComponent | HostComponent | Component<unknown> | OComponent<unknown>
 export type ParentTree = Exclude<Tree, TextComponent>
 
-export type Tree2 = Host2 | Text2
-
-export type ParentTree2 = Host2 | RootNode | Custom2
+export type Tree2 = Host2 | Text2 | Custom2<unknown, unknown>
+export type ParentTree2 = Host2 | RootNode | Custom2<unknown, unknown>
 
 export type TreeSlice2 = [
-  keyof HTMLElementTagNameMap,
+  keyof HTMLElementTagNameMap | typeof Custom2,
   Record<string, unknown> | null,
   ...(TreeSlice2 | string | number)[]
 ]

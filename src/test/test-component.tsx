@@ -1,3 +1,6 @@
+// @ts-nocheck
+// TODO
+
 import {createTree} from '../lib/create-tree'
 import {action, observable} from 'mobx'
 import {OComponent} from '../lib/component-types/observer'

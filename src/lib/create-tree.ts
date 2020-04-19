@@ -1,9 +1,27 @@
 import {HostComponent} from './component-types/host'
 import {Component} from './component-types/custom'
 import {TextComponent} from './component-types/text'
-import {Tree} from './component-types/base'
+import {Tree, TreeSlice2} from './component-types/base'
+import {Custom2} from './component-types/custom2'
 
+// export namespace JSX {
+//   // interface Element extends TreeSlice2 {}
+//   type Element = TreeSlice2
 //
+//   interface ElementClass extends Component<any> {}
+// }
+//
+
+declare global {
+  namespace JSX {
+    // @ts-ignore
+    type Element = TreeSlice2
+
+    // @ts-ignore
+    interface ElementClass extends Custom2<any> {}
+  }
+}
+
 export type TreeSlice = [
   keyof HTMLElementTagNameMap | typeof Component,
   Record<string, unknown> | null,
