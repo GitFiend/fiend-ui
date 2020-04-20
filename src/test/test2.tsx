@@ -11,6 +11,7 @@ export class Test2 extends Custom2<Test2Props> {
     return (
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <h3>{`Num clicks: ${this.num}`}</h3>
+        <NumPane num={this.num} />
         <button
           onClick={() => {
             this.action(() => {
@@ -22,6 +23,16 @@ export class Test2 extends Custom2<Test2Props> {
         </button>
       </div>
     )
+  }
+}
+
+interface NumPaneProps {
+  num: number
+}
+
+class NumPane extends Custom2<NumPaneProps> {
+  render() {
+    return <div>{this.props.num}</div>
   }
 }
 
