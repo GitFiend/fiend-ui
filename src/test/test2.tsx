@@ -32,7 +32,17 @@ interface NumPaneProps {
 
 class NumPane extends Custom2<NumPaneProps> {
   render() {
-    return <div>{this.props.num}</div>
+    const hue = (this.props.num * 10) % 255
+
+    return (
+      <div
+        style={{
+          backgroundColor: `hsl(${hue}, 90%, 80%)`,
+        }}
+      >
+        {this.props.num}
+      </div>
+    )
   }
 }
 

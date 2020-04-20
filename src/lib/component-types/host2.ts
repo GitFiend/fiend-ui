@@ -1,5 +1,4 @@
 import {ParentTree2, Subtree, Tree2, TreeBase, TreeType} from './base'
-import {setAttributesFromProps} from './host'
 import {removeSubtrees, renderChildInternal} from '../render2'
 
 export class Host2 implements TreeBase {
@@ -61,4 +60,25 @@ function renderHostChildren(children: Subtree[], prevChildren: Tree2[], parent: 
   }
 
   return newChildren
+}
+
+export function setAttributesFromProps(element: HTMLElement, props: Record<string, unknown>) {
+  const propNames = Object.keys(props)
+  const el = element as any
+
+  for (const prop of propNames) {
+    if (prop.startsWith('on')) {
+      element.addEventListener(prop.slice(2).toLowerCase(), props[prop] as any)
+    } else if (prop === 'style') {
+      const styles = props[prop] as any
+
+      const styleKeys = Object.keys(styles)
+
+      for (const s of styleKeys) {
+        el.style[s] = styles[s]
+      }
+    } else {
+      el[prop] = props[prop]
+    }
+  }
 }
