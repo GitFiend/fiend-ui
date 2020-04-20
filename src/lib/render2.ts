@@ -1,5 +1,5 @@
 import {ParentTree2, RootNode, Subtree, Tree2, TreeSlice2, TreeType} from './component-types/base'
-import {renderHost} from './component-types/host2'
+import {renderHost} from './component-types/host/host2'
 import {renderTextComponent} from './component-types/text2'
 import {renderCustom} from './component-types/custom2'
 

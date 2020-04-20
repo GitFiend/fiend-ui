@@ -2,7 +2,7 @@ import {TextComponent} from './text'
 import {Component} from './custom'
 import {OComponent} from './observer'
 import {HostComponent} from './host'
-import {Host2} from './host2'
+import {Host2} from './host/host2'
 import {Text2} from './text2'
 import {Custom2, Rec} from './custom2'
 

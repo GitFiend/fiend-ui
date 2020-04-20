@@ -1,6 +1,6 @@
 import {ParentTree, Tree, TreeBase, TreeType} from './base'
 import {removeFollowingElements} from '../render'
-import {setAttributesFromProps} from './host2'
+import {setAttributesFromProps} from './host/set-attributes'
 
 export class HostComponent implements TreeBase {
   type = TreeType.host as const

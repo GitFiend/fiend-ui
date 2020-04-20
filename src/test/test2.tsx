@@ -10,19 +10,20 @@ export class Test2 extends Custom2<Test2Props> {
   render() {
     return (
       <div style={{display: 'flex', flexDirection: 'column'}}>
-        <h3>{`Num clicks: ${this.num}`}</h3>
-        <NumPane num={this.num} />
-        <button
-          onClick={() => {
-            this.action(() => {
-              this.num++
-            })
-          }}
-        >
+        <h3>
+          Num clicks: <NumPane num={this.num} />
+        </h3>
+        <button onClick={this.onClick} style={{marginRight: 'auto'}}>
           Click Me
         </button>
       </div>
     )
+  }
+
+  onClick = () => {
+    this.action(() => {
+      this.num++
+    })
   }
 }
 
@@ -32,12 +33,15 @@ interface NumPaneProps {
 
 class NumPane extends Custom2<NumPaneProps> {
   render() {
-    const hue = (this.props.num * 10) % 255
+    const hue = Math.round(Math.random() * 1000) % 255
 
     return (
       <div
         style={{
-          backgroundColor: `hsl(${hue}, 90%, 80%)`,
+          fontSize: '18px',
+          padding: '10px',
+          backgroundColor: `hsl(${hue}, 100%, 80%)`,
+          // marginRight: 'auto',
         }}
       >
         {this.props.num}

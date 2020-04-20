@@ -1,5 +1,6 @@
-import {ParentTree2, Subtree, Tree2, TreeBase, TreeType} from './base'
-import {removeSubtrees, renderChildInternal} from '../render2'
+import {ParentTree2, Subtree, Tree2, TreeBase, TreeType} from '../base'
+import {removeSubtrees, renderChildInternal} from '../../render2'
+import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
 export class Host2 implements TreeBase {
   type = TreeType.host as const
@@ -41,7 +42,11 @@ export function renderHost(
   }
 
   if (prevTree.type === TreeType.host && prevTree.tag === tag) {
-    // TODO: Update attributes. Update children.
+    if (props !== null) {
+      updateAttributes(prevTree.element, props, prevTree.props)
+    }
+
+    prevTree.props = props
     prevTree.children = renderHostChildren(children, prevTree.children, parent)
 
     return prevTree
@@ -60,25 +65,4 @@ function renderHostChildren(children: Subtree[], prevChildren: Tree2[], parent: 
   }
 
   return newChildren
-}
-
-export function setAttributesFromProps(element: HTMLElement, props: Record<string, unknown>) {
-  const propNames = Object.keys(props)
-  const el = element as any
-
-  for (const prop of propNames) {
-    if (prop.startsWith('on')) {
-      element.addEventListener(prop.slice(2).toLowerCase(), props[prop] as any)
-    } else if (prop === 'style') {
-      const styles = props[prop] as any
-
-      const styleKeys = Object.keys(styles)
-
-      for (const s of styleKeys) {
-        el.style[s] = styles[s]
-      }
-    } else {
-      el[prop] = props[prop]
-    }
-  }
 }
