@@ -1,4 +1,5 @@
 import {Rec} from '../custom2'
+import {RefObject} from '../../util/ref'
 
 //
 export function setAttributesFromProps(element: HTMLElement, props: Rec) {
@@ -41,7 +42,7 @@ function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
 
 function setAttribute(element: any, attr: string, value: any): void {
   if (attr.startsWith('on')) {
-    console.log('addEventListener', attr.slice(2).toLowerCase(), value)
+    // console.log('addEventListener', attr.slice(2).toLowerCase(), value)
     element.addEventListener(attr.slice(2).toLowerCase(), value)
   } else if (attr === 'style') {
     const styleKeys = Object.keys(value)
@@ -49,6 +50,8 @@ function setAttribute(element: any, attr: string, value: any): void {
     for (const s of styleKeys) {
       element.style[s] = value[s]
     }
+  } else if (attr === 'ref') {
+    ;(value as RefObject<any>).current = element
   } else {
     element[attr] = value
   }

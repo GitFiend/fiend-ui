@@ -1,27 +1,29 @@
 import {equalProps, ParentTree2, Subtree, Tree2, TreeBase, TreeSlice2, TreeType} from './base'
 import {removeSubtrees, renderInternal2} from '../render2'
+import {StoreBase} from './store'
 
 export interface Rec {
   [prop: string]: unknown
 }
 
-export class Custom2<P extends {} = {}, E = {}> implements TreeBase {
+type Props = {
+  store: StoreBase
+}
+
+// TODO: Should probably make this abstract?
+export class Custom2<P extends {} = {}, E extends {} = {}> implements TreeBase {
   type = TreeType.custom as const
   element: HTMLElement
   subtree: Tree2 | null = null
 
+  derived: E = {} as E
+
   constructor(public props: P, public parent: ParentTree2, public children: Subtree[]) {
     this.element = parent.element
-
-    console.log({props})
   }
 
   render(): TreeSlice2 | null {
     return null
-  }
-
-  remove(): void {
-    this.subtree?.remove()
   }
 
   update() {
@@ -30,12 +32,31 @@ export class Custom2<P extends {} = {}, E = {}> implements TreeBase {
     if (res !== null) this.subtree = renderInternal2(this.parent, res, this.subtree, 0)
   }
 
+  calcDerived(props: P): E {
+    return {} as E
+  }
+
   updateWithNewProps(props: P) {
-    if (!equalProps(this.props, props)) {
-      //
+    const newDerived = this.calcDerived(props)
+
+    if (!equalProps(this.props, props) || !equalProps(this.derived, newDerived)) {
       this.props = props
+      this.derived = newDerived
       this.update()
     }
+  }
+
+  updateFromStore() {
+    const newDerived = this.calcDerived(this.props)
+
+    if (!equalProps(newDerived, this.derived)) {
+      this.derived = newDerived
+      this.update()
+    }
+  }
+
+  componentDidMount(): void {
+    //
   }
 
   /*
@@ -46,6 +67,22 @@ export class Custom2<P extends {} = {}, E = {}> implements TreeBase {
   action(callback: () => void): void {
     callback()
     this.update()
+  }
+
+  mount() {
+    if (this.props.hasOwnProperty('store')) {
+      ;((this.props as unknown) as Props).store.listeners.set(this, '')
+    }
+    this.derived = this.calcDerived(this.props)
+    this.update()
+    this.componentDidMount()
+  }
+
+  remove(): void {
+    if (this.props.hasOwnProperty('store')) {
+      ;((this.props as unknown) as Props).store.listeners.delete(this)
+    }
+    this.subtree?.remove()
   }
 
   // Required by JSX
@@ -63,7 +100,8 @@ export function makeCustomComponent<P extends Rec>(
   children: Subtree[]
 ) {
   const component = new cons<P>(props || ({} as P), parent, children)
-  component.update()
+  component.mount()
+
   return component
 }
 
