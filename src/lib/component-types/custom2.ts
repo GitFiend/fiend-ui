@@ -99,6 +99,12 @@ export function makeCustomComponent<P extends Rec>(
   parent: ParentTree2,
   children: Subtree[]
 ) {
+  // try {
+  //   new cons<P>(props || ({} as P), parent, children)
+  // } catch (e) {
+  //   debugger
+  // }
+
   const component = new cons<P>(props || ({} as P), parent, children)
   component.mount()
 

@@ -57,6 +57,13 @@ export function renderHost(
 }
 
 function renderHostChildren(children: Subtree[], prevChildren: Tree2[], parent: ParentTree2) {
+  /*
+    Sometimes there is one child that's also an array.
+     */
+  if (children.length === 1 && Array.isArray(children[0])) {
+    children = (children as Subtree[][])[0]
+  }
+
   const len = children.length
   const newChildren: Tree2[] = Array(len)
 

@@ -11,9 +11,9 @@ function main(): void {
     // lotsOfElements(root)
     // lotsOfElements(root)
     // lotsOfElements(root)
-    test2(root)
+    // test2(root)
     // canvasTest(root)
-    // boxesTest()
+    boxesTest()
     // customComponents(root)
   }
 }

@@ -4,14 +4,6 @@ import {TextComponent} from './component-types/text'
 import {Tree, TreeSlice2} from './component-types/base'
 import {Custom2} from './component-types/custom2'
 
-// export namespace JSX {
-//   // interface Element extends TreeSlice2 {}
-//   type Element = TreeSlice2
-//
-//   interface ElementClass extends Component<any> {}
-// }
-//
-
 declare global {
   namespace JSX {
     // @ts-ignore
@@ -28,12 +20,11 @@ export type TreeSlice = [
   ...(TreeSlice | string | number)[]
 ]
 
-// export enum SlicePart {
-//   type,
-//   props,
-// }
+export const createTree = (...slice: TreeSlice) => {
+  // debugger
 
-export const createTree = (...slice: TreeSlice) => slice
+  return slice
+}
 
 // export function createTree(...slice: TreeSlice): TreeSlice {
 //   // console.log(args)

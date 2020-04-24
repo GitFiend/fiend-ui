@@ -58,7 +58,6 @@ function drawBoxes(ctx: CanvasRenderingContext2D, width: number, height: number,
     drawBox(ctx, left, top + i * boxHeight, boxWidth, boxHeight)
   }
 
-  // ctx.rect(20, 20, 150, 100)
   ctx.stroke()
   // console.timeEnd('draw boxes')
 }
@@ -78,19 +77,11 @@ export function canvasTest(root: HTMLElement) {
   console.timeEnd('render')
 }
 
-interface Size {
-  width: number
-  height: number
-}
-
 export function getCanvasContext(
   canvas: HTMLCanvasElement,
   width: number,
   height: number
 ): CanvasRenderingContext2D | null {
-  // canvas.style.width = width + 'px'
-  // canvas.style.height = height + 'px'
-
   const scale = window.devicePixelRatio
 
   canvas.width = width * scale

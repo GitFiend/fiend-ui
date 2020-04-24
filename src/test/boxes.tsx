@@ -12,9 +12,11 @@ interface BoxesProps {
 
 export class Boxes extends Custom2<BoxesProps> {
   render() {
+    const t = ((Date.now() - this.tick) / 6) % boxHeight
+
     const {width, height} = this.props
 
-    return <div>{...this.drawBoxes(width, height, 0)}</div>
+    return <div>{this.drawBoxes(width, height, -t)}</div>
   }
 
   drawBoxes(width: number, height: number, top: number) {
@@ -41,6 +43,9 @@ export class Boxes extends Custom2<BoxesProps> {
           width: w + 'px',
           height: h + 'px',
           border: '1px solid',
+          display: 'flex',
+          alignItems: 'center',
+          paddingLeft: '5px',
         }}
       >
         I am a commit message. Here is some text.
@@ -48,9 +53,24 @@ export class Boxes extends Custom2<BoxesProps> {
     )
   }
 
-  componentDidMount(): void {}
+  componentDidMount(): void {
+    const {width, height} = this.props
 
-  loopBoxes() {}
+    this.loopBoxes(width, height)
+  }
+
+  tick = Date.now()
+
+  loopBoxes(width: number, height: number) {
+    // const t = ((Date.now() - this.tick) / 6) % boxHeight
+    //
+    // this.drawBoxes(width, height, -t)
+    this.update()
+
+    requestAnimationFrame(() => {
+      this.loopBoxes(width, height)
+    })
+  }
 }
 
 export function boxesTest() {
