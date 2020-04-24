@@ -1,7 +1,8 @@
 import {Custom2} from '../lib/component-types/custom2'
-import {createTree} from '../lib/create-tree'
+import React from 'react'
 import {TreeSlice2} from '../lib/component-types/base'
 import {render2} from '../lib/render2'
+import {render} from 'react-dom'
 
 const boxHeight = 30
 
@@ -10,7 +11,9 @@ interface BoxesProps {
   height: number
 }
 
-export class Boxes extends Custom2<BoxesProps> {
+const createTree = React.createElement
+
+export class Boxes extends React.Component<BoxesProps> {
   render() {
     const t = ((Date.now() - this.tick) / 6) % boxHeight
 
@@ -24,7 +27,7 @@ export class Boxes extends Custom2<BoxesProps> {
     const left = width * 0.2
     const boxWidth = width * 0.6
 
-    const boxes: TreeSlice2[] = Array(numBoxes)
+    const boxes: any[] = Array(numBoxes)
 
     for (let i = 0; i < numBoxes; i++) {
       boxes[i] = this.drawBox(left, top + i * boxHeight, boxWidth, boxHeight)
@@ -62,7 +65,7 @@ export class Boxes extends Custom2<BoxesProps> {
   tick = Date.now()
 
   loopBoxes(width: number, height: number) {
-    this.update()
+    this.forceUpdate()
 
     requestAnimationFrame(() => {
       this.loopBoxes(width, height)
@@ -70,10 +73,11 @@ export class Boxes extends Custom2<BoxesProps> {
   }
 }
 
-export function boxesTest() {
+export function reactBoxesTest() {
   console.time('render')
 
-  render2(<Boxes width={window.innerWidth} height={window.innerHeight} />, document.body)
+  // @ts-ignore
+  render(<Boxes width={window.innerWidth} height={window.innerHeight} />, document.body)
 
   console.timeEnd('render')
 }

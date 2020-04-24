@@ -3,6 +3,7 @@ import {reactMain} from './test/react-compare'
 import {test2} from './test/test2'
 import {canvasTest} from './test/canvas'
 import {boxesTest} from './test/boxes'
+import {reactBoxesTest} from './test/boxes-react'
 
 function main(): void {
   const root = document.getElementById('root')
@@ -12,8 +13,9 @@ function main(): void {
     // lotsOfElements(root)
     // lotsOfElements(root)
     // test2(root)
-    // canvasTest(root)
-    boxesTest()
+    canvasTest(root)
+    // boxesTest()
+    // reactBoxesTest()
     // customComponents(root)
   }
 }
