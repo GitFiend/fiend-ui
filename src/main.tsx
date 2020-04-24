@@ -13,8 +13,8 @@ function main(): void {
     // lotsOfElements(root)
     // lotsOfElements(root)
     // test2(root)
-    canvasTest(root)
-    // boxesTest()
+    // canvasTest(root)
+    boxesTest()
     // reactBoxesTest()
     // customComponents(root)
   }

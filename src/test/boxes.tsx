@@ -3,7 +3,7 @@ import {createTree} from '../lib/create-tree'
 import {TreeSlice2} from '../lib/component-types/base'
 import {render2} from '../lib/render2'
 
-const boxHeight = 30
+const boxHeight = 14
 
 interface BoxesProps {
   width: number
@@ -12,7 +12,7 @@ interface BoxesProps {
 
 export class Boxes extends Custom2<BoxesProps> {
   render() {
-    const t = ((Date.now() - this.tick) / 6) % boxHeight
+    const t = ((Date.now() - this.tick) / 20) % boxHeight
 
     const {width, height} = this.props
 
@@ -46,6 +46,7 @@ export class Boxes extends Custom2<BoxesProps> {
           display: 'flex',
           alignItems: 'center',
           paddingLeft: '5px',
+          fontSize: '8px',
         }}
       >
         I am a commit message. Here is some text.
