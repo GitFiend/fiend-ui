@@ -20,7 +20,7 @@ export type TreeSlice = [
   ...(TreeSlice | string | number)[]
 ]
 
-export const createTree = (...slice: TreeSlice) => {
+export const createTree = (...slice: TreeSlice): TreeSlice => {
   // debugger
 
   return slice

@@ -6,7 +6,7 @@ export function setAttributesFromProps(element: HTMLElement, props: Rec) {
   const attributes = Object.keys(props)
 
   for (const attr of attributes) {
-    setAttribute(element, attr, props[attr])
+    setAttribute(element, attr, props[attr], null)
   }
 }
 
@@ -26,11 +26,11 @@ function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
     const n = newProps[key]
 
     if (o === undefined) {
-      setAttribute(element, key, n)
+      setAttribute(element, key, n, o)
     } //
     else if (o !== n) {
       deleteAttribute(element, key, o)
-      setAttribute(element, key, n)
+      setAttribute(element, key, n, o)
     }
   }
   for (const key of oldKeys) {
@@ -40,20 +40,37 @@ function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
   }
 }
 
-function setAttribute(element: any, attr: string, value: any): void {
+function setAttribute(element: HTMLElement, attr: string, value: any, oldValue: any): void {
   if (attr.startsWith('on')) {
-    // console.log('addEventListener', attr.slice(2).toLowerCase(), value)
     element.addEventListener(attr.slice(2).toLowerCase(), value)
   } else if (attr === 'style') {
-    const styleKeys = Object.keys(value)
-
-    for (const s of styleKeys) {
-      element.style[s] = value[s]
-    }
+    setStyles(element, value, oldValue)
   } else if (attr === 'ref') {
     ;(value as RefObject<any>).current = element
   } else {
-    element[attr] = value
+    element.setAttribute(attr, value)
+  }
+}
+
+function setStyles(
+  element: HTMLElement,
+  styles: CSSStyleDeclaration,
+  oldStyles: CSSStyleDeclaration | undefined
+) {
+  const styleKeys = Object.keys(styles)
+
+  if (oldStyles) {
+    for (const s of styleKeys) {
+      const style = styles[s as any]
+
+      if (oldStyles[s as any] !== style) {
+        element.style[s as any] = styles[s as any]
+      }
+    }
+  } else {
+    for (const s of styleKeys) {
+      element.style[s as any] = styles[s as any]
+    }
   }
 }
 
