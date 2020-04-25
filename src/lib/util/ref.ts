@@ -4,6 +4,6 @@ export interface RefObject<T> {
 
 export function createRef<T>(): RefObject<T> {
   return {
-    current: null,
+    current: null
   }
 }

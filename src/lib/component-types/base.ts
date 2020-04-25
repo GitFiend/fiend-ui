@@ -23,7 +23,7 @@ export type Subtree = TreeSlice2 | string | number
 export enum TreeType {
   host,
   custom,
-  text,
+  text
 }
 
 export interface TreeBase {

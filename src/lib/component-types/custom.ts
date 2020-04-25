@@ -5,7 +5,7 @@ import {OComponent} from './observer'
 export enum CustomComponentType {
   standard,
   mobx,
-  pure,
+  pure
 }
 
 export class Component<P = {}, E = {}> implements TreeBase {
@@ -52,7 +52,7 @@ export class Component<P = {}, E = {}> implements TreeBase {
 
     return {
       prev: this.prev,
-      curr: this.curr,
+      curr: this.curr
     }
   }
 

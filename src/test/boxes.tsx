@@ -46,7 +46,7 @@ export class Boxes extends Custom2<BoxesProps> {
           display: 'flex',
           alignItems: 'center',
           paddingLeft: '5px',
-          fontSize: '8px',
+          fontSize: '8px'
         }}
       >
         I am a commit message. Here is some text.

@@ -11,7 +11,7 @@ class Mine2 extends React.Component<{}, {num: number}> {
   // num = 0
 
   state = {
-    num: 0,
+    num: 0
   }
 
   render() {
@@ -21,14 +21,14 @@ class Mine2 extends React.Component<{}, {num: number}> {
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'column'
         }}
       >
         <h3>Hello from custom component</h3>
         <button
           onClick={() => {
             this.setState({
-              num: this.state.num + 1,
+              num: this.state.num + 1
             })
             // console.log('omg')
             // runInAction(() => {
@@ -56,7 +56,7 @@ export function reactMain(): void {
       (
         <div
           style={{
-            background: 'pink',
+            background: 'pink'
           }}
           key={'adf'}
         >
