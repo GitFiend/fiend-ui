@@ -45,11 +45,11 @@ export class Custom2<P extends {} = {}> implements TreeBase {
   }
 
   // Required by JSX
-  private context: any
-  private refs: any
-  private state: any
-  private setState: any
-  private forceUpdate: any
+  context: any
+  refs: any
+  state: any
+  setState: any
+  forceUpdate: any
 }
 
 export function makeCustomComponent<P extends Rec>(

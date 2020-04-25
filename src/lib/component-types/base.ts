@@ -5,11 +5,12 @@ import {HostComponent} from './host'
 import {Host2} from './host/host2'
 import {Text2} from './text2'
 import {Custom2, Rec} from './custom2'
+import {Observer2} from './observer2'
 
 export type Tree = TextComponent | HostComponent | Component<unknown> | OComponent<unknown>
 export type ParentTree = Exclude<Tree, TextComponent>
 
-export type Tree2 = Host2 | Text2 | Custom2
+export type Tree2 = Host2 | Text2 | Custom2 | Observer2
 export type ParentTree2 = Host2 | RootNode | Custom2
 
 export type TreeSlice2 = [
@@ -23,7 +24,7 @@ export type Subtree = TreeSlice2 | string | number
 export enum TreeType {
   host,
   custom,
-  text
+  text,
 }
 
 export interface TreeBase {

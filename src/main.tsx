@@ -1,9 +1,6 @@
 import {createTree} from './lib/create-tree'
-import {reactMain} from './test/react-compare'
-import {test2} from './test/test2'
-import {canvasTest} from './test/canvas'
 import {boxesTest} from './test/boxes'
-import {reactBoxesTest} from './test/boxes-react'
+import {test2} from './test/test2'
 
 function main(): void {
   const root = document.getElementById('root')
@@ -12,9 +9,9 @@ function main(): void {
     // lotsOfElements(root)
     // lotsOfElements(root)
     // lotsOfElements(root)
-    // test2(root)
+    test2(root)
     // canvasTest(root)
-    boxesTest()
+    // boxesTest()
     // reactBoxesTest()
     // customComponents(root)
   }

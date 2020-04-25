@@ -49,7 +49,7 @@ export class Boxes extends React.Component<BoxesProps> {
           display: 'flex',
           alignItems: 'center',
           paddingLeft: '5px',
-          fontSize: '8px'
+          fontSize: '8px',
         }}
       >
         I am a commit message. Here is some text.

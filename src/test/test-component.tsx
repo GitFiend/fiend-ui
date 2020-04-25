@@ -16,7 +16,7 @@ export class TestComponent extends Component<{}> {
       <div
         style={{
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
         }}
       >
         <h3>Hello from custom component</h3>
@@ -68,7 +68,7 @@ export class TestComponent2 extends Component<TC2Props, TC2State> {
 
   calcDerived(props: TC2Props): TC2State {
     return {
-      moreNum: props.o.moreNum
+      moreNum: props.o.moreNum,
     }
   }
 }

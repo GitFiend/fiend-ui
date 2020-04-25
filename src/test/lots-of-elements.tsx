@@ -9,7 +9,7 @@ export function lotsOfElements(root: HTMLElement): void {
   render2(
     <div
       style={{
-        background: 'pink'
+        background: 'pink',
       }}
       key={'adf'}
     >
@@ -27,7 +27,7 @@ export function lotsOfElements(root: HTMLElement): void {
         <div>c</div>
         <div
           style={{
-            background: 'pink'
+            background: 'pink',
           }}
           key={'adf'}
         >
@@ -45,7 +45,7 @@ export function lotsOfElements(root: HTMLElement): void {
             <div>c</div>
             <div
               style={{
-                background: 'pink'
+                background: 'pink',
               }}
               key={'adf'}
             >
