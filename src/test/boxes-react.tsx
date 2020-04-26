@@ -8,7 +8,7 @@ interface BoxesProps {
   height: number
 }
 
-const createTree = React.createElement
+const createElement = React.createElement
 
 export class Boxes extends React.Component<BoxesProps> {
   render() {

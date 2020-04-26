@@ -1,10 +1,10 @@
-import {createTree} from '../lib/create-tree'
-import {render2} from '../lib/render2'
+import {createElement} from '../lib/create-element'
+import {render} from '../lib/render'
 
 export function lotsOfElements(root: HTMLElement): void {
   console.time('render')
 
-  render2(
+  render(
     <div
       style={{
         background: 'pink',

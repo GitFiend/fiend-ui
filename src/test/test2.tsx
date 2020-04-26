@@ -1,7 +1,7 @@
-import {createTree} from '../lib/create-tree'
-import {render2} from '../lib/render2'
+import {createElement} from '../lib/create-element'
+import {render} from '../lib/render'
 import {action, observable} from 'mobx'
-import {Observer2} from '../lib/component-types/observer2'
+import {ObserverComponent} from '../lib/component-types/observer-component'
 
 function randomHue() {
   return Math.round(Math.random() * 1000) % 255
@@ -22,7 +22,7 @@ interface Test2Props {
   children: any
 }
 
-export class Test2 extends Observer2<Test2Props> {
+export class Test2 extends ObserverComponent<Test2Props> {
   @observable
   num = 0
 
@@ -53,7 +53,7 @@ interface NumPaneProps {
   num: number
 }
 
-class NumPane extends Observer2<NumPaneProps> {
+class NumPane extends ObserverComponent<NumPaneProps> {
   render() {
     return (
       <div
@@ -70,7 +70,7 @@ class NumPane extends Observer2<NumPaneProps> {
   }
 }
 
-class Nested extends Observer2 {
+class Nested extends ObserverComponent {
   @observable num = 100
 
   render() {
@@ -88,7 +88,7 @@ export function test2(root: HTMLElement) {
 
   const store = new MyStore()
 
-  render2(
+  render(
     <div>
       <Test2 store={store}>OMG1</Test2>
       <Test2 store={store}>OMG2</Test2>

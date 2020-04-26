@@ -1,27 +1,27 @@
-import {equalProps, ParentTree2, Subtree, Tree2, TreeBase, TreeSlice2, TreeType} from './base'
-import {removeSubtrees, renderInternal2} from '../render2'
+import {equalProps, ParentTree2, SubSlice, Tree2, ComponentBase, JSXSlice, TreeType} from './base'
+import {removeSubtrees, renderInternal} from '../render'
 
 export interface Rec {
   [prop: string]: unknown
 }
 
-export class Custom2<P extends {} = {}> implements TreeBase {
+export class Component<P extends {} = {}> implements ComponentBase {
   type = TreeType.custom as const
   element: HTMLElement
   subtree: Tree2 | null = null
 
-  constructor(public props: P, public parent: ParentTree2, public children: Subtree[]) {
+  constructor(public props: P, public parent: ParentTree2, public children: SubSlice[]) {
     this.element = parent.element
   }
 
-  render(): TreeSlice2 | null {
+  render(): JSXSlice | null {
     return null
   }
 
   update() {
     const res = this.render()
 
-    if (res !== null) this.subtree = renderInternal2(this.parent, res, this.subtree, 0)
+    if (res !== null) this.subtree = renderInternal(this.parent, res, this.subtree, 0)
   }
 
   updateWithNewProps(props: P): void {
@@ -53,10 +53,10 @@ export class Custom2<P extends {} = {}> implements TreeBase {
 }
 
 export function makeCustomComponent<P extends Rec>(
-  cons: typeof Custom2,
+  cons: typeof Component,
   props: P | null,
   parent: ParentTree2,
-  children: Subtree[]
+  children: SubSlice[]
 ) {
   const component = new cons<P>(props || ({} as P), parent, children)
   component.mount()
@@ -65,9 +65,9 @@ export function makeCustomComponent<P extends Rec>(
 }
 
 export function renderCustom<P extends Rec>(
-  cons: typeof Custom2,
+  cons: typeof Component,
   props: P | null,
-  children: Subtree[],
+  children: SubSlice[],
   parent: ParentTree2,
   prevTree: Tree2 | null,
   index: number

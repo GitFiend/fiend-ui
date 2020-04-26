@@ -1,7 +1,7 @@
-import {Custom2} from '../lib/component-types/custom2'
-import {createTree} from '../lib/create-tree'
-import {TreeSlice2} from '../lib/component-types/base'
-import {render2} from '../lib/render2'
+import {Component} from '../lib/component-types/component'
+import {createElement} from '../lib/create-element'
+import {JSXSlice} from '../lib/component-types/base'
+import {render} from '../lib/render'
 
 const boxHeight = 14
 
@@ -10,7 +10,7 @@ interface BoxesProps {
   height: number
 }
 
-export class Boxes extends Custom2<BoxesProps> {
+export class Boxes extends Component<BoxesProps> {
   render() {
     const t = ((Date.now() - this.tick) / 20) % boxHeight
 
@@ -24,7 +24,7 @@ export class Boxes extends Custom2<BoxesProps> {
     const left = width * 0.2
     const boxWidth = width * 0.6
 
-    const boxes: TreeSlice2[] = Array(numBoxes)
+    const boxes: JSXSlice[] = Array(numBoxes)
 
     for (let i = 0; i < numBoxes; i++) {
       boxes[i] = this.drawBox(left, top + i * boxHeight, boxWidth, boxHeight)
@@ -74,7 +74,7 @@ export class Boxes extends Custom2<BoxesProps> {
 export function boxesTest() {
   console.time('render')
 
-  render2(<Boxes width={window.innerWidth} height={window.innerHeight} />, document.body)
+  render(<Boxes width={window.innerWidth} height={window.innerHeight} />, document.body)
 
   console.timeEnd('render')
 }

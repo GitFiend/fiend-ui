@@ -1,17 +1,17 @@
-import {ParentTree2, RootNode, Subtree, Tree2, TreeSlice2, TreeType} from './component-types/base'
-import {renderHost} from './component-types/host/host2'
-import {renderTextComponent} from './component-types/text2'
-import {renderCustom} from './component-types/custom2'
+import {ParentTree2, RootNode, SubSlice, Tree2, JSXSlice, TreeType} from './component-types/base'
+import {renderHost} from './component-types/host/host-component'
+import {renderTextComponent} from './component-types/text-component'
+import {renderCustom} from './component-types/component'
 
-export function render2(slice: TreeSlice2, target: HTMLElement): void {
+export function render(slice: JSXSlice, target: HTMLElement): void {
   const root = new RootNode(target)
 
-  renderInternal2(root, slice, null, 0)
+  renderInternal(root, slice, null, 0)
 }
 
-export function renderInternal2(
+export function renderInternal(
   parent: ParentTree2,
-  slice: TreeSlice2,
+  slice: JSXSlice,
   prevTree: Tree2 | null,
   index: number
 ): Tree2 {
@@ -25,7 +25,7 @@ export function renderInternal2(
 }
 
 export function renderChildInternal(
-  subtree: Subtree,
+  subtree: SubSlice,
   prevTree: Tree2 | null,
   parent: ParentTree2,
   index: number
@@ -40,7 +40,7 @@ export function renderChildInternal(
   // }
   else {
     // debugger
-    return renderInternal2(parent, subtree, prevTree, index)
+    return renderInternal(parent, subtree, prevTree, index)
   }
 }
 

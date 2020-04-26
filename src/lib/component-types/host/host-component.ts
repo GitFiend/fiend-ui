@@ -1,8 +1,8 @@
-import {ParentTree2, Subtree, Tree2, TreeBase, TreeType} from '../base'
-import {removeSubtrees, renderChildInternal} from '../../render2'
+import {ParentTree2, SubSlice, Tree2, ComponentBase, TreeType} from '../base'
+import {removeSubtrees, renderChildInternal} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
-export class Host2 implements TreeBase {
+export class HostComponent implements ComponentBase {
   type = TreeType.host as const
   element: HTMLElement
   children: Tree2[]
@@ -11,7 +11,7 @@ export class Host2 implements TreeBase {
     public tag: keyof HTMLElementTagNameMap,
     public props: Record<string, unknown> | null,
     public parent: ParentTree2,
-    childrenSlices: Subtree[]
+    childrenSlices: SubSlice[]
   ) {
     this.element = document.createElement(tag)
 
@@ -32,13 +32,13 @@ export class Host2 implements TreeBase {
 export function renderHost(
   tag: keyof HTMLElementTagNameMap,
   props: Record<string, unknown> | null,
-  children: Subtree[],
+  children: SubSlice[],
   parent: ParentTree2,
   prevTree: Tree2 | null,
   index: number
-): Host2 {
+): HostComponent {
   if (prevTree === null) {
-    return new Host2(tag, props, parent, children)
+    return new HostComponent(tag, props, parent, children)
   }
 
   if (prevTree.type === TreeType.host && prevTree.tag === tag) {
@@ -52,16 +52,16 @@ export function renderHost(
     return prevTree
   } else {
     removeSubtrees(parent, index)
-    return new Host2(tag, props, parent, children)
+    return new HostComponent(tag, props, parent, children)
   }
 }
 
-function renderHostChildren(children: Subtree[], prevChildren: Tree2[], parent: ParentTree2) {
+function renderHostChildren(children: SubSlice[], prevChildren: Tree2[], parent: ParentTree2) {
   /*
     Sometimes there is one child that's also an array.
      */
   if (children.length === 1 && Array.isArray(children[0])) {
-    children = (children as Subtree[][])[0]
+    children = (children as SubSlice[][])[0]
   }
 
   const len = children.length

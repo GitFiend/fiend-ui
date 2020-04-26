@@ -1,4 +1,4 @@
-import {createTree} from './lib/create-tree'
+import {createElement} from './lib/create-element'
 import {boxesTest} from './test/boxes'
 import {test2} from './test/test2'
 import {test2React} from './test/test2-react'

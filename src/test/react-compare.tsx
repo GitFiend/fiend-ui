@@ -3,7 +3,7 @@ import {render} from 'react-dom'
 import {observable, runInAction} from 'mobx'
 import {observer} from 'mobx-react'
 
-const createTree = React.createElement
+const createElement = React.createElement
 
 // @observer
 class Mine2 extends React.Component<{}, {num: number}> {

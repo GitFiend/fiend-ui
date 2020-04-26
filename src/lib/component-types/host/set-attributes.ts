@@ -1,4 +1,4 @@
-import {Rec} from '../custom2'
+import {Rec} from '../component'
 import {RefObject} from '../../util/ref'
 
 //

@@ -1,8 +1,8 @@
-import {Custom2} from '../lib/component-types/custom2'
-import {TreeSlice2} from '../lib/component-types/base'
-import {createTree} from '../lib/create-tree'
+import {Component} from '../lib/component-types/component'
+import {JSXSlice} from '../lib/component-types/base'
+import {createElement} from '../lib/create-element'
 import {createRef} from '../lib/util/ref'
-import {render2} from '../lib/render2'
+import {render} from '../lib/render'
 
 interface TextCanvasProps {
   width: number
@@ -11,10 +11,10 @@ interface TextCanvasProps {
 
 const boxHeight = 30
 
-export class TextCanvas extends Custom2<TextCanvasProps> {
+export class TextCanvas extends Component<TextCanvasProps> {
   ref = createRef<HTMLCanvasElement>()
 
-  render(): TreeSlice2 | null {
+  render(): JSXSlice | null {
     const {width, height} = this.props
 
     return <canvas ref={this.ref} style={{width: width + 'px', height: height + 'px'}} />
@@ -72,7 +72,7 @@ function drawBox(ctx: CanvasRenderingContext2D, x: number, y: number, w: number,
 export function canvasTest(root: HTMLElement) {
   console.time('render')
 
-  render2(<TextCanvas width={window.innerWidth} height={window.innerHeight} />, document.body)
+  render(<TextCanvas width={window.innerWidth} height={window.innerHeight} />, document.body)
 
   console.timeEnd('render')
 }

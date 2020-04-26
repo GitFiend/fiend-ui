@@ -1,18 +1,18 @@
-import {Host2} from './host/host2'
-import {Text2} from './text2'
-import {Custom2, Rec} from './custom2'
-import {Observer2} from './observer2'
+import {HostComponent} from './host/host-component'
+import {TextComponent} from './text-component'
+import {Component, Rec} from './component'
+import {ObserverComponent} from './observer-component'
 
-export type Tree2 = Host2 | Text2 | Custom2 | Observer2
-export type ParentTree2 = Host2 | RootNode | Custom2
+export type Tree2 = HostComponent | TextComponent | Component | ObserverComponent
+export type ParentTree2 = HostComponent | RootNode | Component
 
-export type TreeSlice2 = [
-  keyof HTMLElementTagNameMap | typeof Custom2,
+export type JSXSlice = [
+  keyof HTMLElementTagNameMap | typeof Component,
   Record<string, unknown> | null,
-  ...Subtree[]
+  ...SubSlice[]
 ]
 
-export type Subtree = TreeSlice2 | string | number
+export type SubSlice = JSXSlice | string | number
 
 export enum TreeType {
   host,
@@ -20,7 +20,7 @@ export enum TreeType {
   text,
 }
 
-export interface TreeBase {
+export interface ComponentBase {
   parent: unknown
   element: unknown
   type: TreeType
@@ -28,7 +28,7 @@ export interface TreeBase {
   remove(): void
 }
 
-export class RootNode implements TreeBase {
+export class RootNode implements ComponentBase {
   type = TreeType.host as const
   parent: null
   children: Tree2[] = []
