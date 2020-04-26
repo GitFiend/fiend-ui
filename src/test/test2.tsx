@@ -19,7 +19,6 @@ class MyStore {
 
 interface Test2Props {
   store: MyStore
-  children: any
 }
 
 export class Test2 extends ObserverComponent<Test2Props> {
@@ -27,13 +26,14 @@ export class Test2 extends ObserverComponent<Test2Props> {
   num = 0
 
   render() {
-    const {store} = this.props
+    const {store, children} = this.props
 
     return (
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <h3>
           Num clicks: <NumPane num={this.num} store={store} />
         </h3>
+        {children}
         <button onClick={this.onClick} style={{marginRight: 'auto'}}>
           Click Me
         </button>

@@ -11,7 +11,7 @@ export class HostComponent implements ComponentBase {
     public tag: keyof HTMLElementTagNameMap,
     public props: Record<string, unknown> | null,
     public parent: ParentTree2,
-    childrenSlices: SubTree[]
+    childrenSlices: SubTree
   ) {
     this.element = document.createElement(tag)
 
@@ -32,7 +32,7 @@ export class HostComponent implements ComponentBase {
 export function renderHost(
   tag: keyof HTMLElementTagNameMap,
   props: Record<string, unknown> | null,
-  children: SubTree[],
+  children: SubTree,
   parent: ParentTree2,
   prevTree: Z | null,
   index: number
@@ -56,24 +56,12 @@ export function renderHost(
   }
 }
 
-function renderHostChildren(children: SubTree[], prevChildren: Z[], parent: ParentTree2) {
-  // /*
-  //   Sometimes there is one child that's also an array.
-  //    */
-  // if (children.length === 1 && Array.isArray(children[0])) {
-  //   children = (children as SubTree[][])[0]
-  // }
+function renderHostChildren(children: SubTree, prevChildren: Z[], parent: ParentTree2) {
+  if (!Array.isArray(children)) {
+    return [renderChildInternal(children, prevChildren[0] || null, parent, 0)]
+  }
 
-  // const len = children.length
   const newChildren: Z[] = []
-
-  // for (let i = 0; i < len; i++) {
-  //   const child = children[i]
-  //
-  //   if (Array.isArray(child)) {
-  //   }
-  //   newChildren[i] = renderChildInternal(children[i], prevChildren[i] || null, parent, i)
-  // }
 
   let i = 0
   for (const c of children) {

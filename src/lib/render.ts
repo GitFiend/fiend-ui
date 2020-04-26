@@ -11,12 +11,13 @@ export function render(tree: Tree, target: HTMLElement): void {
 
 export function renderInternal(
   parent: ParentTree2,
-  slice: Tree,
+  tree: Tree,
   prevTree: Z | null,
   index: number
 ): Z {
-  const {type, props, children} = slice
+  const {type, props, children} = tree
 
+  // WHat about number?
   if (typeof type === 'string') {
     return renderHost(type, props, children, parent, prevTree, index)
   } else {

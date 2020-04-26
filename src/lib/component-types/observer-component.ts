@@ -1,6 +1,7 @@
 import {equalProps, ParentTree2, Z, ComponentBase, ZType, SubTree, Tree} from './base'
 import {renderInternal} from '../render'
 import {autorun, IReactionDisposer} from 'mobx'
+import {Props} from './component'
 
 export class ObserverComponent<P extends {} = {}> implements ComponentBase {
   disposers: IReactionDisposer[] = []
@@ -8,8 +9,12 @@ export class ObserverComponent<P extends {} = {}> implements ComponentBase {
   type = ZType.custom as const
   element: HTMLElement
   subtree: Z | null = null
+  props: Props<P>
 
-  constructor(public props: P, public parent: ParentTree2, public children: SubTree[]) {
+  constructor(props: P, public parent: ParentTree2, public children: SubTree) {
+    this.props = props
+    this.props.children = children
+
     this.element = parent.element
   }
 
@@ -23,9 +28,12 @@ export class ObserverComponent<P extends {} = {}> implements ComponentBase {
     if (res !== null) this.subtree = renderInternal(this.parent, res, this.subtree, 0)
   }
 
-  updateWithNewProps(props: P): void {
-    if (!equalProps(this.props, props)) {
-      this.props = props
+  updateWithNewProps(props: P, children: SubTree): void {
+    const p = props as Props<P>
+    p.children = children
+
+    if (!equalProps(this.props, p)) {
+      this.props = p
       this.update()
     }
   }

@@ -3,7 +3,7 @@ import {createElement} from './create-element'
 const numLoops = 300000
 
 describe('create element', () => {
-  test('object creation performance', () => {
+  test(`run createElement ${numLoops} times`, () => {
     testFunc(createElement)
 
     expect(true).toBe(true)
@@ -15,7 +15,7 @@ describe('create element', () => {
     expect(d).toEqual({
       type: 'h1',
       props: null,
-      children: ['Heading'],
+      children: 'Heading',
     })
   })
 
@@ -31,8 +31,8 @@ describe('create element', () => {
       type: 'div',
       props: null,
       children: [
-        {type: 'h1', props: null, children: ['Heading']},
-        {type: 'p', props: null, children: ['paragraph']},
+        {type: 'h1', props: null, children: 'Heading'},
+        {type: 'p', props: null, children: 'paragraph'},
       ],
     })
   })
@@ -50,23 +50,21 @@ describe('create element', () => {
       type: 'div',
       props: null,
       children: [
-        [
-          {
-            type: 'div',
-            props: null,
-            children: [1],
-          },
-          {
-            type: 'div',
-            props: null,
-            children: [2],
-          },
-          {
-            type: 'div',
-            props: null,
-            children: [3],
-          },
-        ],
+        {
+          type: 'div',
+          props: null,
+          children: 1,
+        },
+        {
+          type: 'div',
+          props: null,
+          children: 2,
+        },
+        {
+          type: 'div',
+          props: null,
+          children: 3,
+        },
       ],
     })
   })
@@ -85,11 +83,11 @@ describe('create element', () => {
       type: 'div',
       props: null,
       children: [
-        {type: 'h1', props: null, children: ['Heading']},
+        {type: 'h1', props: null, children: 'Heading'},
         [
-          {type: 'div', props: null, children: [1]},
-          {type: 'div', props: null, children: [2]},
-          {type: 'div', props: null, children: [3]},
+          {type: 'div', props: null, children: 1},
+          {type: 'div', props: null, children: 2},
+          {type: 'div', props: null, children: 3},
         ],
       ],
     })

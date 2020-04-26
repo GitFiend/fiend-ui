@@ -1,4 +1,4 @@
-import {SubTree} from './component-types/base'
+import {SubTree, Tree} from './component-types/base'
 import {Component} from './component-types/component'
 
 declare global {
@@ -17,11 +17,11 @@ export function createElement(
   type: keyof HTMLElementTagNameMap | typeof Component,
   props: Record<string, unknown> | null,
   ...children: SubTree[]
-) {
+): Tree {
   return {
     type,
     props,
-    children,
+    children: (children.length === 1 ? children[0] : children) as SubTree,
   }
 }
 
