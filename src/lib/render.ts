@@ -1,4 +1,4 @@
-import {ParentTree2, RootNode, SubSlice, Tree2, JSXSlice, TreeType} from './component-types/base'
+import {ParentTree2, RootNode, SubSlice, Z, JSXSlice, ZType} from './component-types/base'
 import {renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {renderCustom} from './component-types/component'
@@ -12,9 +12,9 @@ export function render(slice: JSXSlice, target: HTMLElement): void {
 export function renderInternal(
   parent: ParentTree2,
   slice: JSXSlice,
-  prevTree: Tree2 | null,
+  prevTree: Z | null,
   index: number
-): Tree2 {
+): Z {
   const [typeOrConstructor, props, ...children] = slice
 
   if (typeof typeOrConstructor === 'string') {
@@ -26,10 +26,10 @@ export function renderInternal(
 
 export function renderChildInternal(
   subtree: SubSlice,
-  prevTree: Tree2 | null,
+  prevTree: Z | null,
   parent: ParentTree2,
   index: number
-): Tree2 {
+): Z {
   if (typeof subtree === 'string') {
     return renderTextComponent(subtree, prevTree, parent, index)
   } else if (typeof subtree === 'number') {
@@ -46,7 +46,7 @@ export function renderChildInternal(
 
 export function removeSubtrees(parent: ParentTree2, index: number): void {
   switch (parent.type) {
-    case TreeType.host:
+    case ZType.host:
       const siblings = parent.children
       const len = siblings.length
 
@@ -54,7 +54,7 @@ export function removeSubtrees(parent: ParentTree2, index: number): void {
         siblings[i].remove()
       }
       break
-    case TreeType.custom:
+    case ZType.custom:
       // Custom components one have child?
       // if (index === 0)
       //   parent.subtree?.remove()

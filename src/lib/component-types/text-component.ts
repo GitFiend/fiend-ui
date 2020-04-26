@@ -1,8 +1,8 @@
-import {ParentTree2, Tree2, ComponentBase, TreeType} from './base'
+import {ParentTree2, Z, ComponentBase, ZType} from './base'
 import {removeSubtrees} from '../render'
 
 export class TextComponent implements ComponentBase {
-  type = TreeType.text as const
+  type = ZType.text as const
   element: Text
 
   constructor(public text: string, public parent: ParentTree2) {
@@ -17,7 +17,7 @@ export class TextComponent implements ComponentBase {
 
 export function renderTextComponent(
   text: string,
-  prevTree: Tree2 | null,
+  prevTree: Z | null,
   parent: ParentTree2,
   index: number
 ): TextComponent {
@@ -25,7 +25,7 @@ export function renderTextComponent(
     return new TextComponent(text, parent)
   }
 
-  if (prevTree.type === TreeType.text) {
+  if (prevTree.type === ZType.text) {
     if (prevTree.text === text) return prevTree
     else {
       prevTree.element.nodeValue = text

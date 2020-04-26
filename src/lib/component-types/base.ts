@@ -3,7 +3,7 @@ import {TextComponent} from './text-component'
 import {Component, Rec} from './component'
 import {ObserverComponent} from './observer-component'
 
-export type Tree2 = HostComponent | TextComponent | Component | ObserverComponent
+export type Z = HostComponent | TextComponent | Component | ObserverComponent
 export type ParentTree2 = HostComponent | RootNode | Component
 
 export type JSXSlice = [
@@ -14,7 +14,7 @@ export type JSXSlice = [
 
 export type SubSlice = JSXSlice | string | number
 
-export enum TreeType {
+export enum ZType {
   host,
   custom,
   text,
@@ -23,15 +23,15 @@ export enum TreeType {
 export interface ComponentBase {
   parent: unknown
   element: unknown
-  type: TreeType
+  type: ZType
 
   remove(): void
 }
 
 export class RootNode implements ComponentBase {
-  type = TreeType.host as const
+  type = ZType.host as const
   parent: null
-  children: Tree2[] = []
+  children: Z[] = []
 
   constructor(public element: HTMLElement) {}
 

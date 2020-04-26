@@ -1,11 +1,11 @@
-import {ParentTree2, SubSlice, Tree2, ComponentBase, TreeType} from '../base'
+import {ParentTree2, SubSlice, Z, ComponentBase, ZType} from '../base'
 import {removeSubtrees, renderChildInternal} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
 export class HostComponent implements ComponentBase {
-  type = TreeType.host as const
+  type = ZType.host as const
   element: HTMLElement
-  children: Tree2[]
+  children: Z[]
 
   constructor(
     public tag: keyof HTMLElementTagNameMap,
@@ -34,14 +34,14 @@ export function renderHost(
   props: Record<string, unknown> | null,
   children: SubSlice[],
   parent: ParentTree2,
-  prevTree: Tree2 | null,
+  prevTree: Z | null,
   index: number
 ): HostComponent {
   if (prevTree === null) {
     return new HostComponent(tag, props, parent, children)
   }
 
-  if (prevTree.type === TreeType.host && prevTree.tag === tag) {
+  if (prevTree.type === ZType.host && prevTree.tag === tag) {
     if (props !== null) {
       updateAttributes(prevTree.element, props, prevTree.props)
     }
@@ -56,7 +56,7 @@ export function renderHost(
   }
 }
 
-function renderHostChildren(children: SubSlice[], prevChildren: Tree2[], parent: ParentTree2) {
+function renderHostChildren(children: SubSlice[], prevChildren: Z[], parent: ParentTree2) {
   /*
     Sometimes there is one child that's also an array.
      */
@@ -65,7 +65,7 @@ function renderHostChildren(children: SubSlice[], prevChildren: Tree2[], parent:
   }
 
   const len = children.length
-  const newChildren: Tree2[] = Array(len)
+  const newChildren: Z[] = Array(len)
 
   for (let i = 0; i < len; i++) {
     newChildren[i] = renderChildInternal(children[i], prevChildren[i] || null, parent, i)

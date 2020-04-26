@@ -1,13 +1,13 @@
-import {equalProps, ParentTree2, SubSlice, Tree2, ComponentBase, JSXSlice, TreeType} from './base'
+import {equalProps, ParentTree2, SubSlice, Z, ComponentBase, JSXSlice, ZType} from './base'
 import {renderInternal} from '../render'
 import {autorun, IReactionDisposer} from 'mobx'
 
 export class ObserverComponent<P extends {} = {}> implements ComponentBase {
   disposers: IReactionDisposer[] = []
 
-  type = TreeType.custom as const
+  type = ZType.custom as const
   element: HTMLElement
-  subtree: Tree2 | null = null
+  subtree: Z | null = null
 
   constructor(public props: P, public parent: ParentTree2, public children: SubSlice[]) {
     this.element = parent.element
