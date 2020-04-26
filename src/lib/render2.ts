@@ -1,7 +1,7 @@
 import {ParentTree2, RootNode, Subtree, Tree2, TreeSlice2, TreeType} from './component-types/base'
-import {Host2, renderHost} from './component-types/host/host2'
-import {renderTextComponent, Text2} from './component-types/text2'
-import {Custom2, renderCustom} from './component-types/custom2'
+import {renderHost} from './component-types/host/host2'
+import {renderTextComponent} from './component-types/text2'
+import {renderCustom} from './component-types/custom2'
 
 export function render2(slice: TreeSlice2, target: HTMLElement): void {
   const root = new RootNode(target)

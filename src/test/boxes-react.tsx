@@ -1,7 +1,4 @@
-import {Custom2} from '../lib/component-types/custom2'
 import React from 'react'
-import {TreeSlice2} from '../lib/component-types/base'
-import {render2} from '../lib/render2'
 import {render} from 'react-dom'
 
 const boxHeight = 14

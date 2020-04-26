@@ -1,6 +1,4 @@
-import {render} from '../lib/render'
 import {createTree} from '../lib/create-tree'
-import {TestComponent} from './test-component'
 import {render2} from '../lib/render2'
 
 export function lotsOfElements(root: HTMLElement): void {
