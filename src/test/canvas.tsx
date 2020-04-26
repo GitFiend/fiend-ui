@@ -1,5 +1,4 @@
 import {Component} from '../lib/component-types/component'
-import {JSXSlice} from '../lib/component-types/base'
 import {createElement} from '../lib/create-element'
 import {createRef} from '../lib/util/ref'
 import {render} from '../lib/render'
@@ -14,7 +13,7 @@ const boxHeight = 30
 export class TextCanvas extends Component<TextCanvasProps> {
   ref = createRef<HTMLCanvasElement>()
 
-  render(): JSXSlice | null {
+  render() {
     const {width, height} = this.props
 
     return <canvas ref={this.ref} style={{width: width + 'px', height: height + 'px'}} />

@@ -1,7 +1,7 @@
 import {Component} from '../lib/component-types/component'
 import {createElement} from '../lib/create-element'
-import {JSXSlice} from '../lib/component-types/base'
 import {render} from '../lib/render'
+import {Tree} from '../lib/component-types/base'
 
 const boxHeight = 14
 
@@ -24,7 +24,7 @@ export class Boxes extends Component<BoxesProps> {
     const left = width * 0.2
     const boxWidth = width * 0.6
 
-    const boxes: JSXSlice[] = Array(numBoxes)
+    const boxes: Tree[] = Array(numBoxes)
 
     for (let i = 0; i < numBoxes; i++) {
       boxes[i] = this.drawBox(left, top + i * boxHeight, boxWidth, boxHeight)
@@ -33,7 +33,7 @@ export class Boxes extends Component<BoxesProps> {
     return boxes
   }
 
-  drawBox(x: number, y: number, w: number, h: number) {
+  drawBox(x: number, y: number, w: number, h: number): Tree {
     return (
       <div
         style={{

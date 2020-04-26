@@ -1,4 +1,4 @@
-import {JSXSlice} from './component-types/base'
+import {SubTree} from './component-types/base'
 import {Component} from './component-types/component'
 
 declare global {
@@ -11,7 +11,19 @@ declare global {
   }
 }
 
-export const createElement = (...slice: JSXSlice): JSXSlice => slice
+// export const createElementSlice = (...slice: JSXSlice): JSXSlice => slice
+
+export function createElement(
+  type: keyof HTMLElementTagNameMap | typeof Component,
+  props: Record<string, unknown> | null,
+  ...children: SubTree[]
+) {
+  return {
+    type,
+    props,
+    children,
+  }
+}
 
 export function createArray2() {
   if (arguments.length > 2) {
@@ -25,29 +37,21 @@ export function createArray2() {
   return [arguments[0], arguments[1], []]
 }
 
-export function createObjectSlice(...slice: JSXSlice) {
-  // const slice = Array.from(arguments)
-  return {
-    type: slice[0],
-    props: slice[1],
-    children: slice.slice(2),
-  }
-}
-
-export function createArrayUnshift(...slice: JSXSlice) {
-  // const slice = Array.from(arguments)
-  slice.unshift(0)
-
-  return slice
-}
-
-export function createObject(type: any, props: any, ...children: JSXSlice) {
-  return {
-    type,
-    props,
-    children,
-  }
-}
+// export function createObjectSlice(...slice: JSXSlice) {
+//   // const slice = Array.from(arguments)
+//   return {
+//     type: slice[0],
+//     props: slice[1],
+//     children: slice.slice(2),
+//   }
+// }
+//
+// export function createArrayUnshift(...slice: JSXSlice) {
+//   // const slice = Array.from(arguments)
+//   slice.unshift(0)
+//
+//   return slice
+// }
 
 export function createObject2() {
   if (arguments.length > 2) {

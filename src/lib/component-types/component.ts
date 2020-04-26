@@ -1,4 +1,4 @@
-import {equalProps, ParentTree2, SubSlice, Z, ComponentBase, JSXSlice, ZType} from './base'
+import {ComponentBase, equalProps, ParentTree2, SubTree, Tree, Z, ZType} from './base'
 import {removeSubtrees, renderInternal} from '../render'
 
 export interface Rec {
@@ -10,11 +10,11 @@ export class Component<P extends {} = {}> implements ComponentBase {
   element: HTMLElement
   subtree: Z | null = null
 
-  constructor(public props: P, public parent: ParentTree2, public children: SubSlice[]) {
+  constructor(public props: P, public parent: ParentTree2, public children: SubTree[]) {
     this.element = parent.element
   }
 
-  render(): JSXSlice | null {
+  render(): Tree | null {
     return null
   }
 
@@ -56,7 +56,7 @@ export function makeCustomComponent<P extends Rec>(
   cons: typeof Component,
   props: P | null,
   parent: ParentTree2,
-  children: SubSlice[]
+  children: SubTree[]
 ) {
   const component = new cons<P>(props || ({} as P), parent, children)
   component.mount()
@@ -67,7 +67,7 @@ export function makeCustomComponent<P extends Rec>(
 export function renderCustom<P extends Rec>(
   cons: typeof Component,
   props: P | null,
-  children: SubSlice[],
+  children: SubTree[],
   parent: ParentTree2,
   prevTree: Z | null,
   index: number

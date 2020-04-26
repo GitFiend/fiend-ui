@@ -6,13 +6,22 @@ import {ObserverComponent} from './observer-component'
 export type Z = HostComponent | TextComponent | Component | ObserverComponent
 export type ParentTree2 = HostComponent | RootNode | Component
 
-export type JSXSlice = [
-  keyof HTMLElementTagNameMap | typeof Component,
-  Record<string, unknown> | null,
-  ...SubSlice[]
-]
+// export type JSXSlice = [
+//   keyof HTMLElementTagNameMap | typeof Component,
+//   Record<string, unknown> | null,
+//   ...SubSlice[]
+// ]
 
-export type SubSlice = JSXSlice | string | number
+export interface Tree {
+  type: keyof HTMLElementTagNameMap | typeof Component
+  props: Record<string, unknown> | null
+  children: SubTree[]
+}
+
+export type SubTree = Tree | string | number | (Tree | string | number)[]
+export type SubTreeFlat = Tree | string | number
+
+// export type SubSlice = JSXSlice | string | number
 
 export enum ZType {
   host,

@@ -1,17 +1,10 @@
-import {createElement, createObject, createObject2, createObjectSlice} from './create-element'
+import {createElement} from './create-element'
 
 const numLoops = 300000
 
 describe('create element', () => {
   test('object creation speeds', () => {
-    //   testObject()
-    //   testArray()
-    //   testArray2()
-    //
     testFunc(createElement)
-    testFunc(createObjectSlice)
-    testFunc(createObject)
-    testFunc(createObject2)
 
     expect(true).toBe(true)
   })

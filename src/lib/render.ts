@@ -1,31 +1,31 @@
-import {ParentTree2, RootNode, SubSlice, Z, JSXSlice, ZType} from './component-types/base'
+import {ParentTree2, RootNode, SubTreeFlat, Tree, Z, ZType} from './component-types/base'
 import {renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {renderCustom} from './component-types/component'
 
-export function render(slice: JSXSlice, target: HTMLElement): void {
+export function render(tree: Tree, target: HTMLElement): void {
   const root = new RootNode(target)
 
-  renderInternal(root, slice, null, 0)
+  renderInternal(root, tree, null, 0)
 }
 
 export function renderInternal(
   parent: ParentTree2,
-  slice: JSXSlice,
+  slice: Tree,
   prevTree: Z | null,
   index: number
 ): Z {
-  const [typeOrConstructor, props, ...children] = slice
+  const {type, props, children} = slice
 
-  if (typeof typeOrConstructor === 'string') {
-    return renderHost(typeOrConstructor, props, children, parent, prevTree, index)
+  if (typeof type === 'string') {
+    return renderHost(type, props, children, parent, prevTree, index)
   } else {
-    return renderCustom(typeOrConstructor, props, children, parent, prevTree, index)
+    return renderCustom(type, props, children, parent, prevTree, index)
   }
 }
 
 export function renderChildInternal(
-  subtree: SubSlice,
+  subtree: SubTreeFlat,
   prevTree: Z | null,
   parent: ParentTree2,
   index: number
@@ -34,12 +34,7 @@ export function renderChildInternal(
     return renderTextComponent(subtree, prevTree, parent, index)
   } else if (typeof subtree === 'number') {
     return renderTextComponent(subtree.toString(), prevTree, parent, index)
-  }
-  // else if (Array.isArray(subtree)) {
-  //   return []
-  // }
-  else {
-    // debugger
+  } else {
     return renderInternal(parent, subtree, prevTree, index)
   }
 }
