@@ -1,6 +1,7 @@
 import {createTree} from './lib/create-tree'
 import {boxesTest} from './test/boxes'
 import {test2} from './test/test2'
+import {test2React} from './test/test2-react'
 
 function main(): void {
   const root = document.getElementById('root')
@@ -10,6 +11,7 @@ function main(): void {
     // lotsOfElements(root)
     // lotsOfElements(root)
     test2(root)
+    // test2React(root)
     // canvasTest(root)
     // boxesTest()
     // reactBoxesTest()
