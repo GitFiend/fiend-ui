@@ -4,7 +4,7 @@ import {Component} from './component-types/component'
 declare global {
   namespace JSX {
     // @ts-ignore
-    type Element = JSXSlice
+    type Element = Subtree
 
     // @ts-ignore
     interface ElementClass extends Component<any> {}
