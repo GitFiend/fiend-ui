@@ -25,7 +25,11 @@ export function renderFlatSubtree(
   prevTree: Z | null,
   parent: ParentTree2,
   index: number
-): Z {
+): Z | null {
+  if (subtree === null) {
+    removeSubtrees(parent, index)
+    return null
+  }
   if (typeof subtree === 'string') {
     return renderTextComponent(subtree, prevTree, parent, index)
   } else if (typeof subtree === 'number') {
@@ -38,7 +42,7 @@ export function renderFlatSubtree(
 export function removeSubtrees(parent: ParentTree2, index: number): void {
   switch (parent.type) {
     case ZType.host:
-      const siblings = parent.children
+      const siblings: Z[] = parent.children
       const len = siblings.length
 
       for (let i = index; i < len; i++) {
@@ -46,6 +50,7 @@ export function removeSubtrees(parent: ParentTree2, index: number): void {
       }
       break
     case ZType.custom:
+      console.log('custom delete!!!!!!!!!!!')
       // Custom components one have child?
       // if (index === 0)
       //   parent.subtree?.remove()
@@ -54,23 +59,31 @@ export function removeSubtrees(parent: ParentTree2, index: number): void {
   }
 }
 
-export function renderSubtree(children: Subtree, prevChildren: Z[], parent: ParentTree2) {
-  if (!Array.isArray(children)) {
-    return [renderFlatSubtree(children, prevChildren[0] || null, parent, 0)]
-  }
-
+export function renderSubtree(children: Subtree, prevChildren: Z[], parent: ParentTree2): Z[] {
   const newChildren: Z[] = []
 
-  let i = 0
-  for (const c of children) {
-    if (Array.isArray(c)) {
-      for (const c_ of c) {
-        newChildren.push(renderFlatSubtree(c_, prevChildren[i] || null, parent, i))
+  if (children === null) {
+    if (prevChildren[0]) {
+      removeSubtrees(parent, 0)
+    }
+  } else if (!Array.isArray(children)) {
+    const s = renderFlatSubtree(children, prevChildren[0] || null, parent, 0)
+    if (s !== null) newChildren.push(s)
+  } else {
+    let i = 0
+    for (const c of children) {
+      if (Array.isArray(c)) {
+        for (const c_ of c) {
+          const s = renderFlatSubtree(c_, prevChildren[i] || null, parent, i)
+          if (s !== null) newChildren.push(s)
+          i++
+        }
+      } else {
+        const s = renderFlatSubtree(c, prevChildren[i] || null, parent, i)
+
+        if (s !== null) newChildren.push(s)
         i++
       }
-    } else {
-      newChildren.push(renderFlatSubtree(c, prevChildren[i] || null, parent, i))
-      i++
     }
   }
 

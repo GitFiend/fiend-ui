@@ -12,13 +12,14 @@ export interface Tree {
   children: Subtree
 }
 
-export type SubtreeFlat = Tree | string | number
+export type SubtreeFlat = Tree | string | number | null
 export type Subtree =
+  | null
   | Tree
   | string
   | number
   | SubtreeFlat[]
-  | (Tree | string | number | SubtreeFlat[])[]
+  | (null | Tree | string | number | SubtreeFlat[])[]
 
 export enum ZType {
   host,

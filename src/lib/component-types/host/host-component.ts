@@ -5,7 +5,7 @@ import {setAttributesFromProps, updateAttributes} from './set-attributes'
 export class HostComponent implements ComponentBase {
   type = ZType.host as const
   element: HTMLElement
-  children: Z[]
+  children: Z[] = []
 
   constructor(
     public tag: keyof HTMLElementTagNameMap,
