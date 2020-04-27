@@ -7,7 +7,7 @@ import {screen} from '@testing-library/dom'
 import {Component} from '../lib/component-types/component'
 import {Subtree} from '../lib/component-types/base'
 
-describe('component switching', () => {
+describe('element deletion', () => {
   it('shows alternate component after state change', () => {
     const store = new Store()
 
@@ -15,20 +15,14 @@ describe('component switching', () => {
     render(s, document.body)
 
     store.setA(true)
-    // console.log(document.body.innerHTML)
+    console.log(document.body.innerHTML)
     expect(screen.queryByText('a')).toBeDefined()
     expect(screen.queryByText('b')).toBeNull()
 
     store.setA(false)
-    // console.log(document.body.innerHTML)
+    console.log(document.body.innerHTML)
     expect(screen.queryByText('b')).toBeDefined()
     expect(screen.queryByText('a')).toBeNull()
-
-    // TODO: Broken!
-    store.setA(true)
-    // console.log(document.body.innerHTML)
-    // expect(screen.queryByText('a')).toBeDefined()
-    // expect(screen.queryByText('b')).toBeNull()
   })
 })
 
@@ -47,11 +41,13 @@ interface SwitcherProps {
 }
 class Switcher extends ObserverComponent<SwitcherProps> {
   render() {
+    const {store} = this.props
+
     return (
       <div>
         <h1>Heading</h1>
-        {this.drawSwitchingPart()}
-        <footer>Footer</footer>
+        {store.a && this.drawSwitchingPart()}
+        {store.a && <footer>Footer</footer>}
       </div>
     )
   }
@@ -60,7 +56,7 @@ class Switcher extends ObserverComponent<SwitcherProps> {
     const {store} = this.props
 
     if (store.a) {
-      // console.log('a')
+      console.log('a')
       return (
         <F>
           <CustomDiv>a</CustomDiv>
@@ -68,7 +64,7 @@ class Switcher extends ObserverComponent<SwitcherProps> {
       )
     }
 
-    // console.log('b')
+    console.log('b')
     return (
       <F>
         <CustomDiv>b</CustomDiv>
