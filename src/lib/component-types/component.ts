@@ -1,5 +1,5 @@
 import {ComponentBase, equalProps, ParentTree2, SubTree, Tree, Z, ZType} from './base'
-import {removeSubtrees, renderInternal} from '../render'
+import {removeSubtrees, renderTree} from '../render'
 
 export interface Rec {
   [prop: string]: unknown
@@ -27,7 +27,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
   update() {
     const res = this.render()
 
-    if (res !== null) this.subtree = renderInternal(this.parent, res, this.subtree, 0)
+    if (res !== null) this.subtree = renderTree(res, this.subtree, this.parent, 0)
   }
 
   updateWithNewProps(props: P, children: SubTree): void {

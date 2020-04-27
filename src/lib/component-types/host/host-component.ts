@@ -1,5 +1,5 @@
 import {ParentTree2, Z, ComponentBase, ZType, SubTree} from '../base'
-import {removeSubtrees, renderChildInternal} from '../../render'
+import {removeSubtrees, renderSubTree} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
 export class HostComponent implements ComponentBase {
@@ -58,7 +58,7 @@ export function renderHost(
 
 function renderHostChildren(children: SubTree, prevChildren: Z[], parent: ParentTree2) {
   if (!Array.isArray(children)) {
-    return [renderChildInternal(children, prevChildren[0] || null, parent, 0)]
+    return [renderSubTree(children, prevChildren[0] || null, parent, 0)]
   }
 
   const newChildren: Z[] = []
@@ -67,11 +67,11 @@ function renderHostChildren(children: SubTree, prevChildren: Z[], parent: Parent
   for (const c of children) {
     if (Array.isArray(c)) {
       for (const c_ of c) {
-        newChildren.push(renderChildInternal(c_, prevChildren[i] || null, parent, i))
+        newChildren.push(renderSubTree(c_, prevChildren[i] || null, parent, i))
         i++
       }
     } else {
-      newChildren.push(renderChildInternal(c, prevChildren[i] || null, parent, i))
+      newChildren.push(renderSubTree(c, prevChildren[i] || null, parent, i))
       i++
     }
   }

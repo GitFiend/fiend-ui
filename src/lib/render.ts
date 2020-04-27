@@ -6,15 +6,10 @@ import {renderCustom} from './component-types/component'
 export function render(tree: Tree, target: HTMLElement): void {
   const root = new RootNode(target)
 
-  renderInternal(root, tree, null, 0)
+  renderTree(tree, null, root, 0)
 }
 
-export function renderInternal(
-  parent: ParentTree2,
-  tree: Tree,
-  prevTree: Z | null,
-  index: number
-): Z {
+export function renderTree(tree: Tree, prevTree: Z | null, parent: ParentTree2, index: number): Z {
   const {type, props, children} = tree
 
   // WHat about number?
@@ -25,7 +20,7 @@ export function renderInternal(
   }
 }
 
-export function renderChildInternal(
+export function renderSubTree(
   subtree: SubTreeFlat,
   prevTree: Z | null,
   parent: ParentTree2,
@@ -36,7 +31,7 @@ export function renderChildInternal(
   } else if (typeof subtree === 'number') {
     return renderTextComponent(subtree.toString(), prevTree, parent, index)
   } else {
-    return renderInternal(parent, subtree, prevTree, index)
+    return renderTree(subtree, prevTree, parent, index)
   }
 }
 
