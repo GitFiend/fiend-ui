@@ -14,7 +14,7 @@ export class ObserverComponent<P extends {} = {}> extends Component<P> {
   }
 
   remove(): void {
-    super.remove()
     this.disposers.forEach((d) => d())
+    super.remove()
   }
 }

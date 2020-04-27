@@ -40,9 +40,9 @@ export class Component<P extends {} = {}> implements ComponentBase {
     }
   }
 
-  componentDidMount(): void {
-    //
-  }
+  componentDidMount(): void {}
+
+  componentWillUnmount(): void {}
 
   mount() {
     this.update()
@@ -51,6 +51,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
 
   remove(): void {
     this.subtree.forEach((s) => s.remove())
+    this.componentWillUnmount()
   }
 
   // Required by JSX
