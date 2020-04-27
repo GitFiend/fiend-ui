@@ -61,9 +61,3 @@ export function equalProps(a: Rec, b: Rec): boolean {
 
   return true
 }
-
-export class F extends Component {
-  render() {
-    return this.props.children || null
-  }
-}

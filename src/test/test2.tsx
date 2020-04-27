@@ -2,7 +2,7 @@ import {createElement} from '../lib/create-element'
 import {render} from '../lib/render'
 import {action, observable} from 'mobx'
 import {ObserverComponent} from '../lib/component-types/observer-component'
-import {F} from '../lib/component-types/base'
+import {F} from '../lib/component-types/fragment'
 
 function randomHue() {
   return Math.round(Math.random() * 1000) % 255
