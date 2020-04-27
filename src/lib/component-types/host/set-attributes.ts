@@ -41,7 +41,9 @@ function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
 }
 
 function setAttribute(element: HTMLElement, attr: string, value: any, oldValue: any): void {
-  if (attr.startsWith('on')) {
+  if (attr === 'className') {
+    element.setAttribute('class', value)
+  } else if (attr.startsWith('on')) {
     element.addEventListener(attr.slice(2).toLowerCase(), value)
   } else if (attr === 'style') {
     setStyles(element, value, oldValue)
