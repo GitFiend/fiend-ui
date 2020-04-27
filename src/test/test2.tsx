@@ -2,6 +2,7 @@ import {createElement} from '../lib/create-element'
 import {render} from '../lib/render'
 import {action, observable} from 'mobx'
 import {ObserverComponent} from '../lib/component-types/observer-component'
+import {F} from '../lib/component-types/base'
 
 function randomHue() {
   return Math.round(Math.random() * 1000) % 255
@@ -74,7 +75,12 @@ class Nested extends ObserverComponent {
   @observable num = 100
 
   render() {
-    return <button onClick={this.onClick}>{this.num}</button>
+    return (
+      <F>
+        <p>n:</p>
+        <button onClick={this.onClick}>{this.num}</button>
+      </F>
+    )
   }
 
   @action

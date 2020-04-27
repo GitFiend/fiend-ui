@@ -1,36 +1,36 @@
-import {ComponentBase, equalProps, ParentTree2, SubTree, Tree, Z, ZType} from './base'
-import {removeSubtrees, renderTree} from '../render'
+import {ComponentBase, equalProps, ParentTree2, Subtree, Z, ZType} from './base'
+import {removeSubtrees, renderSubtree} from '../render'
 
 export interface Rec {
   [prop: string]: unknown
 }
 
-export type Props<T> = T & {children?: SubTree}
+export type Props<T> = T & {children?: Subtree}
 
 export class Component<P extends {} = {}> implements ComponentBase {
   type = ZType.custom as const
   element: HTMLElement
-  subtree: Z | null = null
+  subtree: Z[] = []
   props: Props<P>
 
-  constructor(props: P, public parent: ParentTree2, public children: SubTree) {
+  constructor(props: P, public parent: ParentTree2, public children: Subtree) {
     this.props = props
     this.props.children = children
 
     this.element = parent.element
   }
 
-  render(): Tree | null {
+  render(): Subtree | null {
     return null
   }
 
   update() {
     const res = this.render()
 
-    if (res !== null) this.subtree = renderTree(res, this.subtree, this.parent, 0)
+    if (res !== null) this.subtree = renderSubtree(res, this.subtree, this.parent)
   }
 
-  updateWithNewProps(props: P, children: SubTree): void {
+  updateWithNewProps(props: P, children: Subtree): void {
     const p = props as Props<P>
     p.children = children
 
@@ -50,7 +50,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
   }
 
   remove(): void {
-    this.subtree?.remove()
+    this.subtree.forEach((s) => s.remove())
   }
 
   // Required by JSX
@@ -65,7 +65,7 @@ export function makeCustomComponent<P extends Rec>(
   cons: typeof Component,
   props: P | null,
   parent: ParentTree2,
-  children: SubTree
+  children: Subtree
 ) {
   const component = new cons<P>(props || ({} as P), parent, children)
   component.mount()
@@ -76,7 +76,7 @@ export function makeCustomComponent<P extends Rec>(
 export function renderCustom<P extends Rec>(
   cons: typeof Component,
   props: P | null,
-  children: SubTree,
+  children: Subtree,
   parent: ParentTree2,
   prevTree: Z | null,
   index: number

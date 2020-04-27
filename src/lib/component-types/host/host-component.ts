@@ -1,5 +1,5 @@
-import {ParentTree2, Z, ComponentBase, ZType, SubTree} from '../base'
-import {removeSubtrees, renderSubTree} from '../../render'
+import {ComponentBase, ParentTree2, Subtree, Z, ZType} from '../base'
+import {removeSubtrees, renderSubtree} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
 export class HostComponent implements ComponentBase {
@@ -11,7 +11,7 @@ export class HostComponent implements ComponentBase {
     public tag: keyof HTMLElementTagNameMap,
     public props: Record<string, unknown> | null,
     public parent: ParentTree2,
-    childrenSlices: SubTree
+    childrenSlices: Subtree
   ) {
     this.element = document.createElement(tag)
 
@@ -19,7 +19,7 @@ export class HostComponent implements ComponentBase {
 
     parent.element.appendChild(this.element)
 
-    this.children = renderHostChildren(childrenSlices, [], this)
+    this.children = renderSubtree(childrenSlices, [], this)
   }
 
   remove(): void {
@@ -32,7 +32,7 @@ export class HostComponent implements ComponentBase {
 export function renderHost(
   tag: keyof HTMLElementTagNameMap,
   props: Record<string, unknown> | null,
-  children: SubTree,
+  children: Subtree,
   parent: ParentTree2,
   prevTree: Z | null,
   index: number
@@ -47,34 +47,11 @@ export function renderHost(
     }
 
     prevTree.props = props
-    prevTree.children = renderHostChildren(children, prevTree.children, parent)
+    prevTree.children = renderSubtree(children, prevTree.children, parent)
 
     return prevTree
   } else {
     removeSubtrees(parent, index)
     return new HostComponent(tag, props, parent, children)
   }
-}
-
-function renderHostChildren(children: SubTree, prevChildren: Z[], parent: ParentTree2) {
-  if (!Array.isArray(children)) {
-    return [renderSubTree(children, prevChildren[0] || null, parent, 0)]
-  }
-
-  const newChildren: Z[] = []
-
-  let i = 0
-  for (const c of children) {
-    if (Array.isArray(c)) {
-      for (const c_ of c) {
-        newChildren.push(renderSubTree(c_, prevChildren[i] || null, parent, i))
-        i++
-      }
-    } else {
-      newChildren.push(renderSubTree(c, prevChildren[i] || null, parent, i))
-      i++
-    }
-  }
-
-  return newChildren
 }

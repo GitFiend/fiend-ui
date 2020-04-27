@@ -1,4 +1,4 @@
-import {ParentTree2, RootNode, SubTreeFlat, Tree, Z, ZType} from './component-types/base'
+import {ParentTree2, RootNode, Subtree, SubtreeFlat, Tree, Z, ZType} from './component-types/base'
 import {renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {renderCustom} from './component-types/component'
@@ -20,8 +20,8 @@ export function renderTree(tree: Tree, prevTree: Z | null, parent: ParentTree2, 
   }
 }
 
-export function renderSubTree(
-  subtree: SubTreeFlat,
+export function renderFlatSubtree(
+  subtree: SubtreeFlat,
   prevTree: Z | null,
   parent: ParentTree2,
   index: number
@@ -52,4 +52,27 @@ export function removeSubtrees(parent: ParentTree2, index: number): void {
 
       break
   }
+}
+
+export function renderSubtree(children: Subtree, prevChildren: Z[], parent: ParentTree2) {
+  if (!Array.isArray(children)) {
+    return [renderFlatSubtree(children, prevChildren[0] || null, parent, 0)]
+  }
+
+  const newChildren: Z[] = []
+
+  let i = 0
+  for (const c of children) {
+    if (Array.isArray(c)) {
+      for (const c_ of c) {
+        newChildren.push(renderFlatSubtree(c_, prevChildren[i] || null, parent, i))
+        i++
+      }
+    } else {
+      newChildren.push(renderFlatSubtree(c, prevChildren[i] || null, parent, i))
+      i++
+    }
+  }
+
+  return newChildren
 }

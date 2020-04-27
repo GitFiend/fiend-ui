@@ -9,16 +9,16 @@ export type ParentTree2 = HostComponent | RootNode | Component
 export interface Tree {
   type: keyof HTMLElementTagNameMap | typeof Component
   props: Record<string, unknown> | null
-  children: SubTree
+  children: Subtree
 }
 
-export type SubTreeFlat = Tree | string | number
-export type SubTree =
+export type SubtreeFlat = Tree | string | number
+export type Subtree =
   | Tree
   | string
   | number
-  | SubTreeFlat[]
-  | (Tree | string | number | SubTreeFlat[])[]
+  | SubtreeFlat[]
+  | (Tree | string | number | SubtreeFlat[])[]
 
 export enum ZType {
   host,
@@ -62,8 +62,8 @@ export function equalProps(a: Rec, b: Rec): boolean {
   return true
 }
 
-// export class F extends Component {
-//   render(): Tree | null {
-//     return this.props.children || null
-//   }
-// }
+export class F extends Component {
+  render() {
+    return this.props.children || null
+  }
+}
