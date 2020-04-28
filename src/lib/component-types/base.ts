@@ -4,7 +4,7 @@ import {Component, Rec} from './component'
 import {ObserverComponent} from './observer-component'
 
 export type Z = HostComponent | TextComponent | Component | ObserverComponent
-export type ParentTree2 = HostComponent | RootNode | Component
+export type ParentTree = HostComponent | RootNode | Component
 
 export interface Tree {
   type: keyof HTMLElementTagNameMap | typeof Component

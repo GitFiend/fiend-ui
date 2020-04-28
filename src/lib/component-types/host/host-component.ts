@@ -1,4 +1,4 @@
-import {ComponentBase, ParentTree2, Subtree, Z, ZType} from '../base'
+import {ComponentBase, ParentTree, Subtree, Z, ZType} from '../base'
 import {removeSubtrees, renderSubtree} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
@@ -10,7 +10,7 @@ export class HostComponent implements ComponentBase {
   constructor(
     public tag: keyof HTMLElementTagNameMap,
     public props: Record<string, unknown> | null,
-    public parent: ParentTree2,
+    public parent: ParentTree,
     childrenSlices: Subtree
   ) {
     this.element = document.createElement(tag)
@@ -33,7 +33,7 @@ export function renderHost(
   tag: keyof HTMLElementTagNameMap,
   props: Record<string, unknown> | null,
   children: Subtree,
-  parent: ParentTree2,
+  parent: ParentTree,
   prevTree: Z | null,
   index: number
 ): HostComponent {

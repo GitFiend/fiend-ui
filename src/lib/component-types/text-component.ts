@@ -1,11 +1,11 @@
-import {ParentTree2, Z, ComponentBase, ZType} from './base'
+import {ParentTree, Z, ComponentBase, ZType} from './base'
 import {removeSubtrees} from '../render'
 
 export class TextComponent implements ComponentBase {
   type = ZType.text as const
   element: Text
 
-  constructor(public text: string, public parent: ParentTree2) {
+  constructor(public text: string, public parent: ParentTree) {
     this.element = document.createTextNode(text)
     parent.element.appendChild(this.element)
   }
@@ -18,7 +18,7 @@ export class TextComponent implements ComponentBase {
 export function renderTextComponent(
   text: string,
   prevTree: Z | null,
-  parent: ParentTree2,
+  parent: ParentTree,
   index: number
 ): TextComponent {
   if (prevTree === null) {

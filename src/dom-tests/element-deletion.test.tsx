@@ -7,7 +7,7 @@ import {screen} from '@testing-library/dom'
 import {Component} from '../lib/component-types/component'
 import {Subtree} from '../lib/component-types/base'
 
-describe('element deletion', () => {
+xdescribe('element deletion', () => {
   it('shows alternate component after state change', () => {
     const store = new Store()
 
@@ -46,7 +46,7 @@ class Switcher extends ObserverComponent<SwitcherProps> {
     return (
       <div>
         <h1>Heading</h1>
-        {store.a && this.drawSwitchingPart()}
+        {/*{store.a && this.drawSwitchingPart()}*/}
         {store.a && <footer>Footer</footer>}
       </div>
     )

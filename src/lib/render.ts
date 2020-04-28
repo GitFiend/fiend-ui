@@ -1,4 +1,4 @@
-import {ParentTree2, RootNode, Subtree, SubtreeFlat, Tree, Z, ZType} from './component-types/base'
+import {ParentTree, RootNode, Subtree, SubtreeFlat, Tree, Z, ZType} from './component-types/base'
 import {renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {renderCustom} from './component-types/component'
@@ -9,7 +9,7 @@ export function render(tree: Tree, target: HTMLElement): void {
   renderTree(tree, null, root, 0)
 }
 
-export function renderTree(tree: Tree, prevTree: Z | null, parent: ParentTree2, index: number): Z {
+export function renderTree(tree: Tree, prevTree: Z | null, parent: ParentTree, index: number): Z {
   const {type, props, children} = tree
 
   // WHat about number?
@@ -23,7 +23,7 @@ export function renderTree(tree: Tree, prevTree: Z | null, parent: ParentTree2, 
 export function renderFlatSubtree(
   subtree: SubtreeFlat,
   prevTree: Z | null,
-  parent: ParentTree2,
+  parent: ParentTree,
   index: number
 ): Z | null {
   if (subtree === null) {
@@ -39,7 +39,7 @@ export function renderFlatSubtree(
   }
 }
 
-export function removeSubtrees(parent: ParentTree2, index: number): void {
+export function removeSubtrees(parent: ParentTree, index: number): void {
   switch (parent.type) {
     case ZType.host:
       const siblings: Z[] = parent.children
@@ -59,7 +59,7 @@ export function removeSubtrees(parent: ParentTree2, index: number): void {
   }
 }
 
-export function renderSubtree(children: Subtree, prevChildren: Z[], parent: ParentTree2): Z[] {
+export function renderSubtree(children: Subtree, prevChildren: Z[], parent: ParentTree): Z[] {
   const newChildren: Z[] = []
 
   if (children === null) {

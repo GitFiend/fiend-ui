@@ -1,4 +1,4 @@
-import {ComponentBase, equalProps, ParentTree2, Subtree, Z, ZType} from './base'
+import {ComponentBase, equalProps, ParentTree, Subtree, Z, ZType} from './base'
 import {removeSubtrees, renderSubtree} from '../render'
 
 export interface Rec {
@@ -13,7 +13,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
   subtree: Z[] = []
   props: Props<P>
 
-  constructor(props: P, public parent: ParentTree2, public children: Subtree) {
+  constructor(props: P, public parent: ParentTree, public children: Subtree) {
     this.props = props
     this.props.children = children
 
@@ -65,7 +65,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
 export function makeCustomComponent<P extends Rec>(
   cons: typeof Component,
   props: P | null,
-  parent: ParentTree2,
+  parent: ParentTree,
   children: Subtree
 ) {
   const component = new cons<P>(props || ({} as P), parent, children)
@@ -78,7 +78,7 @@ export function renderCustom<P extends Rec>(
   cons: typeof Component,
   props: P | null,
   children: Subtree,
-  parent: ParentTree2,
+  parent: ParentTree,
   prevTree: Z | null,
   index: number
 ) {
