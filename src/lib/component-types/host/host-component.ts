@@ -47,8 +47,8 @@ export function renderHost(
     }
 
     prevTree.props = props
-    removeExtraChildren(children, prevTree)
-    prevTree.children = renderSubtree(children, prevTree.children, parent)
+    // removeExtraChildren(children, prevTree)
+    prevTree.children = renderSubtree(children, prevTree.children, prevTree)
 
     return prevTree
   } else {
@@ -58,12 +58,13 @@ export function renderHost(
   }
 }
 
-function removeExtraChildren(children: Subtree, prevTree: HostComponent) {
-  if (children === null) return
-
-  const length = Array.isArray(children) ? children.length : 1
-
-  const prevLength = prevTree.children.length
-
-  if (prevLength > length) removeSubtrees(prevTree, length)
-}
+// // TODO: Maybe not the best place to do this.
+// function removeExtraChildren(children: Subtree, prevTree: HostComponent) {
+//   if (children === null) return
+//
+//   const length = Array.isArray(children) ? children.length : 1
+//
+//   const prevLength = prevTree.children.length
+//
+//   if (prevLength > length) removeSubtrees(prevTree, length)
+// }

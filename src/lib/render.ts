@@ -86,6 +86,6 @@ export function renderSubtree(children: Subtree, prevChildren: Z[], parent: Pare
       }
     }
   }
-
+  removeSubtrees(parent, newChildren.length)
   return newChildren
 }
