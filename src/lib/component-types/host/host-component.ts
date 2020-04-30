@@ -47,11 +47,23 @@ export function renderHost(
     }
 
     prevTree.props = props
+    removeExtraChildren(children, prevTree)
     prevTree.children = renderSubtree(children, prevTree.children, parent)
 
     return prevTree
   } else {
+    // Type has changed. Remove it.
     removeSubtrees(parent, index)
     return new HostComponent(tag, props, parent, children)
   }
+}
+
+function removeExtraChildren(children: Subtree, prevTree: HostComponent) {
+  if (children === null) return
+
+  const length = Array.isArray(children) ? children.length : 1
+
+  const prevLength = prevTree.children.length
+
+  if (prevLength > length) removeSubtrees(prevTree, length)
 }
