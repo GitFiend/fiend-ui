@@ -78,9 +78,11 @@ function setStyles(
 
 function deleteAttribute(element: HTMLElement, attr: string, oldValue: unknown): void {
   if (attr.startsWith('on')) {
-    console.log('removeEventListener', attr.slice(2).toLowerCase(), oldValue)
     element.removeEventListener(attr.slice(2).toLowerCase(), oldValue as any)
-    // element.addEventListener(attr.slice(2).toLowerCase(), value)
+  } else if (attr === 'className') {
+    element.removeAttribute('class')
+  } else if (attr === 'ref') {
+    ;(oldValue as RefObject<any>).current = null
   } else if (attr === 'style') {
     // const styleKeys = Object.keys(value)
     //
