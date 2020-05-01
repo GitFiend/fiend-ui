@@ -26,34 +26,56 @@ describe('deletion of custom component', () => {
       </C>
     )
 
-    renderTree(c2, divs, root, 0)
+    const divs2 = renderTree(c2, divs, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
+
+    const c3 = (
+      <C>
+        <div>a</div>
+        <div>b</div>
+      </C>
+    )
+
+    renderTree(c3, divs2, root, 0)
+
+    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
   })
 
   test('custom inside custom', () => {
     const root = mkRoot()
 
-    const c = (
+    let c = (
       <C>
         <C>a</C>
         <C>b</C>
       </C>
     )
 
-    const divs = renderTree(c, null, root, 0)
+    let divs = renderTree(c, null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    const c2 = (
+    c = (
       <C>
         <C>a</C>
       </C>
     )
 
-    renderTree(c2, divs, root, 0)
+    divs = renderTree(c, divs, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
+
+    c = (
+      <C>
+        <C>a</C>
+        <C>b</C>
+      </C>
+    )
+
+    divs = renderTree(c, divs, root, 0)
+
+    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
   })
 
   test('complex', () => {
