@@ -1,5 +1,5 @@
-import {ComponentBase, equalProps, ParentTree, Subtree, Z, ZType} from './base'
-import {removeSubtrees, renderSubtree} from '../render'
+import {ComponentBase, equalProps, ParentComponent, Subtree, Z, ZType} from './base'
+import {removeSubComponents, renderSubtree} from '../render'
 
 export interface Rec {
   [prop: string]: unknown
@@ -10,10 +10,10 @@ export type Props<T> = T & {children?: Subtree}
 export class Component<P extends {} = {}> implements ComponentBase {
   type = ZType.custom as const
   element: HTMLElement
-  subtree: Z[] = []
+  subComponents: Z[] = []
   props: Props<P>
 
-  constructor(props: P, public parent: ParentTree, public children: Subtree) {
+  constructor(props: P, public parent: ParentComponent, public children: Subtree) {
     this.props = props
     this.props.children = children
 
@@ -27,7 +27,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
   update() {
     const res = this.render()
 
-    if (res !== null) this.subtree = renderSubtree(res, this.subtree, this.parent)
+    if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)
   }
 
   updateWithNewProps(props: P, children: Subtree): void {
@@ -50,7 +50,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
   }
 
   remove(): void {
-    this.subtree.forEach((s) => s.remove())
+    this.subComponents.forEach((s) => s.remove())
     this.componentWillUnmount()
   }
 
@@ -65,7 +65,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
 export function makeCustomComponent<P extends Rec>(
   cons: typeof Component,
   props: P | null,
-  parent: ParentTree,
+  parent: ParentComponent,
   children: Subtree
 ) {
   const component = new cons<P>(props || ({} as P), parent, children)
@@ -78,7 +78,7 @@ export function renderCustom<P extends Rec>(
   cons: typeof Component,
   props: P | null,
   children: Subtree,
-  parent: ParentTree,
+  parent: ParentComponent,
   prevTree: Z | null,
   index: number
 ) {
@@ -92,7 +92,7 @@ export function renderCustom<P extends Rec>(
     return prevTree
   }
 
-  removeSubtrees(parent, index)
+  removeSubComponents(parent, index)
 
   return makeCustomComponent(cons, props, parent, children)
 }

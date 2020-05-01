@@ -1,5 +1,5 @@
-import {ComponentBase, ParentTree, Subtree, Z, ZType} from '../base'
-import {removeSubtrees, renderSubtree} from '../../render'
+import {ComponentBase, ParentComponent, Subtree, Z, ZType} from '../base'
+import {removeSubComponents, renderSubtree} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
 export class HostComponent implements ComponentBase {
@@ -10,7 +10,7 @@ export class HostComponent implements ComponentBase {
   constructor(
     public tag: keyof HTMLElementTagNameMap,
     public props: Record<string, unknown> | null,
-    public parent: ParentTree,
+    public parent: ParentComponent,
     childrenSlices: Subtree
   ) {
     this.element = document.createElement(tag)
@@ -29,11 +29,12 @@ export class HostComponent implements ComponentBase {
   }
 }
 
+// TODO: prevTree.children? parent.children? Seems there might be a bug here.
 export function renderHost(
   tag: keyof HTMLElementTagNameMap,
   props: Record<string, unknown> | null,
   children: Subtree,
-  parent: ParentTree,
+  parent: ParentComponent,
   prevTree: Z | null,
   index: number
 ): HostComponent {
@@ -47,24 +48,12 @@ export function renderHost(
     }
 
     prevTree.props = props
-    // removeExtraChildren(children, prevTree)
     prevTree.children = renderSubtree(children, prevTree.children, prevTree)
 
     return prevTree
   } else {
     // Type has changed. Remove it.
-    removeSubtrees(parent, index)
+    removeSubComponents(parent, index)
     return new HostComponent(tag, props, parent, children)
   }
 }
-
-// // TODO: Maybe not the best place to do this.
-// function removeExtraChildren(children: Subtree, prevTree: HostComponent) {
-//   if (children === null) return
-//
-//   const length = Array.isArray(children) ? children.length : 1
-//
-//   const prevLength = prevTree.children.length
-//
-//   if (prevLength > length) removeSubtrees(prevTree, length)
-// }

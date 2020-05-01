@@ -1,4 +1,12 @@
-import {ParentTree, RootNode, Subtree, SubtreeFlat, Tree, Z, ZType} from './component-types/base'
+import {
+  ParentComponent,
+  RootNode,
+  Subtree,
+  SubtreeFlat,
+  Tree,
+  Z,
+  ZType,
+} from './component-types/base'
 import {renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {renderCustom} from './component-types/component'
@@ -9,7 +17,12 @@ export function render(tree: Tree, target: HTMLElement): void {
   renderTree(tree, null, root, 0)
 }
 
-export function renderTree(tree: Tree, prevTree: Z | null, parent: ParentTree, index: number): Z {
+export function renderTree(
+  tree: Tree,
+  prevTree: Z | null,
+  parent: ParentComponent,
+  index: number
+): Z {
   const {type, props, children} = tree
 
   // WHat about number?
@@ -23,11 +36,11 @@ export function renderTree(tree: Tree, prevTree: Z | null, parent: ParentTree, i
 export function renderFlatSubtree(
   subtree: SubtreeFlat,
   prevTree: Z | null,
-  parent: ParentTree,
+  parent: ParentComponent,
   index: number
 ): Z | null {
   if (subtree === null) {
-    removeSubtrees(parent, index)
+    removeSubComponents(parent, index)
     return null
   }
   if (typeof subtree === 'string') {
@@ -39,7 +52,7 @@ export function renderFlatSubtree(
   }
 }
 
-export function removeSubtrees(parent: ParentTree, index: number): void {
+export function removeSubComponents(parent: ParentComponent, index: number): void {
   switch (parent.type) {
     case ZType.host:
       const siblings: Z[] = parent.children
@@ -51,6 +64,8 @@ export function removeSubtrees(parent: ParentTree, index: number): void {
       break
     case ZType.custom:
       console.log('custom delete!!!!!!!!!!!')
+
+      // parent.children
       // Custom components one have child?
       // if (index === 0)
       //   parent.subtree?.remove()
@@ -59,12 +74,12 @@ export function removeSubtrees(parent: ParentTree, index: number): void {
   }
 }
 
-export function renderSubtree(children: Subtree, prevChildren: Z[], parent: ParentTree): Z[] {
+export function renderSubtree(children: Subtree, prevChildren: Z[], parent: ParentComponent): Z[] {
   const newChildren: Z[] = []
 
   if (children === null) {
     if (prevChildren[0]) {
-      removeSubtrees(parent, 0)
+      removeSubComponents(parent, 0)
     }
   } else if (!Array.isArray(children)) {
     const s = renderFlatSubtree(children, prevChildren[0] || null, parent, 0)
@@ -86,6 +101,6 @@ export function renderSubtree(children: Subtree, prevChildren: Z[], parent: Pare
       }
     }
   }
-  removeSubtrees(parent, newChildren.length)
+  removeSubComponents(parent, newChildren.length)
   return newChildren
 }
