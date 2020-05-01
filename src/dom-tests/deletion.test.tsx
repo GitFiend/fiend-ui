@@ -3,6 +3,7 @@ import {Subtree} from '../lib/component-types/base'
 import {createElement} from '../lib/create-element'
 import {mkRoot} from './host.test'
 import {renderTree} from '../lib/render'
+import {F} from '../lib/component-types/fragment'
 
 describe('deletion of custom component', () => {
   test('host inside custom', () => {
@@ -54,6 +55,32 @@ describe('deletion of custom component', () => {
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
   })
+
+  test('complex', () => {
+    const root = mkRoot()
+
+    const c = (
+      <F>
+        <h1>a</h1>
+        {pickComponent('a')}
+      </F>
+    )
+
+    const divs = renderTree(c, null, root, 0)
+
+    expect(root.element.innerHTML).toEqual(`<h1>a</h1><div>A</div>`)
+
+    const c2 = (
+      <F>
+        <h1>a</h1>
+        {pickComponent('b')}
+      </F>
+    )
+
+    renderTree(c2, divs, root, 0)
+
+    expect(root.element.innerHTML).toEqual(`<h1>a</h1><div>B</div>`)
+  })
 })
 
 class C extends Component {
@@ -61,5 +88,24 @@ class C extends Component {
     const {children} = this.props
 
     return <div>{children}</div>
+  }
+}
+
+function pickComponent(component: 'a' | 'b') {
+  if (component === 'a') {
+    return <A />
+  }
+  return <B />
+}
+
+class A extends Component {
+  render(): Subtree | null {
+    return <div>A</div>
+  }
+}
+
+class B extends Component {
+  render(): Subtree | null {
+    return <div>B</div>
   }
 }
