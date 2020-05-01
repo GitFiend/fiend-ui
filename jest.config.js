@@ -1,14 +1,13 @@
-
 module.exports = {
   globals: {
-    __DEV__: false
+    __DEV__: false,
   },
   roots: ['<rootDir>/src/'],
   transform: {
-    '.(ts|tsx)': 'ts-jest'
+    '.(ts|tsx)': 'ts-jest',
   },
   testRegex: '(\\.(test))\\.(ts|tsx)$',
-  moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
+  moduleFileExtensions: ['ts', 'tsx', 'js'],
   coverageDirectory: '<rootDir>/coverage~~',
-  collectCoverageFrom: ['app/**/*.{ts,tsx,js}']
+  collectCoverageFrom: ['src/**/*.{ts,tsx}'],
 }

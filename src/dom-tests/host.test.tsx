@@ -54,6 +54,6 @@ describe('simple div', () => {
   })
 })
 
-function mkRoot(): RootNode {
+export function mkRoot(): RootNode {
   return new RootNode(document.createElement('div'))
 }
