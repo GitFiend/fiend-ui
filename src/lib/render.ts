@@ -54,23 +54,23 @@ export function renderFlatSubtree(
 
 export function removeSubComponents(parent: ParentComponent, index: number): void {
   switch (parent.type) {
+    case ZType.custom:
     case ZType.host:
-      const siblings: Z[] = parent.children
+      const siblings: Z[] = parent.subComponents
       const len = siblings.length
 
       for (let i = index; i < len; i++) {
         siblings[i].remove()
       }
       break
-    case ZType.custom:
-      console.log('custom delete!!!!!!!!!!!')
+    // console.log('custom delete!!!!!!!!!!!')
 
-      // parent.children
-      // Custom components one have child?
-      // if (index === 0)
-      //   parent.subtree?.remove()
+    // parent.children
+    // Custom components one have child?
+    // if (index === 0)
+    //   parent.subtree?.remove()
 
-      break
+    // break
   }
 }
 

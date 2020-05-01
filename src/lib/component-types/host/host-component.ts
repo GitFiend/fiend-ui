@@ -5,7 +5,7 @@ import {setAttributesFromProps, updateAttributes} from './set-attributes'
 export class HostComponent implements ComponentBase {
   type = ZType.host as const
   element: HTMLElement
-  children: Z[] = []
+  subComponents: Z[] = []
 
   constructor(
     public tag: keyof HTMLElementTagNameMap,
@@ -19,13 +19,13 @@ export class HostComponent implements ComponentBase {
 
     parent.element.appendChild(this.element)
 
-    this.children = renderSubtree(childrenSlices, [], this)
+    this.subComponents = renderSubtree(childrenSlices, [], this)
   }
 
   remove(): void {
     this.element.remove()
 
-    for (const c of this.children) c.remove()
+    for (const c of this.subComponents) c.remove()
   }
 }
 
@@ -48,7 +48,7 @@ export function renderHost(
     }
 
     prevTree.props = props
-    prevTree.children = renderSubtree(children, prevTree.children, prevTree)
+    prevTree.subComponents = renderSubtree(children, prevTree.subComponents, prevTree)
 
     return prevTree
   } else {

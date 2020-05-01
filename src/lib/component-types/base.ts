@@ -33,7 +33,7 @@ export interface ComponentBase {
 export class RootNode implements ComponentBase {
   type = ZType.host as const
   parent: null
-  children: Z[] = []
+  subComponents: Z[] = []
 
   constructor(public element: HTMLElement) {}
 
