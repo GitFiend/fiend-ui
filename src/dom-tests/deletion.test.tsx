@@ -2,8 +2,9 @@ import {Component} from '../lib/component-types/component'
 import {Subtree} from '../lib/component-types/base'
 import {createElement} from '../lib/create-element'
 import {mkRoot} from './host.test'
-import {renderTree} from '../lib/render'
+import {render, renderTree} from '../lib/render'
 import {F} from '../lib/component-types/fragment'
+import {ObserverComponent} from '../lib/component-types/observer-component'
 
 describe('deletion of custom component', () => {
   test('host inside custom', () => {
@@ -103,6 +104,25 @@ describe('deletion of custom component', () => {
 
     expect(root.element.innerHTML).toEqual(`<h1>a</h1><div>B</div>`)
   })
+
+  test('different order', () => {
+    class Outer extends Component {
+      render(): Subtree | null {
+        console.log('render Outer')
+        return (
+          <F>
+            <A />
+            <h1>Heading</h1>
+          </F>
+        )
+      }
+    }
+
+    const div = document.createElement('div')
+    render(<Outer />, div)
+
+    expect(div.innerHTML).toEqual(`<div>A</div><h1>Heading</h1>`)
+  })
 })
 
 class C extends Component {
@@ -122,11 +142,12 @@ function pickComponent(component: 'a' | 'b') {
 
 class A extends Component {
   render(): Subtree | null {
+    console.log('render A')
     return <div>A</div>
   }
 }
 
-class B extends Component {
+class B extends ObserverComponent {
   render(): Subtree | null {
     return <div>B</div>
   }
