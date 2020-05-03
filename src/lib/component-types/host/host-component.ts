@@ -6,13 +6,17 @@ export class HostComponent implements ComponentBase {
   type = ZType.host as const
   element: HTMLElement
   subComponents: Z[] = []
+  location: string
 
   constructor(
     public tag: keyof HTMLElementTagNameMap,
     public props: Record<string, unknown> | null,
     public parent: ParentComponent,
-    childrenSlices: Subtree
+    childrenSlices: Subtree,
+    index: number
   ) {
+    this.location = this.parent.location + index
+
     this.element = document.createElement(tag)
 
     if (props !== null) setAttributesFromProps(this.element, props)
@@ -39,7 +43,7 @@ export function renderHost(
   index: number
 ): HostComponent {
   if (prevTree === null) {
-    return new HostComponent(tag, props, parent, children)
+    return new HostComponent(tag, props, parent, children, index)
   }
 
   if (prevTree.type === ZType.host && prevTree.tag === tag) {
@@ -54,6 +58,6 @@ export function renderHost(
   } else {
     // Type has changed. Remove it.
     removeSubComponents(parent, index)
-    return new HostComponent(tag, props, parent, children)
+    return new HostComponent(tag, props, parent, children, index)
   }
 }

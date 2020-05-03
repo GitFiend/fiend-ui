@@ -1,5 +1,6 @@
 import {ComponentBase, equalProps, ParentComponent, Subtree, Z, ZType} from './base'
 import {removeSubComponents, renderSubtree} from '../render'
+import {time, timeEnd} from '../util/measure'
 
 export interface Rec {
   [prop: string]: unknown
@@ -12,8 +13,15 @@ export class Component<P extends {} = {}> implements ComponentBase {
   element: HTMLElement
   subComponents: Z[] = []
   props: Props<P>
+  location: string
 
-  constructor(props: P, public parent: ParentComponent, public children: Subtree) {
+  constructor(
+    props: P,
+    public parent: ParentComponent,
+    public children: Subtree,
+    public index: number
+  ) {
+    this.location = this.parent.location + index
     this.props = props
     this.props.children = children
 
@@ -25,9 +33,17 @@ export class Component<P extends {} = {}> implements ComponentBase {
   }
 
   update() {
+    if (__DEV__) {
+      time((this as any).constructor.name)
+    }
+
     const res = this.render()
 
     if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)
+
+    if (__DEV__) {
+      timeEnd((this as any).constructor.name)
+    }
   }
 
   updateWithNewProps(props: P, children: Subtree): void {
@@ -66,9 +82,10 @@ export function makeCustomComponent<P extends Rec>(
   cons: typeof Component,
   props: P | null,
   parent: ParentComponent,
-  children: Subtree
+  children: Subtree,
+  index: number
 ) {
-  const component = new cons<P>(props || ({} as P), parent, children)
+  const component = new cons<P>(props || ({} as P), parent, children, index)
   component.mount()
 
   return component
@@ -83,7 +100,7 @@ export function renderCustom<P extends Rec>(
   index: number
 ) {
   if (prevTree === null) {
-    return makeCustomComponent(cons, props, parent, children)
+    return makeCustomComponent(cons, props, parent, children, index)
   }
 
   if (prevTree.type === ZType.custom && prevTree instanceof cons) {
@@ -94,5 +111,5 @@ export function renderCustom<P extends Rec>(
 
   removeSubComponents(parent, index)
 
-  return makeCustomComponent(cons, props, parent, children)
+  return makeCustomComponent(cons, props, parent, children, index)
 }

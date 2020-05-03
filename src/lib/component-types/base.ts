@@ -34,11 +34,13 @@ export class RootNode implements ComponentBase {
   type = ZType.host as const
   parent: null
   subComponents: Z[] = []
+  location: string = '1'
 
   constructor(public element: HTMLElement) {}
 
   remove(): void {
     this.element.remove()
+    this.subComponents.forEach((s) => s.remove())
   }
 }
 
@@ -56,4 +58,8 @@ export function equalProps(a: Rec, b: Rec): boolean {
   }
 
   return true
+}
+
+export function last<T>(array: T[]): T | undefined {
+  return array[array.length - 1]
 }

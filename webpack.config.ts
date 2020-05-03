@@ -15,31 +15,31 @@ const config = (env: Env, argv: Argv): Configuration => {
   const devMode = argv.mode === 'development'
 
   const buildEnvironment = {
-    __DEV__: devMode
+    __DEV__: devMode,
   }
 
   return {
     entry: {
-      main: path.join(__dirname, 'src', 'main.tsx')
+      main: path.join(__dirname, 'src', 'main.tsx'),
     },
     watchOptions: {
-      poll: true
+      poll: true,
     },
     stats: {
       entrypoints: false,
       colors: true,
-      modules: false
+      modules: false,
     },
     output: {
       path: path.join(__dirname, 'output-code/'),
-      filename: '[name].js'
+      filename: '[name].js',
     },
     target: 'web',
     mode: devMode ? 'development' : 'production',
     devtool: devMode ? 'cheap-module-eval-source-map' : undefined,
     node: false,
     resolve: {
-      extensions: ['.ts', '.tsx', '.js']
+      extensions: ['.ts', '.tsx', '.js'],
     },
     optimization: {
       // concatenateModules: false,
@@ -52,17 +52,17 @@ const config = (env: Env, argv: Argv): Configuration => {
             compress: {
               // drop_console: true,
               ecma: 9,
-              passes: 2,
-              unsafe_arrows: true
-            }
-          }
-        })
-      ]
+              passes: 3,
+              unsafe_arrows: true,
+            },
+          },
+        }),
+      ],
     },
     plugins: [
       new CleanWebpackPlugin(),
       new ForkTsCheckerWebpackPlugin(),
-      new webpack.DefinePlugin(buildEnvironment)
+      new webpack.DefinePlugin(buildEnvironment),
       // new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)()
     ],
     module: {
@@ -73,12 +73,12 @@ const config = (env: Env, argv: Argv): Configuration => {
           options: {
             transpileOnly: true,
             compilerOptions: {
-              module: 'es6'
-            }
-          }
-        }
-      ]
-    }
+              module: 'es6',
+            },
+          },
+        },
+      ],
+    },
   }
 }
 module.exports = config
