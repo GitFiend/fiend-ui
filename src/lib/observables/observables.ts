@@ -1,31 +1,9 @@
+import {TrackObservables} from './track-observables'
+
 //
+export const t = new TrackObservables()
 
-class TrackObservables {
-  computeds = new Map<Computed<unknown>, ''>()
-
-  computedStack: Computed<unknown>[] = []
-
-  registerComputed(c: Computed<unknown>) {
-    this.computeds.set(c, '')
-    this.computedStack.push(c)
-  }
-
-  finishRegisterComputed() {
-    this.computedStack.pop()
-  }
-
-  track(a: Atom<unknown>) {
-    const len = this.computedStack.length
-
-    if (len > 0) {
-      this.computedStack[len - 1].track(a)
-    }
-  }
-}
-
-const t = new TrackObservables()
-
-function obs<T>(value: T) {
+function obs<T>(value: T): {(): T; (newValue: T): void} {
   const a = new Atom(value)
 
   function inner(): T
@@ -35,24 +13,13 @@ function obs<T>(value: T) {
 
     if (newValue !== undefined) a.set(newValue)
 
-    return undefined
+    return
   }
+
+  return inner
 }
 
-function computed<T>(f: () => T) {
-  const c = new Computed(f)
-
-  t.registerComputed(c)
-  c.get()
-  t.finishRegisterComputed()
-
-  return () => {
-    // TODO: Track
-    return c.get()
-  }
-}
-
-class Atom<T> {
+export class Atom<T> {
   constructor(public value: T) {}
 
   get(): T {
@@ -66,20 +33,6 @@ class Atom<T> {
   }
 }
 
-class Computed<T> {
-  observables = new Map<Atom<unknown>, ''>()
-
-  result: T | null = null
-
-  constructor(public f: () => T) {}
-
-  track(a: Atom<unknown>) {
-    this.observables.set(a, '')
-  }
-
-  get(): T {
-    this.result = this.f()
-
-    return this.result
-  }
+function autorun(f: () => void) {
+  //
 }
