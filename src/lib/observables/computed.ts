@@ -9,44 +9,41 @@ export function computed<T>(f: () => T) {
   }
 }
 
-export class Computed<T> {
+export interface ZReaction {
+  run(): void
+}
+
+export class Computed<T> implements ZReaction {
   observables = new Map<Atom<unknown>, ''>()
 
-  result: T | null = null
+  result: T
 
   constructor(public f: () => T) {
-    t.registerComputed(this)
-    this.get()
-    t.finishRegisterComputed()
+    t.pushReaction(this)
+    this.result = f()
+    t.popReaction()
   }
 
-  track(a: Atom<unknown>) {
-    this.observables.set(a, '')
+  run(): void {
+    t.pushReaction(this)
+    this.result = this.f()
+    t.popReaction()
   }
 
   get(): T {
-    this.result = this.f()
-
     return this.result
   }
 }
 
-export class Reaction {
-  // An array might do.
-  observables = new Map<Atom<unknown>, ''>()
-
+export class Reaction implements ZReaction {
   constructor(public f: () => void) {
-    t.registerReaction(this)
     this.run()
-    t.finishRegisteringReaction()
-  }
-
-  track(a: Atom<unknown>) {
-    this.observables.set(a, '')
   }
 
   run() {
+    t.pushReaction(this)
     this.f()
+    t.popReaction()
   }
 }
 

@@ -1,32 +1,32 @@
 import {Atom} from './observables'
-import {Computed, Reaction} from './computed'
+import {Computed, Reaction, ZReaction} from './computed'
 
 export class TrackObservables {
-  computeds = new Map<Computed<unknown>, ''>()
-  computedStack: Computed<unknown>[] = []
+  // computeds = new Map<Computed<unknown>, ''>()
+  // computedStack: Computed<unknown>[] = []
 
-  reactions = new Map<Reaction, ''>()
-  reactionStack: Reaction[] = []
+  // reactions = new Map<Reaction, ''>()
+  reactionStack: ZReaction[] = []
 
-  registerComputed(c: Computed<unknown>) {
-    this.computeds.set(c, '')
-    this.computedStack.push(c)
-  }
+  // registerComputed(c: Computed<unknown>) {
+  //   this.computeds.set(c, '')
+  //   this.computedStack.push(c)
+  // }
+  //
+  // finishRegisterComputed() {
+  //   this.computedStack.pop()
+  // }
 
-  finishRegisterComputed() {
-    this.computedStack.pop()
-  }
-
-  registerReaction(r: Reaction) {
-    this.reactions.set(r, '')
+  pushReaction(r: Reaction) {
+    // this.reactions.set(r, '')
     this.reactionStack.push(r)
   }
 
-  finishRegisteringReaction() {
+  popReaction() {
     this.reactionStack.pop()
   }
 
-  getCurrentReaction(): Reaction | null {
+  getCurrentReaction(): ZReaction | null {
     const len = this.reactionStack.length
 
     if (len > 0) {
@@ -35,11 +35,11 @@ export class TrackObservables {
     return null
   }
 
-  track(a: Atom<unknown>) {
-    const len = this.reactionStack.length
-
-    if (len > 0) {
-      this.reactionStack[len - 1].track(a)
-    }
-  }
+  // track(a: Atom<unknown>) {
+  //   const len = this.reactionStack.length
+  //
+  //   if (len > 0) {
+  //     this.reactionStack[len - 1].track(a)
+  //   }
+  // }
 }

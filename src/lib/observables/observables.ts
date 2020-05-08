@@ -1,5 +1,5 @@
 import {TrackObservables} from './track-observables'
-import {Reaction} from './computed'
+import {Reaction, ZReaction} from './computed'
 
 //
 export const t = new TrackObservables()
@@ -21,7 +21,7 @@ export function obs<T>(value: T): {(): T; (newValue: T): void} {
 }
 
 export class Atom<T> {
-  reactions = new Map<Reaction, ''>()
+  reactions = new Map<ZReaction, ''>()
 
   constructor(public value: T) {}
 

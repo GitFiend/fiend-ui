@@ -1,5 +1,5 @@
-import {autorun} from './computed'
-import {obs} from './observables'
+import {autorun, computed} from './computed'
+import {obs, t} from './observables'
 
 describe('observables', () => {
   test('autorun', () => {
@@ -18,5 +18,15 @@ describe('observables', () => {
     a(7)
     expect(a()).toEqual(7)
     expect(count).toEqual(3)
+  })
+
+  test('computed', () => {
+    const a = obs(5)
+    const c = computed(() => a() * 3)
+
+    expect(c()).toEqual(15)
+
+    a(6)
+    expect(c()).toEqual(18)
   })
 })
