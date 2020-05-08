@@ -1,9 +1,10 @@
 import {TrackObservables} from './track-observables'
+import {Reaction} from './computed'
 
 //
 export const t = new TrackObservables()
 
-function obs<T>(value: T): {(): T; (newValue: T): void} {
+export function obs<T>(value: T): {(): T; (newValue: T): void} {
   const a = new Atom(value)
 
   function inner(): T
@@ -20,19 +21,26 @@ function obs<T>(value: T): {(): T; (newValue: T): void} {
 }
 
 export class Atom<T> {
+  reactions = new Map<Reaction, ''>()
+
   constructor(public value: T) {}
 
   get(): T {
-    t.track(this)
+    const r = t.getCurrentReaction()
+
+    if (r !== null) {
+      this.reactions.set(r, '')
+    }
 
     return this.value
   }
 
   set(value: T) {
     this.value = value
-  }
-}
 
-function autorun(f: () => void) {
-  //
+    this.reactions.forEach((_, r) => {
+      // this.reactions.delete(r)
+      r.run()
+    })
+  }
 }

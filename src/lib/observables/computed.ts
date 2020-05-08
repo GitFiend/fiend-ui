@@ -30,3 +30,26 @@ export class Computed<T> {
     return this.result
   }
 }
+
+export class Reaction {
+  // An array might do.
+  observables = new Map<Atom<unknown>, ''>()
+
+  constructor(public f: () => void) {
+    t.registerReaction(this)
+    this.run()
+    t.finishRegisteringReaction()
+  }
+
+  track(a: Atom<unknown>) {
+    this.observables.set(a, '')
+  }
+
+  run() {
+    this.f()
+  }
+}
+
+export function autorun(f: () => void) {
+  return new Reaction(f)
+}
