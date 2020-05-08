@@ -1,4 +1,4 @@
-import {Atom, t} from './observables'
+import {Atom, reactionStack} from './observables'
 
 export function computed<T>(f: () => T) {
   const c = new Computed(f)
@@ -19,15 +19,15 @@ export class Computed<T> implements ZReaction {
   result: T
 
   constructor(public f: () => T) {
-    t.pushReaction(this)
+    reactionStack.pushReaction(this)
     this.result = f()
-    t.popReaction()
+    reactionStack.popReaction()
   }
 
   run(): void {
-    t.pushReaction(this)
+    reactionStack.pushReaction(this)
     this.result = this.f()
-    t.popReaction()
+    reactionStack.popReaction()
   }
 
   get(): T {
@@ -41,9 +41,9 @@ export class Reaction implements ZReaction {
   }
 
   run() {
-    t.pushReaction(this)
+    reactionStack.pushReaction(this)
     this.f()
-    t.popReaction()
+    reactionStack.popReaction()
   }
 }
 

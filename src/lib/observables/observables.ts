@@ -1,8 +1,8 @@
-import {TrackObservables} from './track-observables'
-import {Reaction, ZReaction} from './computed'
+import {ReactionStack} from './reaction-stack'
+import {ZReaction} from './computed'
 
 //
-export const t = new TrackObservables()
+export const reactionStack = new ReactionStack()
 
 export function obs<T>(value: T): {(): T; (newValue: T): void} {
   const a = new Atom(value)
@@ -21,26 +21,31 @@ export function obs<T>(value: T): {(): T; (newValue: T): void} {
 }
 
 export class Atom<T> {
-  reactions = new Map<ZReaction, ''>()
+  reactions: ZReaction[] = []
 
   constructor(public value: T) {}
 
   get(): T {
-    const r = t.getCurrentReaction()
+    const r = reactionStack.getCurrentReaction()
 
     if (r !== null) {
-      this.reactions.set(r, '')
+      this.reactions.push(r)
     }
 
     return this.value
   }
 
   set(value: T) {
-    this.value = value
+    if (this.value !== value) {
+      this.value = value
 
-    this.reactions.forEach((_, r) => {
-      // this.reactions.delete(r)
-      r.run()
-    })
+      const reactions = this.reactions
+
+      this.reactions = []
+
+      for (const r of reactions) {
+        r.run()
+      }
+    }
   }
 }
