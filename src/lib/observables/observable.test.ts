@@ -68,4 +68,6 @@ describe('observables', () => {
     expect(c2()).toEqual(20)
     expect(count2).toEqual(3)
   })
+
+  // TODO: Allow setting observables in a reaction.
 })
