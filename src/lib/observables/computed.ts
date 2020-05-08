@@ -1,10 +1,9 @@
-import {Atom, reactionStack} from './observables'
+import {reactionStack} from './observables'
 
 export function computed<T>(f: () => T) {
   const c = new Computed(f)
 
   return () => {
-    // TODO: Track
     return c.get()
   }
 }
@@ -14,7 +13,7 @@ export interface ZReaction {
 }
 
 export class Computed<T> implements ZReaction {
-  observables = new Map<Atom<unknown>, ''>()
+  reactions: ZReaction[] = []
 
   result: T
 
@@ -26,11 +25,30 @@ export class Computed<T> implements ZReaction {
 
   run(): void {
     reactionStack.pushReaction(this)
-    this.result = this.f()
+    const result = this.f()
+
+    if (result !== this.result) {
+      this.result = result
+
+      const reactions = this.reactions
+
+      this.reactions = []
+
+      for (const r of reactions) {
+        r.run()
+      }
+    }
+
     reactionStack.popReaction()
   }
 
   get(): T {
+    const r = reactionStack.getCurrentReaction()
+
+    if (r !== null) {
+      this.reactions.push(r)
+    }
+
     return this.result
   }
 }
