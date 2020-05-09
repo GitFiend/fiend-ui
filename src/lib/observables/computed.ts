@@ -13,7 +13,7 @@ export interface ZReaction {
 }
 
 export class Computed<T> implements ZReaction {
-  reactions: ZReaction[] = []
+  reactions = new Set<ZReaction>()
 
   result: T
 
@@ -32,7 +32,7 @@ export class Computed<T> implements ZReaction {
 
       const reactions = this.reactions
 
-      this.reactions = []
+      this.reactions = new Set<ZReaction>()
 
       for (const r of reactions) {
         r.run()
@@ -46,7 +46,7 @@ export class Computed<T> implements ZReaction {
     const r = reactionStack.getCurrentReaction()
 
     if (r !== null) {
-      this.reactions.push(r)
+      this.reactions.add(r)
     }
 
     return this.result

@@ -21,7 +21,8 @@ export function obs<T>(value: T): {(): T; (newValue: T): void} {
 }
 
 export class Atom<T> {
-  reactions: ZReaction[] = []
+  // reactions: ZReaction[] = []
+  reactions = new Set<ZReaction>()
 
   constructor(public value: T) {}
 
@@ -29,7 +30,8 @@ export class Atom<T> {
     const r = reactionStack.getCurrentReaction()
 
     if (r !== null) {
-      this.reactions.push(r)
+      this.reactions.add(r)
+      // this.reactions.push(r)
     }
 
     return this.value
@@ -41,7 +43,7 @@ export class Atom<T> {
 
       const reactions = this.reactions
 
-      this.reactions = []
+      this.reactions = new Set<ZReaction>()
 
       for (const r of reactions) {
         r.run()

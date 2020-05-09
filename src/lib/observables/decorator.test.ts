@@ -18,7 +18,7 @@ function ob<T>(value: T): {(): T; (newValue: T): undefined} {
   return inner
 }
 
-describe('o', () => {
+xdescribe('o', () => {
   test('o', () => {
     const n = ob(5)
     let ok = false
@@ -37,7 +37,7 @@ describe('o', () => {
   })
 })
 
-describe('test decorator perf', () => {
+xdescribe('test decorator perf', () => {
   const loops = 10
 
   test('time a', () => {
