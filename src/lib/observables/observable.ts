@@ -1,8 +1,6 @@
-import {ReactionStack} from './reaction-stack'
+import {reactionStack} from './reaction-stack'
 import {ZReaction} from './reactions'
-
-//
-export const reactionStack = new ReactionStack()
+import {Notifier, notify} from './notifier'
 
 export function obs<T>(value: T): {(): T; (newValue: T): void} {
   const a = new Atom(value)
@@ -20,8 +18,7 @@ export function obs<T>(value: T): {(): T; (newValue: T): void} {
   return inner
 }
 
-export class Atom<T> {
-  // reactions: ZReaction[] = []
+export class Atom<T> implements Notifier {
   reactions = new Set<ZReaction>()
 
   constructor(public value: T) {}
@@ -31,7 +28,6 @@ export class Atom<T> {
 
     if (r !== null) {
       this.reactions.add(r)
-      // this.reactions.push(r)
     }
 
     return this.value
@@ -41,13 +37,7 @@ export class Atom<T> {
     if (this.value !== value) {
       this.value = value
 
-      const reactions = this.reactions
-
-      this.reactions = new Set<ZReaction>()
-
-      for (const r of reactions) {
-        r.run()
-      }
+      notify(this)
     }
   }
 }

@@ -1,5 +1,5 @@
 import {autorun, IReactionDisposer, observable} from 'mobx'
-import {obs} from './observables'
+import {obs} from './observable'
 import {autorun as autoRun} from './reactions'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {

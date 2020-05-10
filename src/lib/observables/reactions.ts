@@ -1,4 +1,6 @@
-import {reactionStack} from './observables'
+import {reactionStack} from './reaction-stack'
+import {Notifier, notify} from './notifier'
+import {action} from './action'
 
 export function computed<T>(f: () => T) {
   const c = new Computed(f)
@@ -12,7 +14,7 @@ export interface ZReaction {
   run(): void
 }
 
-export class Computed<T> implements ZReaction {
+export class Computed<T> implements ZReaction, Notifier {
   reactions = new Set<ZReaction>()
 
   result: T
@@ -23,23 +25,19 @@ export class Computed<T> implements ZReaction {
     reactionStack.popReaction()
   }
 
+  // TODO: Check for setting observables inside computeds and throw?
   run(): void {
+    // action(() => {
     reactionStack.pushReaction(this)
     const result = this.f()
 
     if (result !== this.result) {
       this.result = result
 
-      const reactions = this.reactions
-
-      this.reactions = new Set<ZReaction>()
-
-      for (const r of reactions) {
-        r.run()
-      }
+      notify(this)
     }
-
     reactionStack.popReaction()
+    // })
   }
 
   get(): T {
@@ -60,7 +58,9 @@ export class Reaction implements ZReaction {
 
   run() {
     reactionStack.pushReaction(this)
-    this.f()
+
+    action(this.f)
+    // this.f()
     reactionStack.popReaction()
   }
 }
