@@ -1,5 +1,5 @@
 import {ReactionStack} from './reaction-stack'
-import {ZReaction} from './computed'
+import {ZReaction} from './reactions'
 
 //
 export const reactionStack = new ReactionStack()

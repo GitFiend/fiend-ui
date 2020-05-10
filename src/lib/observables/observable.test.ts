@@ -1,4 +1,4 @@
-import {autorun, computed} from './computed'
+import {autorun, computed} from './reactions'
 import {obs} from './observables'
 
 describe('observables', () => {

@@ -1,6 +1,6 @@
 import {autorun, IReactionDisposer, observable} from 'mobx'
 import {obs} from './observables'
-import {autorun as autoRun} from './computed'
+import {autorun as autoRun} from './reactions'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {
   const obs = observable.box(value)
@@ -211,33 +211,3 @@ xdescribe('test decorator perf', () => {
     console.timeEnd('e')
   })
 })
-
-/*
-    RangeError: Maximum call stack size exceeded
-
-      10 |   function inner(): T
-      11 |   function inner(newValue: T): undefined
-    > 12 |   function inner(newValue?: T) {
-         |                 ^
-      13 |     if (arguments.length === 0) return a.get()
-      14 |
-      15 |     if (newValue !== undefined) a.set(newValue)
-
-      at inner (src/lib/observables/observables.ts:12:17)
-      at Reaction.f (src/lib/observables/decorator.test.ts:198:25)
-      at Reaction.run (src/lib/observables/computed.ts:63:10)
-      at Atom.set (src/lib/observables/observables.ts:47:11)
-      at inner (src/lib/observables/observables.ts:15:35)
-      at Reaction.f (src/lib/observables/decorator.test.ts:201:11)
-      at Reaction.run (src/lib/observables/computed.ts:63:10)
-      at Atom.set (src/lib/observables/observables.ts:47:11)
-      at inner (src/lib/observables/observables.ts:15:35)
-      at Reaction.f (src/lib/observables/decorator.test.ts:201:11)
-      at Reaction.run (src/lib/observables/computed.ts:63:10)
-      at Atom.set (src/lib/observables/observables.ts:47:11)
-      at inner (src/lib/observables/observables.ts:15:35)
-      at Reaction.f (src/lib/observables/decorator.test.ts:201:11)
-      at Reaction.run (src/lib/observables/computed.ts:63:10)
-      at Atom.set (src/lib/observables/observables.ts:47:11)
-      at inner (src/lib/observables/observables.ts:15:35)
- */

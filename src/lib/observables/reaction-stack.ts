@@ -1,4 +1,4 @@
-import {Reaction, ZReaction} from './computed'
+import {Reaction, ZReaction} from './reactions'
 
 export class ReactionStack {
   stack: ZReaction[] = []
