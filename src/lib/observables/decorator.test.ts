@@ -1,7 +1,6 @@
-import {autorun, IReactionDisposer, observable} from 'mobx'
+import {autorun, computed, IReactionDisposer, observable} from 'mobx'
 import {obs} from './observable'
 import {autorun as autoRun} from './reactions'
-import {reactionStack} from './reaction-stack'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {
   const obs = observable.box(value)
@@ -40,14 +39,22 @@ xdescribe('o', () => {
 
 describe('mobx behaviour', () => {
   test('autorun supports setting', () => {
-    const a = observable.box(1)
+    const a = observable.box(2)
     const b = observable.box(2)
+    const c = computed(() => a.get() * b.get())
+    let d: number = c.get()
+
+    expect(c.get()).toEqual(4)
     let count = 0
 
     autorun(() => {
       count++
       b.set(a.get() * 5)
-      console.log(b.get())
+
+      expect(b.get()).toEqual(10)
+      expect(c.get()).toEqual(20)
+
+      d = c.get()
     })
 
     expect(count).toEqual(1)

@@ -1,6 +1,8 @@
 import {reactionStack} from './reaction-stack'
 import {Notifier, notify} from './notifier'
 
+// export type Computed<T> = () => T
+
 export function computed<T>(f: () => T) {
   const c = new Computed(f)
 
@@ -26,15 +28,17 @@ export class Computed<T> implements Reactor, Notifier {
 
   // TODO: Check for setting observables inside computeds and throw?
   run(): void {
+    console.log('run computed. action stack size: ', reactionStack.actionStack.length)
+
     reactionStack.pushReaction(this)
     const result = this.f()
+    reactionStack.popReaction()
 
     if (result !== this.result) {
       this.result = result
 
       notify(this)
     }
-    reactionStack.popReaction()
   }
 
   get(): T {
@@ -54,6 +58,8 @@ export class Reaction implements Reactor {
   }
 
   run() {
+    // console.log(`Running ${this.name}`)
+
     reactionStack.pushReaction(this)
     reactionStack.startAction()
     this.f()

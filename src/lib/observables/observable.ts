@@ -2,7 +2,10 @@ import {reactionStack} from './reaction-stack'
 import {Reactor} from './reactions'
 import {Notifier, notify} from './notifier'
 
-export function obs<T>(value: T): {(): T; (newValue: T): void} {
+export type Observable<T> = {(): T; (newValue: T): void}
+
+// TODO: Rename to val?
+export function obs<T>(value: T): Observable<T> {
   const a = new Atom(value)
 
   function inner(): T

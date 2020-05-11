@@ -4,15 +4,14 @@ import {Notifier, runActionQueue} from './notifier'
 export class ReactionStack {
   stack: Reactor[] = []
 
-  // notifierStack: Set<Notifier>[] = []
   actionStack: ActionState[] = []
 
-  pushReaction(r: Reaction) {
-    // console.log('pushReaction')
+  pushReaction(r: Reaction): void {
+    // console.log(`push ${(r as any).constructor.name}`)
     this.stack.push(r)
   }
 
-  popReaction() {
+  popReaction(): void {
     this.stack.pop()
   }
 
@@ -25,9 +24,8 @@ export class ReactionStack {
     return null
   }
 
-  queueNotifier(notifier: Notifier) {
+  queueNotifier(notifier: Notifier): void {
     last(this.actionStack).notifiers.add(notifier)
-    // this.notifierStack[this.notifierStack.length - 1].add(notifier)
   }
 
   insideAction(): boolean {
@@ -35,9 +33,10 @@ export class ReactionStack {
   }
 
   startAction(): void {
-    // console.log('startAction')
+    if (this.stack.length === 0) {
+      console.log('starting action with no reaction!')
+    }
     this.actionStack.push(new ActionState(this.getCurrentReaction()!))
-    // this.notifierStack.push(new Set())
   }
 
   endAction(): void {

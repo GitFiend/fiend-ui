@@ -1,5 +1,6 @@
 import {autorun, computed} from './reactions'
 import {obs} from './observable'
+import {runInAction} from './action'
 
 describe('observables', () => {
   test('autorun', () => {
@@ -69,5 +70,20 @@ describe('observables', () => {
     expect(count2).toEqual(3)
   })
 
-  // TODO: Allow setting observables in a reaction.
+  /*
+
+  I think computeds need to keep their own queue and run when called upon.
+
+  They are different from reactions.
+
+   */
+  test('computeds in actions', () => {
+    const a = obs(2)
+    const c = computed(() => a() + 1)
+
+    runInAction(() => {
+      a(3)
+      expect(c()).toEqual(4)
+    })
+  })
 })

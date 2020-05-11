@@ -1,5 +1,5 @@
 import {runInAction} from './action'
-import {autorun} from './reactions'
+import {autorun, computed} from './reactions'
 import {obs} from './observable'
 
 describe('action', () => {
@@ -29,10 +29,33 @@ describe('action', () => {
     autorun(() => {
       count++
       b(a() * 5)
-      // console.log(b())
     })
 
     expect(count).toEqual(1)
-    // console.log(count)
+  })
+
+  xtest('autoRun with computed inside behaves', () => {
+    const a = obs(2)
+    const b = obs(2)
+    const c = computed(() => a() * b())
+    let d: number = c()
+
+    expect(c()).toEqual(4)
+
+    let count = 0
+
+    autorun(() => {
+      count++
+      b(a() * 5)
+
+      expect(b()).toEqual(10)
+
+      // Computed needs to update now.
+      expect(c()).toEqual(20)
+
+      d = c()
+    })
+
+    expect(count).toEqual(1)
   })
 })
