@@ -1,5 +1,5 @@
 import {reactionStack} from './reaction-stack'
-import {Reactor} from './reactions'
+import {Subscriber} from './reactions'
 import {Notifier, notify} from './notifier'
 
 export type Observable<T> = {(): T; (newValue: T): void}
@@ -22,7 +22,7 @@ export function obs<T>(value: T): Observable<T> {
 }
 
 export class Atom<T> implements Notifier {
-  reactions = new Set<Reactor>()
+  subscribers = new Set<Subscriber>()
 
   constructor(public value: T) {}
 
@@ -30,7 +30,7 @@ export class Atom<T> implements Notifier {
     const r = reactionStack.getCurrentReaction()
 
     if (r !== null) {
-      this.reactions.add(r)
+      this.subscribers.add(r)
     }
 
     return this.value
@@ -43,4 +43,9 @@ export class Atom<T> implements Notifier {
       notify(this)
     }
   }
+}
+
+class Chi {
+  $num = 5
+  π = 4
 }

@@ -1,6 +1,7 @@
 import {runInAction} from './action'
-import {autorun, computed} from './reactions'
+import {autorun} from './reactions'
 import {obs} from './observable'
+import {computed} from './computed'
 
 describe('action', () => {
   test('action batches updates', () => {

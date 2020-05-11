@@ -1,13 +1,12 @@
-import {Reaction, Reactor} from './reactions'
+import {Reaction, Subscriber} from './reactions'
 import {Notifier, runActionQueue} from './notifier'
 
 export class ReactionStack {
-  stack: Reactor[] = []
+  stack: Subscriber[] = []
 
   actionStack: ActionState[] = []
 
   pushReaction(r: Reaction): void {
-    // console.log(`push ${(r as any).constructor.name}`)
     this.stack.push(r)
   }
 
@@ -15,7 +14,7 @@ export class ReactionStack {
     this.stack.pop()
   }
 
-  getCurrentReaction(): Reactor | null {
+  getCurrentReaction(): Subscriber | null {
     const len = this.stack.length
 
     if (len > 0) {
@@ -49,7 +48,7 @@ export class ReactionStack {
 export class ActionState {
   notifiers = new Set<Notifier>()
 
-  constructor(public reactor: Reactor) {}
+  constructor(public reactor: Subscriber) {}
 }
 
 export const reactionStack = new ReactionStack()

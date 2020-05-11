@@ -1,6 +1,7 @@
-import {autorun, computed} from './reactions'
+import {autorun} from './reactions'
 import {obs} from './observable'
 import {runInAction} from './action'
+import {computed} from './computed'
 
 describe('observables', () => {
   test('autorun', () => {
@@ -72,7 +73,7 @@ describe('observables', () => {
 
   /*
 
-  I think computeds need to keep their own queue and run when called upon.
+  I think computeds need to keep their own queue and run when called upon?
 
   They are different from reactions.
 
@@ -82,6 +83,7 @@ describe('observables', () => {
     const c = computed(() => a() + 1)
 
     runInAction(() => {
+      // a isn't notifying c because it's inside a reaction.
       a(3)
       expect(c()).toEqual(4)
     })
