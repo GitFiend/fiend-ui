@@ -1,7 +1,6 @@
-import {action} from './action'
+import {runInAction} from './action'
 import {autorun} from './reactions'
 import {obs} from './observable'
-import {reactionStack} from './reaction-stack'
 
 describe('action', () => {
   test('action batches updates', () => {
@@ -13,7 +12,7 @@ describe('action', () => {
       a()
     })
 
-    action(() => {
+    runInAction(() => {
       a(2)
       a(3)
       a(4)

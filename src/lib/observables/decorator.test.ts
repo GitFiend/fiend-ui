@@ -55,7 +55,7 @@ describe('mobx behaviour', () => {
 })
 
 describe('test decorator perf', () => {
-  const loops = 100
+  const loops = 1000
 
   test('time a', () => {
     class A {

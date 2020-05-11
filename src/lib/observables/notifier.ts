@@ -6,8 +6,6 @@ export interface Notifier {
 }
 
 export function notify(notifier: Notifier) {
-  // console.log(notifier)
-
   if (reactionStack.insideAction()) {
     reactionStack.queueNotifier(notifier)
   } else {
@@ -15,44 +13,18 @@ export function notify(notifier: Notifier) {
     notifier.reactions = new Set<Reactor>()
 
     for (const r of reactions) {
-      // console.log('length', reactionStack.stack.length)
-
       r.run()
     }
   }
 }
-//
-// export function runNotifierQueue(notifiers: Set<Notifier>) {
-//   // reactionStack.runningNotifierQueue = true
-//
-//   const reactions = new Set<Reactor>()
-//
-//   for (const n of notifiers) {
-//     for (const r of n.reactions) {
-//       reactions.add(r)
-//     }
-//     n.reactions = new Set<Reactor>()
-//   }
-//
-//   for (const r of reactions) {
-//     r.run()
-//   }
-//
-//   // reactionStack.runningNotifierQueue = false
-// }
 
 export function runActionQueue(actionState: ActionState) {
-  // reactionStack.runningNotifierQueue = true
-
   const reactions = new Set<Reactor>()
   const {notifiers, reactor} = actionState
 
   for (const n of notifiers) {
     for (const r of n.reactions) {
       if (r !== reactor) reactions.add(r)
-      // else {
-      //   console.log('skip action we are already running')
-      // }
     }
     n.reactions = new Set<Reactor>()
   }
@@ -60,6 +32,4 @@ export function runActionQueue(actionState: ActionState) {
   for (const r of reactions) {
     r.run()
   }
-
-  // reactionStack.runningNotifierQueue = false
 }
