@@ -1,6 +1,5 @@
 import {reactionStack} from './reaction-stack'
 import {Notifier, notify} from './notifier'
-import {action} from './action'
 
 export function computed<T>(f: () => T) {
   const c = new Computed(f)
@@ -10,12 +9,12 @@ export function computed<T>(f: () => T) {
   }
 }
 
-export interface ZReaction {
+export interface Reactor {
   run(): void
 }
 
-export class Computed<T> implements ZReaction, Notifier {
-  reactions = new Set<ZReaction>()
+export class Computed<T> implements Reactor, Notifier {
+  reactions = new Set<Reactor>()
 
   result: T
 
@@ -27,7 +26,6 @@ export class Computed<T> implements ZReaction, Notifier {
 
   // TODO: Check for setting observables inside computeds and throw?
   run(): void {
-    // action(() => {
     reactionStack.pushReaction(this)
     const result = this.f()
 
@@ -37,7 +35,6 @@ export class Computed<T> implements ZReaction, Notifier {
       notify(this)
     }
     reactionStack.popReaction()
-    // })
   }
 
   get(): T {
@@ -51,16 +48,16 @@ export class Computed<T> implements ZReaction, Notifier {
   }
 }
 
-export class Reaction implements ZReaction {
+export class Reaction implements Reactor {
   constructor(public f: () => void) {
     this.run()
   }
 
   run() {
     reactionStack.pushReaction(this)
-
-    action(this.f)
-    // this.f()
+    reactionStack.startAction()
+    this.f()
+    reactionStack.endAction()
     reactionStack.popReaction()
   }
 }

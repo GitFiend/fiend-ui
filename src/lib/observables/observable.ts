@@ -1,5 +1,5 @@
 import {reactionStack} from './reaction-stack'
-import {ZReaction} from './reactions'
+import {Reactor} from './reactions'
 import {Notifier, notify} from './notifier'
 
 export function obs<T>(value: T): {(): T; (newValue: T): void} {
@@ -19,7 +19,7 @@ export function obs<T>(value: T): {(): T; (newValue: T): void} {
 }
 
 export class Atom<T> implements Notifier {
-  reactions = new Set<ZReaction>()
+  reactions = new Set<Reactor>()
 
   constructor(public value: T) {}
 

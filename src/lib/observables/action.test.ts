@@ -1,6 +1,7 @@
 import {action} from './action'
 import {autorun} from './reactions'
 import {obs} from './observable'
+import {reactionStack} from './reaction-stack'
 
 describe('action', () => {
   test('action batches updates', () => {
@@ -19,5 +20,20 @@ describe('action', () => {
     })
 
     expect(count).toEqual(2)
+  })
+
+  test('autorun supports setting', () => {
+    const a = obs(1)
+    const b = obs(2)
+    let count = 0
+
+    autorun(() => {
+      count++
+      b(a() * 5)
+      // console.log(b())
+    })
+
+    expect(count).toEqual(1)
+    // console.log(count)
   })
 })

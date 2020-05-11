@@ -1,6 +1,5 @@
 import {autorun, computed} from './reactions'
 import {obs} from './observable'
-import {action} from './action'
 
 describe('observables', () => {
   test('autorun', () => {

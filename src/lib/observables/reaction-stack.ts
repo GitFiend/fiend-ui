@@ -1,14 +1,14 @@
-import {Reaction, ZReaction} from './reactions'
-import {Notifier, runNotifierQueue} from './notifier'
+import {Reaction, Reactor} from './reactions'
+import {Notifier, runActionQueue} from './notifier'
 
 export class ReactionStack {
-  stack: ZReaction[] = []
+  stack: Reactor[] = []
 
-  actions = 0
-  queuedNotifiers = new Set<Notifier>()
-  runningNotifierQueue = false
+  // notifierStack: Set<Notifier>[] = []
+  actionStack: ActionState[] = []
 
   pushReaction(r: Reaction) {
+    // console.log('pushReaction')
     this.stack.push(r)
   }
 
@@ -16,7 +16,7 @@ export class ReactionStack {
     this.stack.pop()
   }
 
-  getCurrentReaction(): ZReaction | null {
+  getCurrentReaction(): Reactor | null {
     const len = this.stack.length
 
     if (len > 0) {
@@ -26,28 +26,35 @@ export class ReactionStack {
   }
 
   queueNotifier(notifier: Notifier) {
-    this.queuedNotifiers.add(notifier)
+    last(this.actionStack).notifiers.add(notifier)
+    // this.notifierStack[this.notifierStack.length - 1].add(notifier)
   }
 
   insideAction(): boolean {
-    return this.actions > 0
+    return this.actionStack.length > 0
   }
 
   startAction(): void {
-    if (this.runningNotifierQueue) return
-
-    this.actions++
+    // console.log('startAction')
+    this.actionStack.push(new ActionState(this.getCurrentReaction()!))
+    // this.notifierStack.push(new Set())
   }
 
   endAction(): void {
-    if (this.runningNotifierQueue) return
+    const queue = this.actionStack.pop()
 
-    this.actions--
-
-    if (this.actions === 0) {
-      runNotifierQueue(this.queuedNotifiers)
-    }
+    if (queue !== undefined) runActionQueue(queue)
   }
 }
 
+export class ActionState {
+  notifiers = new Set<Notifier>()
+
+  constructor(public reactor: Reactor) {}
+}
+
 export const reactionStack = new ReactionStack()
+
+function last<T>(array: T[]): T {
+  return array[array.length - 1]
+}

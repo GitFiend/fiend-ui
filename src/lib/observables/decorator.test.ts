@@ -1,6 +1,7 @@
 import {autorun, IReactionDisposer, observable} from 'mobx'
 import {obs} from './observable'
 import {autorun as autoRun} from './reactions'
+import {reactionStack} from './reaction-stack'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {
   const obs = observable.box(value)
@@ -37,8 +38,24 @@ xdescribe('o', () => {
   })
 })
 
-xdescribe('test decorator perf', () => {
-  const loops = 10
+describe('mobx behaviour', () => {
+  test('autorun supports setting', () => {
+    const a = observable.box(1)
+    const b = observable.box(2)
+    let count = 0
+
+    autorun(() => {
+      count++
+      b.set(a.get() * 5)
+      console.log(b.get())
+    })
+
+    expect(count).toEqual(1)
+  })
+})
+
+describe('test decorator perf', () => {
+  const loops = 100
 
   test('time a', () => {
     class A {
@@ -175,7 +192,7 @@ xdescribe('test decorator perf', () => {
     console.timeEnd('d')
   })
 
-  xtest('e', () => {
+  test('e', () => {
     class E {
       a = obs(5)
 
