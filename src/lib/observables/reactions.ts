@@ -18,6 +18,6 @@ export class Reaction implements Subscriber {
   }
 }
 
-export function autorun(f: () => void) {
+export function autoRun(f: () => void) {
   return new Reaction(f)
 }

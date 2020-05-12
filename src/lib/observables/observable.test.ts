@@ -1,14 +1,14 @@
-import {autorun} from './reactions'
-import {obs} from './observable'
+import {autoRun} from './reactions'
+import {val} from './observable'
 import {runInAction} from './action'
 import {computed} from './computed'
 
 describe('observables', () => {
   test('autorun', () => {
     let count = 0
-    const a = obs(5)
+    const a = val(5)
 
-    autorun(() => {
+    autoRun(() => {
       count++
       a()
     })
@@ -24,7 +24,7 @@ describe('observables', () => {
 
   test('computed', () => {
     let count = 0
-    const a = obs(5)
+    const a = val(5)
 
     const c = computed(() => {
       count++
@@ -46,7 +46,7 @@ describe('observables', () => {
     let count1 = 0
     let count2 = 0
 
-    const a = obs(5)
+    const a = val(5)
 
     const c = computed(() => {
       count1++
@@ -79,13 +79,24 @@ describe('observables', () => {
 
    */
   test('computeds in actions', () => {
-    const a = obs(2)
-    const c = computed(() => a() + 1)
+    let count = 0
+
+    const a = val(2)
+    const c = computed(() => {
+      count++
+      return a() + 1
+    })
+
+    expect(count).toEqual(1)
+    c()
+    expect(count).toEqual(1)
 
     runInAction(() => {
-      // a isn't notifying c because it's inside an action.
       a(3)
+      expect(a()).toEqual(3)
       expect(c()).toEqual(4)
     })
+
+    expect(count).toEqual(2)
   })
 })

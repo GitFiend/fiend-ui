@@ -1,6 +1,7 @@
 import {autorun, computed, IReactionDisposer, observable} from 'mobx'
-import {obs} from './observable'
-import {autorun as autoRun} from './reactions'
+import {val} from './observable'
+import {autoRun} from './reactions'
+import {reactionStack} from './reaction-stack'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {
   const obs = observable.box(value)
@@ -201,19 +202,17 @@ describe('test decorator perf', () => {
 
   test('e', () => {
     class E {
-      a = obs(5)
+      a = val(5)
 
-      b = obs(5)
+      b = val(5)
 
-      c = obs(5)
+      c = val(5)
 
-      d = obs([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+      d = val([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     }
 
     class Run {
       b = new E()
-
-      // disposer: IReactionDisposer
 
       constructor() {
         autoRun(() => {
@@ -229,9 +228,9 @@ describe('test decorator perf', () => {
 
     console.time('e')
     for (let i = 0; i < loops; i++) {
-      const d = new Run()
-      // d.disposer()
+      new Run()
     }
+
     console.timeEnd('e')
   })
 })

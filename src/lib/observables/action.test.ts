@@ -1,14 +1,14 @@
 import {runInAction} from './action'
-import {autorun} from './reactions'
-import {obs} from './observable'
+import {autoRun} from './reactions'
+import {val} from './observable'
 import {computed} from './computed'
 
 describe('action', () => {
   test('action batches updates', () => {
-    const a = obs(1)
+    const a = val(1)
     let count = 0
 
-    autorun(() => {
+    autoRun(() => {
       count++
       a()
     })
@@ -23,11 +23,11 @@ describe('action', () => {
   })
 
   test('autorun supports setting', () => {
-    const a = obs(1)
-    const b = obs(2)
+    const a = val(1)
+    const b = val(2)
     let count = 0
 
-    autorun(() => {
+    autoRun(() => {
       count++
       b(a() * 5)
     })
@@ -36,8 +36,8 @@ describe('action', () => {
   })
 
   xtest('autoRun with computed inside behaves', () => {
-    const a = obs(2)
-    const b = obs(2)
+    const a = val(2)
+    const b = val(2)
     const c = computed(() => a() * b())
     let d: number = c()
 
@@ -45,7 +45,7 @@ describe('action', () => {
 
     let count = 0
 
-    autorun(() => {
+    autoRun(() => {
       count++
       b(a() * 5)
 
