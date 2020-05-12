@@ -45,6 +45,22 @@ export class Atom<T> implements Notifier {
   }
 }
 
+export function array<T>(value: T) {
+  const a = new Atom(value)
+
+  function inner(): T
+  function inner(newValue: T): undefined
+  function inner(newValue?: T) {
+    if (arguments.length === 0) return a.get()
+
+    if (newValue !== undefined) a.set(newValue)
+
+    return
+  }
+
+  return inner
+}
+
 class Chi {
   $num = 5
   π = 4

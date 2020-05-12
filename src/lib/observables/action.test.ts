@@ -35,7 +35,7 @@ describe('action', () => {
     expect(count).toEqual(1)
   })
 
-  xtest('autoRun with computed inside behaves', () => {
+  test('autoRun with computed inside behaves', () => {
     const a = val(2)
     const b = val(2)
     const c = computed(() => a() * b())
