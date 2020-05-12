@@ -83,7 +83,7 @@ describe('observables', () => {
     const c = computed(() => a() + 1)
 
     runInAction(() => {
-      // a isn't notifying c because it's inside a reaction.
+      // a isn't notifying c because it's inside an action.
       a(3)
       expect(c()).toEqual(4)
     })

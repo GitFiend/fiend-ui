@@ -1,4 +1,4 @@
-import {ActionState, reactionStack} from './reaction-stack'
+import {reactionStack} from './reaction-stack'
 import {Subscriber} from './reactions'
 
 export interface Notifier {
@@ -18,18 +18,18 @@ export function notify(notifier: Notifier) {
   }
 }
 
-export function runActionQueue(actionState: ActionState) {
-  const reactions = new Set<Subscriber>()
-  const {notifiers, reactor} = actionState
-
-  for (const n of notifiers) {
-    for (const r of n.subscribers) {
-      if (r !== reactor) reactions.add(r)
-    }
-    n.subscribers = new Set<Subscriber>()
-  }
-
-  for (const r of reactions) {
-    r.run()
-  }
-}
+// export function runActionQueue(actionState: ActionState) {
+//   const reactions = new Set<Subscriber>()
+//   const {subscribers, runningSubscriber} = actionState
+//
+//   // for (const n of notifiers) {
+//     for (const r of subscribers) {
+//       if (r !== runningSubscriber) reactions.add(r)
+//     }
+//     subscribers = new Set<Subscriber>()
+//   // }
+//
+//   for (const r of reactions) {
+//     r.run()
+//   }
+// }

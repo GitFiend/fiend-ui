@@ -1,5 +1,5 @@
 import {Reaction, Subscriber} from './reactions'
-import {Notifier, runActionQueue} from './notifier'
+import {Notifier} from './notifier'
 
 export class ReactionStack {
   stack: Subscriber[] = []
@@ -24,31 +24,46 @@ export class ReactionStack {
   }
 
   queueNotifier(notifier: Notifier): void {
-    last(this.actionStack).notifiers.add(notifier)
+    last(this.actionStack).add(notifier)
   }
 
   insideAction(): boolean {
     return this.actionStack.length > 0
   }
 
+  actionHasSubscriber(subscriber: Subscriber): boolean {
+    return this.insideAction() && last(this.actionStack).subscribers.delete(subscriber)
+  }
+
   startAction(): void {
-    if (this.stack.length === 0) {
-      console.log('starting action with no reaction!')
-    }
-    this.actionStack.push(new ActionState(this.getCurrentReaction()!))
+    this.actionStack.push(new ActionState(this.getCurrentReaction()))
   }
 
   endAction(): void {
     const queue = this.actionStack.pop()
 
-    if (queue !== undefined) runActionQueue(queue)
+    queue?.run()
   }
 }
 
 export class ActionState {
-  notifiers = new Set<Notifier>()
+  subscribers = new Set<Subscriber>()
 
-  constructor(public reactor: Subscriber) {}
+  constructor(public runningSubscriber: Subscriber | null) {}
+
+  add(notifier: Notifier) {
+    for (const s of notifier.subscribers) {
+      if (s !== this.runningSubscriber) {
+        this.subscribers.add(s)
+      }
+    }
+  }
+
+  run() {
+    for (const s of this.subscribers) {
+      s.run()
+    }
+  }
 }
 
 export const reactionStack = new ReactionStack()

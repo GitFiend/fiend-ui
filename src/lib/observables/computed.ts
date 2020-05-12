@@ -22,7 +22,7 @@ Atom could have both reactions and computeds?
 
 Current Plan:
 
-When a computed is inside an action or autoRun and it gets update notification:
+When a computed is inside an action or autoRun and it gets an update notification:
 
 It goes on the action stack.
 If get is called on the computed, then we need to recalculate and remove it from action stack.
@@ -44,7 +44,7 @@ export class Computed<T> implements Subscriber, Notifier {
   // Run is called by an observable (Notifier).
   // TODO: Check for setting observables inside computeds and throw?
   run(): void {
-    console.log('run computed. action stack size: ', reactionStack.actionStack.length)
+    // console.log('run computed. action stack size: ', reactionStack.actionStack.length)
     // this.queuedNotify = false
 
     reactionStack.pushReaction(this)
@@ -68,6 +68,10 @@ export class Computed<T> implements Subscriber, Notifier {
   then we need to recalculate computed value, and then remove this from action stack.
    */
   get(): T {
+    if (reactionStack.actionHasSubscriber(this)) {
+      this.run()
+    }
+
     const r = reactionStack.getCurrentReaction()
 
     if (r !== null) {

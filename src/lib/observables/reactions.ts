@@ -1,7 +1,5 @@
 import {reactionStack} from './reaction-stack'
 
-// export type Computed<T> = () => T
-
 export interface Subscriber {
   run(): void
 }
@@ -12,8 +10,6 @@ export class Reaction implements Subscriber {
   }
 
   run() {
-    // console.log(`Running ${this.name}`)
-
     reactionStack.pushReaction(this)
     reactionStack.startAction()
     this.f()
