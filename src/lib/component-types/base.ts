@@ -19,7 +19,7 @@ export enum ZType {
   host,
   custom,
   text,
-  empty,
+  // empty,
 }
 
 export interface ComponentBase {

@@ -52,29 +52,11 @@ export function renderFlatSubtree(
   }
 }
 
-export function removeSubComponents(parent: ParentComponent, index: number): void {
-  switch (parent.type) {
-    case ZType.custom:
-    case ZType.host:
-      const siblings: Z[] = parent.subComponents
-      const len = siblings.length
-
-      for (let i = index; i < len; i++) {
-        siblings[i].remove()
-      }
-      break
-    // console.log('custom delete!!!!!!!!!!!')
-
-    // parent.children
-    // Custom components one have child?
-    // if (index === 0)
-    //   parent.subtree?.remove()
-
-    // break
-  }
-}
-
-export function renderSubtree(children: Subtree, prevChildren: Z[], parent: ParentComponent): Z[] {
+export function renderSubtree(
+  children: Subtree,
+  prevChildren: Z[],
+  parent: ParentComponent
+): Z[] {
   const newChildren: Z[] = []
 
   if (children === null) {
@@ -103,4 +85,19 @@ export function renderSubtree(children: Subtree, prevChildren: Z[], parent: Pare
   }
   removeSubComponents(parent, newChildren.length)
   return newChildren
+}
+
+export function removeSubComponents(parent: ParentComponent, index: number): void {
+  switch (parent.type) {
+    case ZType.custom:
+    case ZType.host:
+      const siblings: Z[] = parent.subComponents
+      const len = siblings.length
+
+      for (let i = index; i < len; i++) {
+        siblings[i].remove()
+      }
+      siblings.length = index
+      break
+  }
 }

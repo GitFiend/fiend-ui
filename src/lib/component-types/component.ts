@@ -33,17 +33,17 @@ export class Component<P extends {} = {}> implements ComponentBase {
   }
 
   update() {
-    if (__DEV__) {
-      time((this as any).constructor.name)
-    }
+    // if (__DEV__) {
+    //   time((this as any).constructor.name)
+    // }
 
     const res = this.render()
 
     if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)
 
-    if (__DEV__) {
-      timeEnd((this as any).constructor.name)
-    }
+    // if (__DEV__) {
+    //   timeEnd((this as any).constructor.name)
+    // }
   }
 
   updateWithNewProps(props: P, children: Subtree): void {
