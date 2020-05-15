@@ -4,7 +4,6 @@ import {Notifier, notify} from './notifier'
 
 export type Observable<T> = {(): T; (newValue: T): void}
 
-// TODO: Rename to val?
 export function val<T>(value: T): Observable<T> {
   const a = new Atom(value)
 

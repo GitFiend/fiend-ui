@@ -1,4 +1,4 @@
-import {Reaction, Subscriber} from './reactions'
+import {Subscriber} from './reactions'
 import {Notifier} from './notifier'
 
 export class ReactionStack {
@@ -6,7 +6,7 @@ export class ReactionStack {
 
   actionStack: ActionState[] = []
 
-  pushReaction(r: Reaction): void {
+  pushReaction(r: Subscriber): void {
     this.stack.push(r)
   }
 
