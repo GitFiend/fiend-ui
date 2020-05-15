@@ -1,4 +1,4 @@
-import {autorun, IReactionDisposer, trace, Reaction} from 'mobx'
+import {autorun, IReactionDisposer} from 'mobx'
 import {Component} from './component'
 
 class ObserverScheduler {

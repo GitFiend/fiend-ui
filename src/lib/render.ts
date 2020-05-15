@@ -25,7 +25,6 @@ export function renderTree(
 ): Z {
   const {type, props, children} = tree
 
-  // WHat about number?
   if (typeof type === 'string') {
     return renderHost(type, props, children, parent, prevTree, index)
   } else {

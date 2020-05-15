@@ -13,17 +13,19 @@ export function sleep(ms: number) {
   })
 }
 
-describe('simple switching with own observer library', () => {
-  test('shows alternate div after state update', async () => {
+xdescribe('test scheduling', () => {
+  test('shows alternate div after state update', () => {
     const store = new Store()
 
-    const s = <Switcher store={store} />
+    const s = <A store={store} />
     render(s, document.body)
+
+    console.log(document.body.innerHTML)
 
     expect(screen.queryByText('a')).toBeDefined()
     expect(screen.queryByText('b')).toBeNull()
 
-    store.a(false)
+    // store.a(false)
 
     // await sleep(1)
 
@@ -33,28 +35,46 @@ describe('simple switching with own observer library', () => {
 })
 
 class Store {
-  a = val(true)
+  a = val(2)
+  b = val(3)
+  c = val(4)
 }
 
 interface SwitcherProps {
   store: Store
 }
-class Switcher extends ZComponent<SwitcherProps> {
+class A extends ZComponent<SwitcherProps> {
   render() {
     const {store} = this.props
-    console.log('render switcher', store.a())
-
-    if (store.a()) {
-      return (
-        <F>
-          <div>a</div>
-        </F>
-      )
-    }
 
     return (
       <F>
-        <div>b</div>
+        <div>{store.a()}</div>
+        <B store={store} />
+      </F>
+    )
+  }
+}
+class B extends ZComponent<SwitcherProps> {
+  render() {
+    const {store} = this.props
+
+    return <div>{store.b()}</div>
+    // return (
+    //   <F>
+    //     <div>{store.b()}</div>
+    //     {/*<C store={store} />*/}
+    //   </F>
+    // )
+  }
+}
+class C extends ZComponent<SwitcherProps> {
+  render() {
+    const {store} = this.props
+
+    return (
+      <F>
+        <div>{store.c()}</div>
       </F>
     )
   }

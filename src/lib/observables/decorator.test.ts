@@ -19,6 +19,14 @@ function ob<T>(value: T): {(): T; (newValue: T): undefined} {
   return inner
 }
 
+function computed2<T>(f: () => T) {
+  const c = computed(f)
+
+  return () => {
+    return c.get()
+  }
+}
+
 xdescribe('o', () => {
   test('o', () => {
     const n = ob(5)
@@ -175,7 +183,9 @@ describe('test decorator perf', () => {
 
       c = ob(5)
 
-      d = observable([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+      res = computed2(() => this.a() + this.b() + this.c())
+
+      d = observable.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     }
 
     class RunD {
@@ -195,6 +205,8 @@ describe('test decorator perf', () => {
     console.time('d')
     for (let i = 0; i < loops; i++) {
       const d = new RunD()
+
+      console.log(d.b.res())
       d.disposer()
     }
     console.timeEnd('d')

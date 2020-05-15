@@ -37,6 +37,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
     //   time((this as any).constructor.name)
     // }
 
+    // debugger
     const res = this.render()
 
     if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)

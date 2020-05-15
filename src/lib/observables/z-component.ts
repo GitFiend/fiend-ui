@@ -2,9 +2,10 @@ import {IReactionDisposer} from 'mobx'
 import {Component} from '../component-types/component'
 import {reactionStack} from './reaction-stack'
 import {Subscriber} from './reactions'
+import {renderSubtree} from '../render'
 
 class ObserverScheduler {
-  private updates = new Map<string, () => void>()
+  updates = new Map<string, () => void>()
 
   timeout: number | null = null
 
@@ -16,7 +17,11 @@ class ObserverScheduler {
     }
   }
 
-  private run = () => {
+  add(treeLocation: string, update: () => void) {
+    this.updates.set(treeLocation, update)
+  }
+
+  run = () => {
     this.timeout = null
 
     const keys = Array.from(this.updates.keys())
@@ -32,6 +37,16 @@ class ObserverScheduler {
 
 const scheduler = new ObserverScheduler()
 
+/*
+component.render() just runs the render function which includes creating the new tree. The new tree isn't applied.
+
+This can happen out of order because observables don't respect the tree shape/order.
+
+We could let the observables run, and schedule the apply?
+
+
+ */
+
 export class ZComponent<P extends {} = {}> extends Component<P> implements Subscriber {
   disposers: IReactionDisposer[] = []
 
@@ -44,17 +59,34 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
   run() {
     console.log('run')
 
-    scheduler.runScheduled(this.location, this.runInner)
+    this.runInner()
+    // scheduler.runScheduled(this.location, this.runInner)
   }
 
   runInner = () => {
-    console.log('runInner')
+    // console.log('runInner')
 
     reactionStack.pushReaction(this)
-    reactionStack.startAction()
-    this.update()
-    reactionStack.endAction()
+    // reactionStack.startAction()
+
+    const res = this.render()
+    // this.update()
+
+    if (res !== null) {
+      const apply = () => {
+        this.subComponents = renderSubtree(res, this.subComponents, this)
+      }
+
+      scheduler.add(this.location, apply)
+    }
+
+    // reactionStack.endAction()
     reactionStack.popReaction()
+
+    console.log('running scheduler: ', scheduler.updates.size)
+    scheduler.run()
+
+    // if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)
   }
 
   remove(): void {
