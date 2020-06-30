@@ -72,13 +72,13 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
     const res = this.render()
     // this.update()
 
-    if (res !== null) {
-      const apply = () => {
-        this.subComponents = renderSubtree(res, this.subComponents, this)
-      }
-
-      scheduler.add(this.location, apply)
+    // if (res !== null) {
+    const apply = () => {
+      this.subComponents = renderSubtree(res, this.subComponents, this)
     }
+
+    scheduler.add(this.location, apply)
+    // }
 
     // reactionStack.endAction()
     subscriberStack.popSubscriber()

@@ -43,7 +43,8 @@ export class Component<P extends {} = {}> implements ComponentBase {
     // debugger
     const res = this.render()
 
-    if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)
+    // if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)
+    this.subComponents = renderSubtree(res, this.subComponents, this)
 
     // if (__DEV__) {
     //   timeEnd((this as any).constructor.name)
@@ -70,7 +71,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
   }
 
   remove(): void {
-    this.subComponents.forEach((s) => s.remove())
+    this.subComponents.forEach(s => s.remove())
     this.componentWillUnmount()
   }
 
