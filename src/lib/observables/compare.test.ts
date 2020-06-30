@@ -1,5 +1,5 @@
 import {autorun, computed, IReactionDisposer, observable, runInAction} from 'mobx'
-import {autoRun} from './reactions'
+import {autoRun} from './auto-run'
 import {val} from './observable'
 import {computed as zComputed} from './computed'
 

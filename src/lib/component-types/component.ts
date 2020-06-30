@@ -32,6 +32,9 @@ export class Component<P extends {} = {}> implements ComponentBase {
     return null
   }
 
+  /*
+  TODO Question: If render returns null, when are sub components deleted?
+   */
   update() {
     // if (__DEV__) {
     //   time((this as any).constructor.name)

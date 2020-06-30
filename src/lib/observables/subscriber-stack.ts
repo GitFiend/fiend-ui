@@ -1,20 +1,20 @@
-import {Subscriber} from './reactions'
+import {Subscriber} from './auto-run'
 import {Notifier} from './notifier'
 
-export class ReactionStack {
+export class SubscriberStack {
   stack: Subscriber[] = []
 
   actionStack: ActionState[] = []
 
-  pushReaction(r: Subscriber): void {
+  pushSubscriber(r: Subscriber): void {
     this.stack.push(r)
   }
 
-  popReaction(): void {
+  popSubscriber(): void {
     this.stack.pop()
   }
 
-  getCurrentReaction(): Subscriber | null {
+  getCurrentSubscriber(): Subscriber | null {
     const len = this.stack.length
 
     if (len > 0) {
@@ -36,7 +36,7 @@ export class ReactionStack {
   }
 
   startAction(): void {
-    this.actionStack.push(new ActionState(this.getCurrentReaction()))
+    this.actionStack.push(new ActionState(this.getCurrentSubscriber()))
   }
 
   endAction(): void {
@@ -66,7 +66,7 @@ export class ActionState {
   }
 }
 
-export const reactionStack = new ReactionStack()
+export const subscriberStack = new SubscriberStack()
 
 function last<T>(array: T[]): T {
   return array[array.length - 1]

@@ -1,10 +1,10 @@
-import {reactionStack} from './reaction-stack'
+import {subscriberStack} from './subscriber-stack'
 
 //
 export function runInAction(f: () => void) {
-  reactionStack.startAction()
+  subscriberStack.startAction()
   f()
-  reactionStack.endAction()
+  subscriberStack.endAction()
 }
 
 /**
@@ -17,9 +17,9 @@ export function runInAction(f: () => void) {
  */
 export const action = <T extends unknown[], U>(f: (...args: T) => U) => {
   return (...args: T): U => {
-    reactionStack.startAction()
+    subscriberStack.startAction()
     const result = f(...args)
-    reactionStack.endAction()
+    subscriberStack.endAction()
 
     return result
   }

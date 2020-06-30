@@ -1,18 +1,18 @@
-import {reactionStack} from './reaction-stack'
-import {Subscriber} from './reactions'
+import {subscriberStack} from './subscriber-stack'
+import {Subscriber} from './auto-run'
 
 export interface Notifier {
   subscribers: Set<Subscriber>
 }
 
 export function notify(notifier: Notifier) {
-  if (reactionStack.insideAction()) {
-    reactionStack.queueNotifier(notifier)
+  if (subscriberStack.insideAction()) {
+    subscriberStack.queueNotifier(notifier)
   } else {
-    const reactions = notifier.subscribers
+    const subscribers = notifier.subscribers
     notifier.subscribers = new Set<Subscriber>()
 
-    for (const r of reactions) {
+    for (const r of subscribers) {
       r.run()
     }
   }

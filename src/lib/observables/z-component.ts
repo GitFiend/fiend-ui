@@ -1,7 +1,7 @@
 import {IReactionDisposer} from 'mobx'
 import {Component} from '../component-types/component'
-import {reactionStack} from './reaction-stack'
-import {Subscriber} from './reactions'
+import {subscriberStack} from './subscriber-stack'
+import {Subscriber} from './auto-run'
 import {renderSubtree} from '../render'
 
 class ObserverScheduler {
@@ -66,7 +66,7 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
   runInner = () => {
     // console.log('runInner')
 
-    reactionStack.pushReaction(this)
+    subscriberStack.pushSubscriber(this)
     // reactionStack.startAction()
 
     const res = this.render()
@@ -81,7 +81,7 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
     }
 
     // reactionStack.endAction()
-    reactionStack.popReaction()
+    subscriberStack.popSubscriber()
 
     console.log('running scheduler: ', scheduler.updates.size)
     scheduler.run()
@@ -90,7 +90,7 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
   }
 
   remove(): void {
-    this.disposers.forEach((d) => d())
+    this.disposers.forEach(d => d())
     super.remove()
   }
 }

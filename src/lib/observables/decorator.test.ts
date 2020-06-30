@@ -1,7 +1,7 @@
 import {autorun, computed, IReactionDisposer, observable} from 'mobx'
 import {val} from './observable'
-import {autoRun} from './reactions'
-import {reactionStack} from './reaction-stack'
+import {autoRun} from './auto-run'
+import {subscriberStack} from './subscriber-stack'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {
   const obs = observable.box(value)

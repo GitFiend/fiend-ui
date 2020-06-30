@@ -1,4 +1,4 @@
-import {autoRun} from './reactions'
+import {autoRun} from './auto-run'
 import {val} from './observable'
 import {runInAction} from './action'
 import {computed} from './computed'

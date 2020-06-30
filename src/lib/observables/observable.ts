@@ -1,5 +1,5 @@
-import {reactionStack} from './reaction-stack'
-import {Subscriber} from './reactions'
+import {subscriberStack} from './subscriber-stack'
+import {Subscriber} from './auto-run'
 import {Notifier, notify} from './notifier'
 
 export type Observable<T> = {(): T; (newValue: T): void}
@@ -26,7 +26,7 @@ export class Atom<T> implements Notifier {
   constructor(public value: T) {}
 
   get(): T {
-    const r = reactionStack.getCurrentReaction()
+    const r = subscriberStack.getCurrentSubscriber()
 
     if (r !== null) {
       this.subscribers.add(r)
