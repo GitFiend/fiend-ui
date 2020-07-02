@@ -1,5 +1,5 @@
 import {runInAction} from './action'
-import {autoRun} from './auto-run'
+import {autoRun} from './subscriber'
 import {val} from './observable'
 import {computed} from './computed'
 

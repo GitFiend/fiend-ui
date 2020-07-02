@@ -1,6 +1,6 @@
 import {autorun, computed, IReactionDisposer, observable} from 'mobx'
 import {val} from './observable'
-import {autoRun} from './auto-run'
+import {autoRun} from './subscriber'
 import {subscriberStack} from './global-stack'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {

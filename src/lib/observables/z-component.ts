@@ -1,7 +1,7 @@
 import {IReactionDisposer} from 'mobx'
 import {Component} from '../component-types/component'
 import {subscriberStack} from './global-stack'
-import {Subscriber} from './auto-run'
+import {Subscriber} from './subscriber'
 import {renderSubtree} from '../render'
 
 class ObserverScheduler {

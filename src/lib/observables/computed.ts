@@ -1,6 +1,6 @@
 import {Notifier, notify} from './notifier'
 import {subscriberStack} from './global-stack'
-import {Subscriber} from './auto-run'
+import {Subscriber} from './subscriber'
 
 /*
 Notes:
@@ -72,10 +72,10 @@ export class Computed<T> implements Subscriber, Notifier {
       this.run()
     }
 
-    const r = subscriberStack.getCurrentSubscriber()
+    const subscriber = subscriberStack.getCurrentSubscriber()
 
-    if (r !== null) {
-      this.subscribers.add(r)
+    if (subscriber !== null) {
+      this.subscribers.add(subscriber)
     }
 
     return this.value

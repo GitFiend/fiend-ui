@@ -1,8 +1,10 @@
 import {subscriberStack} from './global-stack'
 
 /*
-A Subscriber could be a Computed or a reaction such as AutoRun.
+A Subscriber is an object that listens accesses to notifiers (observables). When these
+notifiers change, the subscriber is run.
 
+Could be a Computed or a reaction such as AutoRun.
 
  */
 export interface Subscriber {

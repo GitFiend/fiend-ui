@@ -1,5 +1,5 @@
 import {subscriberStack} from './global-stack'
-import {Subscriber} from './auto-run'
+import {Subscriber} from './subscriber'
 import {Notifier, notify} from './notifier'
 
 export type Observable<T> = {(): T; (newValue: T): void}

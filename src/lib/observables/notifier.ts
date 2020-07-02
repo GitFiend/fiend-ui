@@ -1,5 +1,5 @@
 import {subscriberStack} from './global-stack'
-import {Subscriber} from './auto-run'
+import {Subscriber} from './subscriber'
 
 /*
 A Notifier is something with observable-like behaviour.

@@ -1,4 +1,4 @@
-import {Subscriber} from './auto-run'
+import {Subscriber} from './subscriber'
 import {Notifier} from './notifier'
 
 export class GlobalStack {
