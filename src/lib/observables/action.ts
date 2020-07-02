@@ -1,10 +1,12 @@
-import {subscriberStack} from './global-stack'
+import {globalStack} from './global-stack'
+import {Subscriber} from './subscriber'
+import {Notifier} from './notifier'
 
 //
 export function runInAction(f: () => void) {
-  subscriberStack.startAction()
+  globalStack.startAction()
   f()
-  subscriberStack.endAction()
+  globalStack.endAction()
 }
 
 /**
@@ -17,10 +19,34 @@ export function runInAction(f: () => void) {
  */
 export const action = <T extends unknown[], U>(f: (...args: T) => U) => {
   return (...args: T): U => {
-    subscriberStack.startAction()
+    globalStack.startAction()
     const result = f(...args)
-    subscriberStack.endAction()
+    globalStack.endAction()
 
     return result
+  }
+}
+
+/*
+An Action lets us batch our notifiers.
+
+ */
+export class ActionState {
+  subscribers = new Set<Subscriber>()
+
+  constructor(public runningSubscriber: Subscriber | null) {}
+
+  add(notifier: Notifier) {
+    for (const s of notifier.subscribers) {
+      if (s !== this.runningSubscriber) {
+        this.subscribers.add(s)
+      }
+    }
+  }
+
+  run() {
+    for (const s of this.subscribers) {
+      s.run()
+    }
   }
 }

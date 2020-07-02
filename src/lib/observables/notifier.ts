@@ -1,4 +1,4 @@
-import {subscriberStack} from './global-stack'
+import {globalStack} from './global-stack'
 import {Subscriber} from './subscriber'
 
 /*
@@ -12,8 +12,8 @@ export interface Notifier {
 }
 
 export function notify(notifier: Notifier) {
-  if (subscriberStack.insideAction()) {
-    subscriberStack.queueNotifier(notifier)
+  if (globalStack.insideAction()) {
+    globalStack.queueNotifier(notifier)
   } else {
     const subscribers = notifier.subscribers
     notifier.subscribers = new Set<Subscriber>()

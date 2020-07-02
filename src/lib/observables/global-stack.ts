@@ -1,5 +1,6 @@
 import {Subscriber} from './subscriber'
 import {Notifier} from './notifier'
+import {ActionState} from './action'
 
 export class GlobalStack {
   subscribers: Subscriber[] = []
@@ -45,27 +46,7 @@ export class GlobalStack {
   }
 }
 
-export class ActionState {
-  subscribers = new Set<Subscriber>()
-
-  constructor(public runningSubscriber: Subscriber | null) {}
-
-  add(notifier: Notifier) {
-    for (const s of notifier.subscribers) {
-      if (s !== this.runningSubscriber) {
-        this.subscribers.add(s)
-      }
-    }
-  }
-
-  run() {
-    for (const s of this.subscribers) {
-      s.run()
-    }
-  }
-}
-
-export const subscriberStack = new GlobalStack()
+export const globalStack = new GlobalStack()
 
 function last<T>(array: T[]): T {
   return array[array.length - 1]

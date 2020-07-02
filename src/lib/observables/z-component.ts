@@ -1,6 +1,6 @@
 import {IReactionDisposer} from 'mobx'
 import {Component} from '../component-types/component'
-import {subscriberStack} from './global-stack'
+import {globalStack} from './global-stack'
 import {Subscriber} from './subscriber'
 import {renderSubtree} from '../render'
 
@@ -66,7 +66,7 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
   runInner = () => {
     // console.log('runInner')
 
-    subscriberStack.pushSubscriber(this)
+    globalStack.pushSubscriber(this)
     // reactionStack.startAction()
 
     const res = this.render()
@@ -81,7 +81,7 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
     // }
 
     // reactionStack.endAction()
-    subscriberStack.popSubscriber()
+    globalStack.popSubscriber()
 
     console.log('running scheduler: ', scheduler.updates.size)
     scheduler.run()

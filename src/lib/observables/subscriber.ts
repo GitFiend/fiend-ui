@@ -1,4 +1,4 @@
-import {subscriberStack} from './global-stack'
+import {globalStack} from './global-stack'
 
 /*
 A Subscriber is an object that listens accesses to notifiers (observables). When these
@@ -17,11 +17,11 @@ export class AutoRun implements Subscriber {
   }
 
   run() {
-    subscriberStack.pushSubscriber(this)
-    subscriberStack.startAction()
+    globalStack.pushSubscriber(this)
+    globalStack.startAction()
     this.f()
-    subscriberStack.endAction()
-    subscriberStack.popSubscriber()
+    globalStack.endAction()
+    globalStack.popSubscriber()
   }
 }
 

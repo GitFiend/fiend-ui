@@ -1,4 +1,4 @@
-import {subscriberStack} from './global-stack'
+import {globalStack} from './global-stack'
 import {Subscriber} from './subscriber'
 import {Notifier, notify} from './notifier'
 
@@ -26,10 +26,10 @@ export class Atom<T> implements Notifier {
   constructor(public value: T) {}
 
   get(): T {
-    const r = subscriberStack.getCurrentSubscriber()
+    const subscriber = globalStack.getCurrentSubscriber()
 
-    if (r !== null) {
-      this.subscribers.add(r)
+    if (subscriber !== null) {
+      this.subscribers.add(subscriber)
     }
 
     return this.value
@@ -44,23 +44,18 @@ export class Atom<T> implements Notifier {
   }
 }
 
-export function array<T>(value: T) {
-  const a = new Atom(value)
-
-  function inner(): T
-  function inner(newValue: T): undefined
-  function inner(newValue?: T) {
-    if (arguments.length === 0) return a.get()
-
-    if (newValue !== undefined) a.set(newValue)
-
-    return
-  }
-
-  return inner
-}
-
-class Chi {
-  $num = 5
-  π = 4
-}
+// export function array<T>(value: T) {
+//   const a = new Atom(value)
+//
+//   function inner(): T
+//   function inner(newValue: T): undefined
+//   function inner(newValue?: T) {
+//     if (arguments.length === 0) return a.get()
+//
+//     if (newValue !== undefined) a.set(newValue)
+//
+//     return
+//   }
+//
+//   return inner
+// }

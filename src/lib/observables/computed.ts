@@ -1,5 +1,5 @@
 import {Notifier, notify} from './notifier'
-import {subscriberStack} from './global-stack'
+import {globalStack} from './global-stack'
 import {Subscriber} from './subscriber'
 
 /*
@@ -36,9 +36,9 @@ export class Computed<T> implements Subscriber, Notifier {
   // queuedNotify = false
 
   constructor(public f: () => T) {
-    subscriberStack.pushSubscriber(this)
+    globalStack.pushSubscriber(this)
     this.value = f()
-    subscriberStack.popSubscriber()
+    globalStack.popSubscriber()
   }
 
   // Run is called by an observable (Notifier).
@@ -47,9 +47,9 @@ export class Computed<T> implements Subscriber, Notifier {
     // console.log('run computed. action stack size: ', reactionStack.actionStack.length)
     // this.queuedNotify = false
 
-    subscriberStack.pushSubscriber(this)
+    globalStack.pushSubscriber(this)
     const result = this.f()
-    subscriberStack.popSubscriber()
+    globalStack.popSubscriber()
 
     if (result !== this.value) {
       this.value = result
@@ -68,11 +68,11 @@ export class Computed<T> implements Subscriber, Notifier {
   then we need to recalculate computed value, and then remove this from action stack.
    */
   get(): T {
-    if (subscriberStack.actionHasSubscriber(this)) {
+    if (globalStack.actionHasSubscriber(this)) {
       this.run()
     }
 
-    const subscriber = subscriberStack.getCurrentSubscriber()
+    const subscriber = globalStack.getCurrentSubscriber()
 
     if (subscriber !== null) {
       this.subscribers.add(subscriber)
