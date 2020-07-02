@@ -1,4 +1,4 @@
-import {subscriberStack} from './subscriber-stack'
+import {subscriberStack} from './global-stack'
 
 //
 export function runInAction(f: () => void) {

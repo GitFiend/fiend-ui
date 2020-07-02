@@ -1,5 +1,10 @@
-import {subscriberStack} from './subscriber-stack'
+import {subscriberStack} from './global-stack'
 
+/*
+A Subscriber could be a Computed or a reaction such as AutoRun.
+
+
+ */
 export interface Subscriber {
   run(): void
 }

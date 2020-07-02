@@ -1,5 +1,5 @@
 import {Notifier, notify} from './notifier'
-import {subscriberStack} from './subscriber-stack'
+import {subscriberStack} from './global-stack'
 import {Subscriber} from './auto-run'
 
 /*

@@ -1,6 +1,6 @@
 import {IReactionDisposer} from 'mobx'
 import {Component} from '../component-types/component'
-import {subscriberStack} from './subscriber-stack'
+import {subscriberStack} from './global-stack'
 import {Subscriber} from './auto-run'
 import {renderSubtree} from '../render'
 

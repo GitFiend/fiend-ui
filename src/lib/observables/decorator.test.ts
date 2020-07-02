@@ -1,7 +1,7 @@
 import {autorun, computed, IReactionDisposer, observable} from 'mobx'
 import {val} from './observable'
 import {autoRun} from './auto-run'
-import {subscriberStack} from './subscriber-stack'
+import {subscriberStack} from './global-stack'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {
   const obs = observable.box(value)
@@ -70,7 +70,7 @@ describe('mobx behaviour', () => {
   })
 })
 
-describe('test decorator perf', () => {
+xdescribe('test decorator perf', () => {
   const loops = 1000
 
   test('time a', () => {

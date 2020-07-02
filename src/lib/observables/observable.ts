@@ -1,4 +1,4 @@
-import {subscriberStack} from './subscriber-stack'
+import {subscriberStack} from './global-stack'
 import {Subscriber} from './auto-run'
 import {Notifier, notify} from './notifier'
 

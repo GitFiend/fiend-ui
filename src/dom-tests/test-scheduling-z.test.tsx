@@ -13,6 +13,8 @@ export function sleep(ms: number) {
   })
 }
 
+// TODO: This test needs to be rewritten.
+
 xdescribe('test scheduling', () => {
   test('shows alternate div after state update', () => {
     const store = new Store()

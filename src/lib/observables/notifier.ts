@@ -1,6 +1,12 @@
-import {subscriberStack} from './subscriber-stack'
+import {subscriberStack} from './global-stack'
 import {Subscriber} from './auto-run'
 
+/*
+A Notifier is something with observable-like behaviour.
+
+Could be a plain observable or a computed (Computeds are both Notifiers and Subscribers).
+
+ */
 export interface Notifier {
   subscribers: Set<Subscriber>
 }
