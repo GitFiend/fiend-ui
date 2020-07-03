@@ -6,7 +6,7 @@ export class HostComponent implements ComponentBase {
   type = ZType.host as const
   element: HTMLElement
   subComponents: Z[] = []
-  location: string
+  order: string
 
   constructor(
     public tag: keyof HTMLElementTagNameMap,
@@ -15,7 +15,7 @@ export class HostComponent implements ComponentBase {
     childrenSlices: Subtree,
     index: number
   ) {
-    this.location = this.parent.location + index
+    this.order = this.parent.order + index
 
     this.element = document.createElement(tag)
 

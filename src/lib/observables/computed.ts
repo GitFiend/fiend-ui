@@ -1,6 +1,6 @@
-import {Notifier, notify} from './notifier'
+import {addResponder, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
-import {Responder} from './responder'
+import {OrderedResponder, Responder, UnorderedResponder} from './responder'
 
 /*
 Notes:
@@ -28,8 +28,12 @@ It goes on the action stack.
 If get is called on the computed, then we need to recalculate and remove it from action stack.
  */
 
-export class Computed<T> implements Responder, Notifier {
-  responders = new Set<Responder>()
+export class Computed<T> implements UnorderedResponder, Notifier {
+  ordered = false as const
+
+  // responders = new Set<Responder>()
+  orderedResponders = new Map<string, OrderedResponder>()
+  unorderedResponders = new Set<UnorderedResponder>()
 
   value: T
 
@@ -79,7 +83,8 @@ export class Computed<T> implements Responder, Notifier {
     const responder = globalStack.getCurrentResponder()
 
     if (responder !== null) {
-      this.responders.add(responder)
+      addResponder(this, responder)
+      // this.responders.add(responder)
     }
 
     return this.value

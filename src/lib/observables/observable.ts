@@ -1,6 +1,6 @@
 import {globalStack} from './global-stack'
-import {Responder} from './responder'
-import {Notifier, notify} from './notifier'
+import {OrderedResponder, UnorderedResponder} from './responder'
+import {addResponder, Notifier, notify} from './notifier'
 
 export type Observable<T> = {(): T; (newValue: T): void}
 
@@ -21,7 +21,9 @@ export function val<T>(value: T): Observable<T> {
 }
 
 export class Atom<T> implements Notifier {
-  responders = new Set<Responder>()
+  // responders = new Set<Responder>()
+  orderedResponders = new Map<string, OrderedResponder>()
+  unorderedResponders = new Set<UnorderedResponder>()
 
   constructor(public value: T) {}
 
@@ -30,7 +32,8 @@ export class Atom<T> implements Notifier {
 
     if (responder !== null) {
       // TODO: distinguish between components and other responders?
-      this.responders.add(responder)
+      // this.responders.add(responder)
+      addResponder(this, responder)
     }
 
     return this.value

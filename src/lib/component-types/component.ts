@@ -12,7 +12,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
   element: HTMLElement
   subComponents: Z[] = []
   props: Props<P>
-  location: string
+  order: string
 
   constructor(
     props: P,
@@ -20,7 +20,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
     public children: Subtree,
     public index: number
   ) {
-    this.location = this.parent.location + index
+    this.order = this.parent.order + index
     this.props = props
     this.props.children = children
 

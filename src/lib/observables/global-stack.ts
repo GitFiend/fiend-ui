@@ -40,13 +40,13 @@ export class GlobalStack {
     return false
   }
 
-  queueComponentUpdate(component: ZComponent) {
-    const numActions = this.actionStack.length
-
-    if (numActions > 0) {
-      this.actionStack[numActions - 1].addComponent(component)
-    }
-  }
+  // queueComponentUpdate(component: ZComponent) {
+  //   const numActions = this.actionStack.length
+  //
+  //   if (numActions > 0) {
+  //     this.actionStack[numActions - 1].addComponent(component)
+  //   }
+  // }
 
   insideAction(): boolean {
     return this.actionStack.length > 0
@@ -60,7 +60,7 @@ export class GlobalStack {
     if (this.insideAction()) {
       const action = last(this.actionStack)
 
-      if (action !== undefined && action.responders.delete(computed)) {
+      if (action !== undefined && action.unorderedResponders.delete(computed)) {
         computed.run()
       }
     }

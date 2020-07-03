@@ -50,9 +50,9 @@ export class ObserverComponent<P extends {} = {}> extends Component<P> {
           this.update()
         },
         {
-          scheduler: (callback) => {
+          scheduler: callback => {
             // console.log('schedule update')
-            scheduler.runScheduled(this.location, callback)
+            scheduler.runScheduled(this.order, callback)
             // callback()
           },
         }
@@ -62,7 +62,7 @@ export class ObserverComponent<P extends {} = {}> extends Component<P> {
   }
 
   remove(): void {
-    this.disposers.forEach((d) => d())
+    this.disposers.forEach(d => d())
     super.remove()
   }
 }

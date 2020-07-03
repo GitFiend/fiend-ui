@@ -34,13 +34,13 @@ export class RootNode implements ComponentBase {
   type = ZType.host as const
   parent: null
   subComponents: Z[] = []
-  location: string = '1'
+  order: string = '1'
 
   constructor(public element: HTMLElement) {}
 
   remove(): void {
     this.element.remove()
-    this.subComponents.forEach((s) => s.remove())
+    this.subComponents.forEach(s => s.remove())
   }
 }
 

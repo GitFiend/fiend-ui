@@ -1,6 +1,6 @@
 import {globalStack} from './global-stack'
-import {Responder} from './responder'
-import {Notifier} from './notifier'
+import {OrderedResponder, Responder, UnorderedResponder} from './responder'
+import {Notifier, runResponders} from './notifier'
 import {ZComponent} from './z-component'
 
 //
@@ -33,26 +33,41 @@ An Action lets us batch our notifiers.
 
  */
 export class ActionState {
-  responders = new Set<Responder>()
-  components = new Map<string, ZComponent>()
+  unorderedResponders = new Set<UnorderedResponder>()
+  orderedResponders = new Map<string, OrderedResponder>()
 
   constructor(public runningResponder: Responder | null) {}
 
   add(notifier: Notifier) {
-    for (const s of notifier.responders) {
-      if (s !== this.runningResponder) {
-        this.responders.add(s)
-      }
+    for (const r of notifier.unorderedResponders) {
+      if (r !== this.runningResponder) this.unorderedResponders.add(r)
     }
+    for (const [key, r] of notifier.orderedResponders) {
+      if (r !== this.runningResponder) this.orderedResponders.set(key, r)
+    }
+
+    // for (const s of notifier.responders) {
+    //   if (s !== this.runningResponder) {
+    //     if (s.ordered)
+    //       this.orderedResponders.add(s)
+    //     else
+    //       this.unorderedResponders.add(s)
+    //   }
+    // }
   }
 
-  addComponent(component: ZComponent) {
-    this.components.set(component.location, component)
-  }
-
+  // This whole object gets deleted after running, so I don't think cleanup is required.
   run() {
-    for (const s of this.responders) {
-      s.run()
-    }
+    runResponders(this.unorderedResponders, this.orderedResponders)
+
+    // for (const s of this.unorderedResponders) {
+    //   s.run()
+    // }
+    // for (const s of this.orderedResponders) {
+    //   s.run()
+    // }
+    // for (const s of this.responders) {
+    //   s.run()
+    // }
   }
 }

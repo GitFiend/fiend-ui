@@ -27,8 +27,8 @@ describe('component switching', () => {
     // TODO: Broken!
     store.setA(true)
     // console.log(document.body.innerHTML)
-    // expect(screen.queryByText('a')).toBeDefined()
-    // expect(screen.queryByText('b')).toBeNull()
+    expect(screen.queryByText('a')).toBeDefined()
+    expect(screen.queryByText('b')).toBeNull()
   })
 })
 
