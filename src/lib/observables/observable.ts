@@ -1,5 +1,5 @@
 import {globalStack} from './global-stack'
-import {Subscriber} from './subscriber'
+import {Responder} from './responder'
 import {Notifier, notify} from './notifier'
 
 export type Observable<T> = {(): T; (newValue: T): void}
@@ -21,16 +21,16 @@ export function val<T>(value: T): Observable<T> {
 }
 
 export class Atom<T> implements Notifier {
-  subscribers = new Set<Subscriber>()
+  responders = new Set<Responder>()
 
   constructor(public value: T) {}
 
   get(): T {
-    const subscriber = globalStack.getCurrentSubscriber()
+    const responder = globalStack.getCurrentResponder()
 
-    if (subscriber !== null) {
-      // TODO: distinguish between components and other subscribers?
-      this.subscribers.add(subscriber)
+    if (responder !== null) {
+      // TODO: distinguish between components and other responders?
+      this.responders.add(responder)
     }
 
     return this.value

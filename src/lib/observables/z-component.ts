@@ -1,7 +1,7 @@
 import {IReactionDisposer} from 'mobx'
 import {Component} from '../component-types/component'
 import {globalStack} from './global-stack'
-import {Subscriber} from './subscriber'
+import {Responder} from './responder'
 import {renderSubtree} from '../render'
 
 class ObserverScheduler {
@@ -47,7 +47,7 @@ We could let the observables run, and schedule the apply?
 // TODO: Run scheduled (also using tree order) at the end of an action?
  */
 
-export class ZComponent<P extends {} = {}> extends Component<P> implements Subscriber {
+export class ZComponent<P extends {} = {}> extends Component<P> implements Responder {
   disposers: IReactionDisposer[] = []
 
   mount() {
@@ -71,7 +71,7 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
   runInner = () => {
     // console.log('runInner')
 
-    globalStack.pushSubscriber(this)
+    globalStack.pushResponder(this)
     globalStack.startAction()
 
     // const apply = () => {
@@ -83,7 +83,7 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
     // scheduler.add(this.location, apply)
 
     globalStack.endAction()
-    globalStack.popSubscriber()
+    globalStack.popResponder()
 
     // console.log('running scheduler: ', scheduler.updates.size)
     // scheduler.run()

@@ -1,37 +1,37 @@
 import {globalStack} from './global-stack'
-import {Subscriber} from './subscriber'
+import {Responder} from './responder'
 
 /*
 A Notifier is something with observable-like behaviour.
 
-Could be a plain observable or a computed (Computeds are both Notifiers and Subscribers).
+Could be a plain observable or a computed (Computeds are both Notifiers and Responders).
 
  */
 export interface Notifier {
-  subscribers: Set<Subscriber>
+  responders: Set<Responder>
 }
 
 export function notify(notifier: Notifier) {
   if (!globalStack.queueNotifierIfInAction(notifier)) {
-    const subscribers = notifier.subscribers
-    notifier.subscribers = new Set<Subscriber>()
+    const responders = notifier.responders
+    notifier.responders = new Set<Responder>()
 
     // TODO: ZComponents need to be run in order
-    for (const r of subscribers) {
+    for (const r of responders) {
       r.run()
     }
   }
 }
 
 // export function runActionQueue(actionState: ActionState) {
-//   const reactions = new Set<Subscriber>()
-//   const {subscribers, runningSubscriber} = actionState
+//   const reactions = new Set<Responder>()
+//   const {responders, runningResponder} = actionState
 //
 //   // for (const n of notifiers) {
-//     for (const r of subscribers) {
-//       if (r !== runningSubscriber) reactions.add(r)
+//     for (const r of responders) {
+//       if (r !== runningResponder) reactions.add(r)
 //     }
-//     subscribers = new Set<Subscriber>()
+//     responders = new Set<Responder>()
 //   // }
 //
 //   for (const r of reactions) {

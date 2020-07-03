@@ -1,30 +1,30 @@
-import {Subscriber} from './subscriber'
+import {Responder} from './responder'
 import {Notifier} from './notifier'
 import {ActionState} from './action'
 import {Computed} from './computed'
 import {ZComponent} from './z-component'
 
 export class GlobalStack {
-  subscriberStack: Subscriber[] = []
+  responderStack: Responder[] = []
   actionStack: ActionState[] = []
 
   /*
-  We put a subscriber on a stack so that notifiers can register themselves
-  with the current subscriber.
+  We put a responder on a stack so that notifiers can register themselves
+  with the current responder.
    */
-  pushSubscriber(subscriber: Subscriber): void {
-    this.subscriberStack.push(subscriber)
+  pushResponder(responder: Responder): void {
+    this.responderStack.push(responder)
   }
 
-  popSubscriber(): void {
-    this.subscriberStack.pop()
+  popResponder(): void {
+    this.responderStack.pop()
   }
 
-  getCurrentSubscriber(): Subscriber | null {
-    const len = this.subscriberStack.length
+  getCurrentResponder(): Responder | null {
+    const len = this.responderStack.length
 
     if (len > 0) {
-      return this.subscriberStack[len - 1]
+      return this.responderStack[len - 1]
     }
     return null
   }
@@ -60,14 +60,14 @@ export class GlobalStack {
     if (this.insideAction()) {
       const action = last(this.actionStack)
 
-      if (action !== undefined && action.subscribers.delete(computed)) {
+      if (action !== undefined && action.responders.delete(computed)) {
         computed.run()
       }
     }
   }
 
   startAction(): void {
-    this.actionStack.push(new ActionState(this.getCurrentSubscriber()))
+    this.actionStack.push(new ActionState(this.getCurrentResponder()))
   }
 
   endAction(): void {

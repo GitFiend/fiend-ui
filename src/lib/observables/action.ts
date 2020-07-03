@@ -1,5 +1,5 @@
 import {globalStack} from './global-stack'
-import {Subscriber} from './subscriber'
+import {Responder} from './responder'
 import {Notifier} from './notifier'
 import {ZComponent} from './z-component'
 
@@ -33,15 +33,15 @@ An Action lets us batch our notifiers.
 
  */
 export class ActionState {
-  subscribers = new Set<Subscriber>()
+  responders = new Set<Responder>()
   components = new Map<string, ZComponent>()
 
-  constructor(public runningSubscriber: Subscriber | null) {}
+  constructor(public runningResponder: Responder | null) {}
 
   add(notifier: Notifier) {
-    for (const s of notifier.subscribers) {
-      if (s !== this.runningSubscriber) {
-        this.subscribers.add(s)
+    for (const s of notifier.responders) {
+      if (s !== this.runningResponder) {
+        this.responders.add(s)
       }
     }
   }
@@ -51,7 +51,7 @@ export class ActionState {
   }
 
   run() {
-    for (const s of this.subscribers) {
+    for (const s of this.responders) {
       s.run()
     }
   }
