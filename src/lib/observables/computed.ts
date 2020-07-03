@@ -64,13 +64,17 @@ export class Computed<T> implements Subscriber, Notifier {
   /*
   TODO:
 
-  If we are inside an action, check if action stack contains this computed. If it does,
-  then we need to recalculate computed value, and then remove this from action stack.
+  If we are inside an action, check if action stack contains this computed.
+  (This means the computed is dirty)
+
+  If it does, then we need to recalculate computed value, and then remove this
+  from action stack.
    */
   get(): T {
-    if (globalStack.actionHasSubscriber(this)) {
-      this.run()
-    }
+    globalStack.runComputedNowIfDirty(this)
+    // if (globalStack.actionHasSubscriber(this)) {
+    //   this.run()
+    // }
 
     const subscriber = globalStack.getCurrentSubscriber()
 

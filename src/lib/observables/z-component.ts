@@ -44,7 +44,7 @@ This can happen out of order because observables don't respect the tree shape/or
 
 We could let the observables run, and schedule the apply?
 
-
+// TODO: Run scheduled (also using tree order) at the end of an action?
  */
 
 export class ZComponent<P extends {} = {}> extends Component<P> implements Subscriber {
@@ -70,23 +70,18 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
     // reactionStack.startAction()
 
     const res = this.render()
-    // this.update()
 
-    // if (res !== null) {
     const apply = () => {
       this.subComponents = renderSubtree(res, this.subComponents, this)
     }
 
     scheduler.add(this.location, apply)
-    // }
 
     // reactionStack.endAction()
     globalStack.popSubscriber()
 
-    console.log('running scheduler: ', scheduler.updates.size)
+    // console.log('running scheduler: ', scheduler.updates.size)
     scheduler.run()
-
-    // if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)
   }
 
   remove(): void {
