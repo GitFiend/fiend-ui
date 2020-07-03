@@ -25,6 +25,6 @@ export class AutoRun implements Subscriber {
   }
 }
 
-export function autoRun(f: () => void, schedule?: () => void) {
+export function autoRun(f: () => void) {
   return new AutoRun(f)
 }

@@ -4,7 +4,7 @@ import {mkRoot} from '../../dom-tests/host.test'
 import {renderTree} from '../render'
 
 describe('component', () => {
-  test('', () => {
+  test('null in render should remove previous elements', () => {
     const root = mkRoot()
 
     const t = renderTree(<A ok={true} />, null, root, 0)

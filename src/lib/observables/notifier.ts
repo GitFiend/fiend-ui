@@ -12,9 +12,7 @@ export interface Notifier {
 }
 
 export function notify(notifier: Notifier) {
-  if (globalStack.insideAction()) {
-    globalStack.queueNotifier(notifier)
-  } else {
+  if (!globalStack.queueNotifierIfInAction(notifier)) {
     const subscribers = notifier.subscribers
     notifier.subscribers = new Set<Subscriber>()
 

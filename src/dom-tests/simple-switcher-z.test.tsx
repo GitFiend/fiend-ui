@@ -6,7 +6,7 @@ import {val} from '../lib/observables/observable'
 import {ZComponent} from '../lib/observables/z-component'
 
 export function sleep(ms: number) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve()
     }, ms)
@@ -42,7 +42,7 @@ interface SwitcherProps {
 class Switcher extends ZComponent<SwitcherProps> {
   render() {
     const {store} = this.props
-    console.log('render switcher', store.a())
+    // console.log('render switcher', store.a())
 
     if (store.a()) {
       return (

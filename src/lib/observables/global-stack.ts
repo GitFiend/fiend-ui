@@ -4,36 +4,43 @@ import {ActionState} from './action'
 import {Computed} from './computed'
 
 export class GlobalStack {
-  subscribers: Subscriber[] = []
-  actions: ActionState[] = []
+  subscriberStack: Subscriber[] = []
+  actionStack: ActionState[] = []
 
   /*
   We put a subscriber on a stack so that notifiers can register themselves
   with the current subscriber.
    */
   pushSubscriber(subscriber: Subscriber): void {
-    this.subscribers.push(subscriber)
+    this.subscriberStack.push(subscriber)
   }
 
   popSubscriber(): void {
-    this.subscribers.pop()
+    this.subscriberStack.pop()
   }
 
   getCurrentSubscriber(): Subscriber | null {
-    const len = this.subscribers.length
+    const len = this.subscriberStack.length
 
     if (len > 0) {
-      return this.subscribers[len - 1]
+      return this.subscriberStack[len - 1]
     }
     return null
   }
 
-  queueNotifier(notifier: Notifier): void {
-    last(this.actions)?.add(notifier)
+  queueNotifierIfInAction(notifier: Notifier): boolean {
+    const numActions = this.actionStack.length
+
+    if (numActions > 0) {
+      this.actionStack[numActions - 1].add(notifier)
+
+      return true
+    }
+    return false
   }
 
   insideAction(): boolean {
-    return this.actions.length > 0
+    return this.actionStack.length > 0
   }
 
   /*
@@ -42,24 +49,20 @@ export class GlobalStack {
    */
   runComputedNowIfDirty(computed: Computed<unknown>) {
     if (this.insideAction()) {
-      const action = last(this.actions)
+      const action = last(this.actionStack)
 
       if (action !== undefined && action.subscribers.delete(computed)) {
         computed.run()
       }
     }
   }
-  //
-  // actionHasSubscriber(subscriber: Subscriber): boolean {
-  //   return this.insideAction() && last(this.actions).subscribers.delete(subscriber)
-  // }
 
   startAction(): void {
-    this.actions.push(new ActionState(this.getCurrentSubscriber()))
+    this.actionStack.push(new ActionState(this.getCurrentSubscriber()))
   }
 
   endAction(): void {
-    const queue = this.actions.pop()
+    const queue = this.actionStack.pop()
 
     queue?.run()
   }
