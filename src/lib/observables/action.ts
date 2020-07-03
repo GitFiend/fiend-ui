@@ -1,6 +1,7 @@
 import {globalStack} from './global-stack'
 import {Subscriber} from './subscriber'
 import {Notifier} from './notifier'
+import {ZComponent} from './z-component'
 
 //
 export function runInAction(f: () => void) {
@@ -33,6 +34,7 @@ An Action lets us batch our notifiers.
  */
 export class ActionState {
   subscribers = new Set<Subscriber>()
+  components = new Map<string, ZComponent>()
 
   constructor(public runningSubscriber: Subscriber | null) {}
 
@@ -42,6 +44,10 @@ export class ActionState {
         this.subscribers.add(s)
       }
     }
+  }
+
+  addComponent(component: ZComponent) {
+    this.components.set(component.location, component)
   }
 
   run() {

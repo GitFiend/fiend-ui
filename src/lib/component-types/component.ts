@@ -1,6 +1,5 @@
 import {ComponentBase, equalProps, ParentComponent, Subtree, Z, ZType} from './base'
 import {removeSubComponents, renderSubtree} from '../render'
-import {time, timeEnd} from '../util/measure'
 
 export interface Rec {
   [prop: string]: unknown
@@ -32,23 +31,10 @@ export class Component<P extends {} = {}> implements ComponentBase {
     return null
   }
 
-  /*
-  TODO Question: If render returns null, when are sub components deleted?
-   */
-  update() {
-    // if (__DEV__) {
-    //   time((this as any).constructor.name)
-    // }
-
-    // debugger
+  update = () => {
     const res = this.render()
 
-    // if (res !== null) this.subComponents = renderSubtree(res, this.subComponents, this)
     this.subComponents = renderSubtree(res, this.subComponents, this)
-
-    // if (__DEV__) {
-    //   timeEnd((this as any).constructor.name)
-    // }
   }
 
   updateWithNewProps(props: P, children: Subtree): void {

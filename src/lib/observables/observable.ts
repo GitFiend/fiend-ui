@@ -29,6 +29,7 @@ export class Atom<T> implements Notifier {
     const subscriber = globalStack.getCurrentSubscriber()
 
     if (subscriber !== null) {
+      // TODO: distinguish between components and other subscribers?
       this.subscribers.add(subscriber)
     }
 

@@ -2,6 +2,7 @@ import {Subscriber} from './subscriber'
 import {Notifier} from './notifier'
 import {ActionState} from './action'
 import {Computed} from './computed'
+import {ZComponent} from './z-component'
 
 export class GlobalStack {
   subscriberStack: Subscriber[] = []
@@ -37,6 +38,14 @@ export class GlobalStack {
       return true
     }
     return false
+  }
+
+  queueComponentUpdate(component: ZComponent) {
+    const numActions = this.actionStack.length
+
+    if (numActions > 0) {
+      this.actionStack[numActions - 1].addComponent(component)
+    }
   }
 
   insideAction(): boolean {

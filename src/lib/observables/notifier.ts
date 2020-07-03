@@ -16,6 +16,7 @@ export function notify(notifier: Notifier) {
     const subscribers = notifier.subscribers
     notifier.subscribers = new Set<Subscriber>()
 
+    // TODO: ZComponents need to be run in order
     for (const r of subscribers) {
       r.run()
     }

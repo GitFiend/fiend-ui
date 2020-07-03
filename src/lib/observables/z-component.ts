@@ -63,25 +63,30 @@ export class ZComponent<P extends {} = {}> extends Component<P> implements Subsc
     // scheduler.runScheduled(this.location, this.runInner)
   }
 
+  update = () => {
+    // I think we want to make sure this is batched instead of run immediately.
+    super.update()
+  }
+
   runInner = () => {
     // console.log('runInner')
 
     globalStack.pushSubscriber(this)
-    // reactionStack.startAction()
+    globalStack.startAction()
 
-    const res = this.render()
+    // const apply = () => {
+    //   const res = this.render()
+    //   this.subComponents = renderSubtree(res, this.subComponents, this)
+    // }
 
-    const apply = () => {
-      this.subComponents = renderSubtree(res, this.subComponents, this)
-    }
+    this.update()
+    // scheduler.add(this.location, apply)
 
-    scheduler.add(this.location, apply)
-
-    // reactionStack.endAction()
+    globalStack.endAction()
     globalStack.popSubscriber()
 
     // console.log('running scheduler: ', scheduler.updates.size)
-    scheduler.run()
+    // scheduler.run()
   }
 
   remove(): void {

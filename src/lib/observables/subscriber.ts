@@ -8,6 +8,8 @@ Could be a Computed or a reaction such as AutoRun.
 
  */
 export interface Subscriber {
+  // TODO: subscriber could say whether it cares about order???
+
   run(): void
 }
 
