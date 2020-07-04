@@ -10,7 +10,11 @@ export function setAttributesFromProps(element: HTMLElement, props: Rec) {
   }
 }
 
-export function updateAttributes(element: HTMLElement, newProps: Rec, oldProps: Rec | null) {
+export function updateAttributes(
+  element: HTMLElement,
+  newProps: Rec,
+  oldProps: Rec | null
+) {
   if (oldProps === null) setAttributesFromProps(element, newProps)
   else {
     updateAttrInner(element, newProps, oldProps)
@@ -40,7 +44,12 @@ function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
   }
 }
 
-function setAttribute(element: HTMLElement, attr: string, value: any, oldValue: any): void {
+function setAttribute(
+  element: HTMLElement,
+  attr: string,
+  value: any,
+  oldValue: any
+): void {
   if (attr === 'className') {
     element.setAttribute('class', value)
   } else if (attr.startsWith('on')) {
@@ -57,11 +66,11 @@ function setAttribute(element: HTMLElement, attr: string, value: any, oldValue: 
 function setStyles(
   element: HTMLElement,
   styles: CSSStyleDeclaration,
-  oldStyles: CSSStyleDeclaration | undefined
+  oldStyles: CSSStyleDeclaration | null
 ) {
   const styleKeys = Object.keys(styles)
 
-  if (oldStyles) {
+  if (oldStyles !== null) {
     for (const s of styleKeys) {
       const style = styles[s as any]
 
@@ -71,6 +80,11 @@ function setStyles(
     }
   } else {
     for (const s of styleKeys) {
+      if (__DEV__) {
+        if (typeof styles[s as any] === 'number') {
+          console.warn(`${s}: ${styles[s as any]}`)
+        }
+      }
       element.style[s as any] = styles[s as any]
     }
   }

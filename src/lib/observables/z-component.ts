@@ -58,7 +58,7 @@ export class ZComponent<P extends {} = {}> extends Component<P>
   }
 
   run() {
-    console.log('run')
+    // console.log('run')
 
     this.runInner()
     // scheduler.runScheduled(this.location, this.runInner)

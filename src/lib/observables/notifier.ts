@@ -49,8 +49,8 @@ export function runResponders(
   orderedResponders: Map<string, OrderedResponder>
 ) {
   // const {unorderedResponders, orderedResponders} = notifier
-  if (orderedResponders.size > 0)
-    console.log(`runResponders ${unorderedResponders.size} ${orderedResponders.size}`)
+  // if (orderedResponders.size > 0)
+  //   console.log(`runResponders ${unorderedResponders.size} ${orderedResponders.size}`)
 
   for (const s of unorderedResponders) {
     s.run()
@@ -59,7 +59,7 @@ export function runResponders(
   const keys = Array.from(orderedResponders.keys())
   keys.sort()
 
-  if (orderedResponders.size > 0) console.log({keys})
+  // if (orderedResponders.size > 0) console.log({keys})
 
   for (const key of keys) {
     orderedResponders.get(key)?.run()
