@@ -29,6 +29,7 @@ export function renderTextComponent(
     if (prevTree.text === text) return prevTree
     else {
       prevTree.element.nodeValue = text
+      prevTree.text = text
       return prevTree
     }
   }
