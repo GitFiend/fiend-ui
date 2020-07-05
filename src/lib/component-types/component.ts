@@ -1,5 +1,6 @@
 import {ComponentBase, equalProps, ParentComponent, Subtree, Z, ZType} from './base'
 import {removeSubComponents, renderSubtree} from '../render'
+import {time, timeEnd} from '../util/measure'
 
 export interface Rec {
   [prop: string]: unknown
@@ -32,9 +33,15 @@ export class Component<P extends {} = {}> implements ComponentBase {
   }
 
   update = () => {
+    if (__DEV__) {
+      time(this.constructor.name)
+    }
     const res = this.render()
 
     this.subComponents = renderSubtree(res, this.subComponents, this)
+    if (__DEV__) {
+      timeEnd(this.constructor.name)
+    }
   }
 
   updateWithNewProps(props: P, children: Subtree): void {
