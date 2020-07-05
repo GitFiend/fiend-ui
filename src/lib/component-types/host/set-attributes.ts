@@ -59,7 +59,8 @@ function setAttribute(
   } else if (attr === 'ref') {
     ;(value as RefObject<any>).current = element
   } else {
-    element.setAttribute(attr, value)
+    if (typeof value === 'boolean' && value) element.setAttribute(attr, '')
+    else element.setAttribute(attr, value)
   }
 }
 
