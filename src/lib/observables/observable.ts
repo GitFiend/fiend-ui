@@ -2,9 +2,9 @@ import {globalStack} from './global-stack'
 import {OrderedResponder, UnorderedResponder} from './responder'
 import {addResponder, Notifier, notify} from './notifier'
 
-export type Observable<T> = {(): T; (newValue: T): void}
+export type Observable<T> = {(): Readonly<T>; (newValue: T): void}
 
-export function val<T>(value: T): Observable<T> {
+export function val<T>(value: T): Observable<Readonly<T>> {
   const a = new Atom(value)
 
   function inner(): T

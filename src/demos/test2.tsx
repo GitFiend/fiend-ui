@@ -3,6 +3,7 @@ import {render} from '../lib/render'
 import {action, observable} from 'mobx'
 import {ObserverComponent} from '../lib/component-types/observer-component'
 import {F} from '../lib/component-types/fragment'
+import {val} from "../lib/observables/observable";
 
 function randomHue() {
   return Math.round(Math.random() * 1000) % 255
@@ -17,6 +18,14 @@ class MyStore {
     this.hue = randomHue()
   }
 }
+
+const object = val([1, 2, 3])
+
+const a = [...object()]
+
+a[0] = 4
+
+object(a)
 
 interface Test2Props {
   store: MyStore
