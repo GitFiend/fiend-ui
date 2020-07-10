@@ -25,3 +25,23 @@ class A extends Component<{ok: boolean}> {
     return <div>OK</div>
   }
 }
+
+class Base {
+  n = 5
+
+  static new() {
+    return new this()
+  }
+}
+
+class B extends Base {
+  n = 6
+}
+
+describe('quick static test', () => {
+  test('it', () => {
+    const b = B.new()
+
+    expect(b.n).toEqual(6)
+  })
+})

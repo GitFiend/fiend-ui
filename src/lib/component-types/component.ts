@@ -1,6 +1,7 @@
 import {ComponentBase, equalProps, ParentComponent, Subtree, Z, ZType} from './base'
 import {removeSubComponents, renderSubtree} from '../render'
 import {time, timeEnd} from '../util/measure'
+// import {createElement} from '../create-element'
 
 export interface Rec {
   [prop: string]: unknown
@@ -67,6 +68,12 @@ export class Component<P extends {} = {}> implements ComponentBase {
     this.subComponents.forEach(s => s.remove())
     this.componentWillUnmount()
   }
+
+  // static new<P>(props: P, children: Subtree) {
+  //   return createElement(this, {}, children)
+  //   // return new this(props, parent, children, index)
+  //   // return new Component(props, parent, children, index)
+  // }
 
   // Required by JSX
   context: any

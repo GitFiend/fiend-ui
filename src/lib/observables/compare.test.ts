@@ -85,11 +85,11 @@ describe('compare mbox computeds with zeact', () => {
         autoRun(() => {
           const {a, b, c, d} = this.b
 
-          const array = d()
+          const array = [...d()]
+
           array.push(a(), b(), c())
 
-          d(array.slice(0))
-          // console.log(d())
+          d(array)
         })
       }
     }
