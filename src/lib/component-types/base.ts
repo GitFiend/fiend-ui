@@ -1,9 +1,9 @@
 import {HostComponent} from './host/host-component'
 import {TextComponent} from './text-component'
 import {Component, Rec} from './component'
-import {ObserverComponent} from './observer-component'
+// import {ObserverComponent} from './observer-component'
 
-export type Z = HostComponent | TextComponent | Component | ObserverComponent
+export type Z = HostComponent | TextComponent | Component
 export type ParentComponent = HostComponent | RootNode | Component
 
 export interface Tree {

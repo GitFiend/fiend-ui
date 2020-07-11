@@ -1,6 +1,16 @@
-import {ComponentBase, equalProps, ParentComponent, Subtree, Z, ZType} from './base'
+import {
+  ComponentBase,
+  equalProps,
+  ParentComponent,
+  Subtree,
+  SubtreeFlat,
+  Tree,
+  Z,
+  ZType,
+} from './base'
 import {removeSubComponents, renderSubtree} from '../render'
 import {time, timeEnd} from '../util/measure'
+import {isPropsObject} from '../host-components'
 // import {createElement} from '../create-element'
 
 export interface Rec {
@@ -69,11 +79,30 @@ export class Component<P extends {} = {}> implements ComponentBase {
     this.componentWillUnmount()
   }
 
-  // TODO
-  static _<P>(props: P, children: Subtree) {
-    // return createElement(this, {}, children)
-    // return new this(props, parent, children, index)
-    // return new Component(props, parent, children, index)
+  static _<P extends {} = {}>(...args: [(P | SubtreeFlat)?, ...SubtreeFlat[]]): Tree {
+    const [props, ...children] = args
+
+    if (args.length === 0) {
+      return {
+        type: this,
+        props: null,
+        children: [],
+      }
+    } else {
+      if (isPropsObject(props)) {
+        return {
+          type: this,
+          props: props as any,
+          children,
+        }
+      } else {
+        return {
+          type: this,
+          props: null,
+          children: args as any[],
+        }
+      }
+    }
   }
 
   // Required by JSX
@@ -91,7 +120,7 @@ export function makeCustomComponent<P extends Rec>(
   children: Subtree,
   index: number
 ) {
-  const component = new cons<P>(props || ({} as P), parent, children, index)
+  const component = new cons<P>(props ?? ({} as P), parent, children, index)
   component.mount()
 
   return component
@@ -110,7 +139,7 @@ export function renderCustom<P extends Rec>(
   }
 
   if (prevTree.type === ZType.custom && prevTree instanceof cons) {
-    prevTree.updateWithNewProps(props || {}, children)
+    prevTree.updateWithNewProps(props ?? {}, children)
 
     return prevTree
   }

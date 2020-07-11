@@ -57,27 +57,11 @@ describe('simple div', () => {
   test('remove child on next render2', () => {
     const root = mkRoot()
 
-    const _h = (
-      <div>
-        <div>a</div>
-        <div>b</div>
-      </div>
-    )
-
-    const h = div(div('a'), div('b'))
-
-    const divs = renderTree(h, null, root, 0)
+    const divs = renderTree(div(div('a'), div('b')), null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    // const h2 = (
-    //   <div>
-    //     <div>a</div>
-    //   </div>
-    // )
-    const h2 = div(div('a'))
-
-    renderTree(h2, divs, root, 0)
+    renderTree(div(div('a')), divs, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
   })

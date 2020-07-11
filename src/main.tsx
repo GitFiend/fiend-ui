@@ -1,7 +1,4 @@
 import {createElement} from './lib/create-element'
-import {boxesTest} from './demos/boxes'
-import {test2} from './demos/test2'
-import {test2React} from './demos/test2-react'
 
 function main(): void {
   const root = document.getElementById('root')
@@ -10,7 +7,7 @@ function main(): void {
     // lotsOfElements(root)
     // lotsOfElements(root)
     // lotsOfElements(root)
-    test2(root)
+    // test2(root)
     // test2React(root)
     // canvasTest(root)
     // boxesTest()

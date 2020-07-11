@@ -1,4 +1,8 @@
 import {div} from './host-components'
+import {Component} from './component-types/component'
+import {Subtree} from './component-types/base'
+import {mkRoot} from '../dom-tests/host.test'
+import {renderTree} from './render'
 
 describe('div renders', () => {
   test('no args', () => {
@@ -50,7 +54,21 @@ describe('div renders', () => {
       children: ['hello', 'hello'],
     })
   })
+
+  test('custom component', () => {
+    const root = mkRoot()
+
+    renderTree(A._(), null, root, 0)
+
+    expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
+  })
 })
+
+class A extends Component {
+  render(): Subtree {
+    return div('omg')
+  }
+}
 
 // describe('test construction perf', () => {
 //   const numLoops = 1000000
