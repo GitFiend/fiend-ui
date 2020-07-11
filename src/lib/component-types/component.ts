@@ -69,11 +69,12 @@ export class Component<P extends {} = {}> implements ComponentBase {
     this.componentWillUnmount()
   }
 
-  // static new<P>(props: P, children: Subtree) {
-  //   return createElement(this, {}, children)
-  //   // return new this(props, parent, children, index)
-  //   // return new Component(props, parent, children, index)
-  // }
+  // TODO
+  static _<P>(props: P, children: Subtree) {
+    // return createElement(this, {}, children)
+    // return new this(props, parent, children, index)
+    // return new Component(props, parent, children, index)
+  }
 
   // Required by JSX
   context: any

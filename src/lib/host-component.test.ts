@@ -7,7 +7,7 @@ describe('div renders', () => {
     expect(el).toEqual({
       type: 'div',
       props: null,
-      children: null,
+      children: [],
     })
   })
 
@@ -27,7 +27,7 @@ describe('div renders', () => {
     expect(el).toEqual({
       type: 'div',
       props: {className: 'hi'},
-      children: null,
+      children: [],
     })
   })
 
@@ -38,6 +38,16 @@ describe('div renders', () => {
       type: 'div',
       props: {className: 'hi'},
       children: ['hello'],
+    })
+  })
+
+  test('two elements only', () => {
+    const el = div('hello', 'hello')
+
+    expect(el).toEqual({
+      type: 'div',
+      props: null,
+      children: ['hello', 'hello'],
     })
   })
 })
