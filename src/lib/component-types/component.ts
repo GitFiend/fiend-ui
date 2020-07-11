@@ -79,7 +79,7 @@ export class Component<P extends {} = {}> implements ComponentBase {
     this.componentWillUnmount()
   }
 
-  static _<P extends {} = {}>(...args: [(P | SubtreeFlat)?, ...SubtreeFlat[]]): Tree {
+  static init<P extends {} = {}>(...args: [(P | SubtreeFlat)?, ...SubtreeFlat[]]): Tree {
     const [props, ...children] = args
 
     if (args.length === 0) {

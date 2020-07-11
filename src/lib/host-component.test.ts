@@ -58,7 +58,7 @@ describe('div renders', () => {
   test('custom component', () => {
     const root = mkRoot()
 
-    renderTree(A._(), null, root, 0)
+    renderTree(A.init(), null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
   })

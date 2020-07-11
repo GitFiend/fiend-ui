@@ -1,17 +1,17 @@
 import {Component} from './component'
-import {createElement} from '../create-element'
 import {mkRoot} from '../../dom-tests/host.test'
 import {renderTree} from '../render'
+import {div} from '../host-components'
 
 describe('component', () => {
   test('null in render should remove previous elements', () => {
     const root = mkRoot()
 
-    const t = renderTree(<A ok={true} />, null, root, 0)
+    const t = renderTree(A.init({ok: true}), null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div>OK</div>`)
 
-    renderTree(<A ok={false} />, t, root, 0)
+    renderTree(A.init({ok: false}), t, root, 0)
 
     expect(root.element.innerHTML).toEqual(``)
   })
@@ -22,7 +22,7 @@ class A extends Component<{ok: boolean}> {
     const {ok} = this.props
 
     if (!ok) return null
-    return <div>OK</div>
+    return div('OK')
   }
 }
 
