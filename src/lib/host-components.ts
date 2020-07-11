@@ -65,7 +65,6 @@ div(
     onclick: () => {
       console.log('omg')
     },
-
     style: {width: '12px'},
   },
   h1({style: {width: '23px'}}, 'omg'),

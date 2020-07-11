@@ -1,9 +1,9 @@
-import {createElement} from '../lib/create-element'
 import {F} from '../lib/component-types/fragment'
 import {render} from '../lib/render'
 import {screen} from '@testing-library/dom'
 import {val} from '../lib/observables/observable'
 import {ZComponent} from '../lib/observables/z-component'
+import {div} from '../lib/host-components'
 
 export function sleep(ms: number) {
   return new Promise(resolve => {
@@ -17,7 +17,7 @@ describe('simple switching with own observer library', () => {
   test('shows alternate div after state update', async () => {
     const store = new Store()
 
-    const s = <Switcher store={store} />
+    const s = Switcher.init({store})
     render(s, document.body)
 
     expect(screen.queryByText('a')).toBeDefined()
@@ -39,23 +39,15 @@ class Store {
 interface SwitcherProps {
   store: Store
 }
+
 class Switcher extends ZComponent<SwitcherProps> {
   render() {
     const {store} = this.props
-    // console.log('render switcher', store.a())
 
     if (store.a()) {
-      return (
-        <F>
-          <div>a</div>
-        </F>
-      )
+      return F.init(div('a'))
     }
 
-    return (
-      <F>
-        <div>b</div>
-      </F>
-    )
+    return F.init(div('b'))
   }
 }
