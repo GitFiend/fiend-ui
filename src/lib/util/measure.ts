@@ -13,6 +13,12 @@ export function timeEnd(name: string): void {
   }
 }
 
+export function timeF(f: () => void, name: string) {
+  time(name)
+  f()
+  timeEnd(name)
+}
+
 /*
  performance.mark('Iteration Start')
     Iteration()

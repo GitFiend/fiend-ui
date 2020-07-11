@@ -41,3 +41,29 @@ describe('div renders', () => {
     })
   })
 })
+
+// describe('test construction perf', () => {
+//   const numLoops = 1000000
+//   test('div2', () => {
+//     timeF(() => {
+//       let elements: Tree[] = []
+//
+//       for (let i = 0; i < numLoops; i++) {
+//         elements.push(div2({style: {width: '100px'}}, div2(), div2(), div2()))
+//       }
+//
+//       expect(elements.length).toEqual(numLoops)
+//     }, 'div2')
+//   })
+//   test('div', () => {
+//     timeF(() => {
+//       let elements: Tree[] = []
+//
+//       for (let i = 0; i < numLoops; i++) {
+//         elements.push(div({style: {width: '100px'}}, div(), div(), div()))
+//       }
+//
+//       expect(elements.length).toEqual(numLoops)
+//     }, 'div')
+//   })
+// })
