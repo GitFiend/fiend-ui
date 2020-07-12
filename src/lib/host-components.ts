@@ -8,9 +8,11 @@ type DataPropertiesOnly<T> = {
   [P in DataPropertyNames<T>]: T[P] //extends object ? DataPropertiesOnly<T[P]> : T[P]
 }
 
-export type HostAttributes<T extends HTMLElement> = Partial<
+export type InlineStyles = Partial<CSSStyleDeclaration>
+
+export type HostAttributes<T> = Partial<
   Omit<DataPropertiesOnly<T>, 'style'> & {
-    style: Partial<CSSStyleDeclaration>
+    style: InlineStyles
   }
 >
 
@@ -19,10 +21,10 @@ type HTMLElementArgs<K extends keyof HTMLElementTagNameMap> = [
   ...SubtreeFlat[]
 ]
 
-function makeHtmlElementConstructor(
-  tagName: keyof HTMLElementTagNameMap
-): (...args: HTMLElementArgs<typeof tagName>) => Tree {
-  return (...args: HTMLElementArgs<typeof tagName>): Tree => {
+function makeHtmlElementConstructor<T extends keyof HTMLElementTagNameMap>(
+  tagName: T
+): (...args: HTMLElementArgs<T>) => Tree {
+  return (...args: HTMLElementArgs<T>): Tree => {
     const [a1, ...children] = args
 
     if (args.length === 0) {
@@ -56,17 +58,23 @@ export function isPropsObject(o: Object | string | undefined | null): boolean {
 }
 
 export const h1 = makeHtmlElementConstructor('h1')
+export const h3 = makeHtmlElementConstructor('h3')
 export const div = makeHtmlElementConstructor('div')
+export const footer = makeHtmlElementConstructor('footer')
+export const span = makeHtmlElementConstructor('span')
+export const a = makeHtmlElementConstructor('a')
+export const p = makeHtmlElementConstructor('p')
+export const img = makeHtmlElementConstructor('img')
 
-div(null, null)
-
-div(
-  {
-    onclick: () => {
-      console.log('omg')
-    },
-    style: {width: '12px'},
-  },
-  h1({style: {width: '23px'}}, 'omg'),
-  div()
-)
+// div(null, null)
+//
+// div(
+//   {
+//     onclick: () => {
+//       console.log('omg')
+//     },
+//     style: {width: '12px'},
+//   },
+//   h1({style: {width: '23px'}}, 'omg'),
+//   div()
+// )

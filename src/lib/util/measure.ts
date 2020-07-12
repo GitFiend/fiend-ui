@@ -19,6 +19,12 @@ export function timeF(f: () => void, name: string) {
   timeEnd(name)
 }
 
+export function timeF2(f: () => void, name: string) {
+  console.time(name)
+  f()
+  console.timeEnd(name)
+}
+
 /*
  performance.mark('Iteration Start')
     Iteration()

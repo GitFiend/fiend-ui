@@ -80,14 +80,20 @@ function setStyles(
       }
     }
   } else {
-    for (const s of styleKeys) {
-      if (__DEV__) {
-        if (typeof styles[s as any] === 'number') {
-          console.warn(`${s}: ${styles[s as any]}`)
-        }
-      }
-      element.style[s as any] = styles[s as any]
-    }
+    element.setAttribute(
+      'style',
+      Object.entries(styles)
+        .map(pair => pair.join(':'))
+        .join(';')
+    )
+    // for (const s of styleKeys) {
+    //   if (__DEV__) {
+    //     if (typeof styles[s as any] === 'number') {
+    //       console.warn(`${s}: ${styles[s as any]}`)
+    //     }
+    //   }
+    //   element.style[s as any] = styles[s as any]
+    // }
   }
 }
 

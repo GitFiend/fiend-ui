@@ -11,6 +11,7 @@ import {
 import {removeSubComponents, renderSubtree} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {isPropsObject} from '../host-components'
+
 // import {createElement} from '../create-element'
 
 export interface Rec {
@@ -79,6 +80,8 @@ export class Component<P extends {} = {}> implements ComponentBase {
     this.componentWillUnmount()
   }
 
+  // TODO: Props aren't typed.
+  // Might help https://github.com/microsoft/TypeScript/issues/5863
   static init<P extends {} = {}>(...args: [(P | SubtreeFlat)?, ...SubtreeFlat[]]): Tree {
     const [props, ...children] = args
 
@@ -147,4 +150,33 @@ export function renderCustom<P extends Rec>(
   removeSubComponents(parent, index)
 
   return makeCustomComponent(cons, props, parent, children, index)
+}
+
+export function $<C extends Component>(
+  cons: new (...a: any[]) => C,
+  ...args: [(C['props'] | SubtreeFlat)?, ...SubtreeFlat[]]
+): Tree {
+  const [props, ...children] = args
+
+  if (args.length === 0) {
+    return {
+      type: cons as any,
+      props: null,
+      children: [],
+    }
+  } else {
+    if (isPropsObject(props)) {
+      return {
+        type: cons as any,
+        props: props as any,
+        children,
+      }
+    } else {
+      return {
+        type: cons as any,
+        props: null,
+        children: args as any[],
+      }
+    }
+  }
 }
