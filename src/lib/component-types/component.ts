@@ -12,8 +12,6 @@ import {removeSubComponents, renderSubtree} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {isPropsObject} from '../host-components'
 
-// import {createElement} from '../create-element'
-
 export interface Rec {
   [prop: string]: unknown
 }
@@ -82,31 +80,31 @@ export class Component<P extends {} = {}> implements ComponentBase {
 
   // TODO: Props aren't typed.
   // Might help https://github.com/microsoft/TypeScript/issues/5863
-  static init<P extends {} = {}>(...args: [(P | SubtreeFlat)?, ...SubtreeFlat[]]): Tree {
-    const [props, ...children] = args
-
-    if (args.length === 0) {
-      return {
-        type: this,
-        props: null,
-        children: [],
-      }
-    } else {
-      if (isPropsObject(props)) {
-        return {
-          type: this,
-          props: props as any,
-          children,
-        }
-      } else {
-        return {
-          type: this,
-          props: null,
-          children: args as any[],
-        }
-      }
-    }
-  }
+  // static init<P extends {} = {}>(...args: [(P | SubtreeFlat)?, ...SubtreeFlat[]]): Tree {
+  //   const [props, ...children] = args
+  //
+  //   if (args.length === 0) {
+  //     return {
+  //       type: this,
+  //       props: null,
+  //       children: [],
+  //     }
+  //   } else {
+  //     if (isPropsObject(props)) {
+  //       return {
+  //         type: this,
+  //         props: props as any,
+  //         children,
+  //       }
+  //     } else {
+  //       return {
+  //         type: this,
+  //         props: null,
+  //         children: args as any[],
+  //       }
+  //     }
+  //   }
+  // }
 
   // Required by JSX
   context: any

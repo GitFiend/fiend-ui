@@ -21,7 +21,7 @@ type HTMLElementArgs<K extends keyof HTMLElementTagNameMap> = [
   ...SubtreeFlat[]
 ]
 
-function makeHtmlElementConstructor<T extends keyof HTMLElementTagNameMap>(
+export function makeHtmlElementConstructor<T extends keyof HTMLElementTagNameMap>(
   tagName: T
 ): (...args: HTMLElementArgs<T>) => Tree {
   return (...args: HTMLElementArgs<T>): Tree => {
@@ -65,16 +65,5 @@ export const span = makeHtmlElementConstructor('span')
 export const a = makeHtmlElementConstructor('a')
 export const p = makeHtmlElementConstructor('p')
 export const img = makeHtmlElementConstructor('img')
-
-// div(null, null)
-//
-// div(
-//   {
-//     onclick: () => {
-//       console.log('omg')
-//     },
-//     style: {width: '12px'},
-//   },
-//   h1({style: {width: '23px'}}, 'omg'),
-//   div()
-// )
+export const ul = makeHtmlElementConstructor('ul')
+export const li = makeHtmlElementConstructor('li')

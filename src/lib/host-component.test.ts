@@ -1,5 +1,5 @@
 import {div} from './host-components'
-import {Component} from './component-types/component'
+import {$, Component} from './component-types/component'
 import {Subtree} from './component-types/base'
 import {mkRoot} from '../dom-tests/host.test'
 import {renderTree} from './render'
@@ -58,7 +58,7 @@ describe('div renders', () => {
   test('custom component', () => {
     const root = mkRoot()
 
-    renderTree(A.init(), null, root, 0)
+    renderTree($(A), null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
   })
