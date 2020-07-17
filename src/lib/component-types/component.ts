@@ -19,7 +19,7 @@ export interface Rec {
 export type Props<T> = T & {children?: Subtree}
 
 export class Component<P extends {} = {}> implements ComponentBase {
-  type = ZType.custom as const
+  _type = ZType.custom as const
   element: HTMLElement
   subComponents: Z[] = []
   props: Props<P>
@@ -139,7 +139,7 @@ export function renderCustom<P extends Rec>(
     return makeCustomComponent(cons, props, parent, children, index)
   }
 
-  if (prevTree.type === ZType.custom && prevTree instanceof cons) {
+  if (prevTree._type === ZType.custom && prevTree instanceof cons) {
     prevTree.updateWithNewProps(props ?? {}, children)
 
     return prevTree
@@ -158,20 +158,20 @@ export function $<C extends Component>(
 
   if (args.length === 0) {
     return {
-      type: cons as any,
+      _type: cons as any,
       props: null,
       children: [],
     }
   } else {
     if (isPropsObject(props)) {
       return {
-        type: cons as any,
+        _type: cons as any,
         props: props as any,
         children,
       }
     } else {
       return {
-        type: cons as any,
+        _type: cons as any,
         props: null,
         children: args as any[],
       }

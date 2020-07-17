@@ -3,7 +3,7 @@ import {removeSubComponents, renderSubtree} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
 export class HostComponent implements ComponentBase {
-  type = ZType.host as const
+  _type = ZType.host as const
   element: HTMLElement
   subComponents: Z[] = []
   order: string
@@ -46,7 +46,7 @@ export function renderHost(
     return new HostComponent(tag, props, parent, children, index)
   }
 
-  if (prevTree.type === ZType.host && prevTree.tag === tag) {
+  if (prevTree._type === ZType.host && prevTree.tag === tag) {
     if (props !== null) {
       updateAttributes(prevTree.element, props, prevTree.props)
     }

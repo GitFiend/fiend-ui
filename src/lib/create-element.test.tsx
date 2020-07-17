@@ -13,7 +13,7 @@ describe('create element', () => {
     const d = <h1>Heading</h1>
 
     expect(d).toEqual({
-      type: 'h1',
+      _type: 'h1',
       props: null,
       children: 'Heading',
     })
@@ -28,11 +28,11 @@ describe('create element', () => {
     )
 
     expect(d).toEqual({
-      type: 'div',
+      _type: 'div',
       props: null,
       children: [
-        {type: 'h1', props: null, children: 'Heading'},
-        {type: 'p', props: null, children: 'paragraph'},
+        {_type: 'h1', props: null, children: 'Heading'},
+        {_type: 'p', props: null, children: 'paragraph'},
       ],
     })
   })
@@ -40,28 +40,28 @@ describe('create element', () => {
   test('child array', () => {
     const d = (
       <div>
-        {[1, 2, 3].map((n) => (
+        {[1, 2, 3].map(n => (
           <div>{n}</div>
         ))}
       </div>
     )
 
     expect(d).toEqual({
-      type: 'div',
+      _type: 'div',
       props: null,
       children: [
         {
-          type: 'div',
+          _type: 'div',
           props: null,
           children: 1,
         },
         {
-          type: 'div',
+          _type: 'div',
           props: null,
           children: 2,
         },
         {
-          type: 'div',
+          _type: 'div',
           props: null,
           children: 3,
         },
@@ -73,21 +73,21 @@ describe('create element', () => {
     const d = (
       <div>
         <h1>Heading</h1>
-        {[1, 2, 3].map((n) => (
+        {[1, 2, 3].map(n => (
           <div>{n}</div>
         ))}
       </div>
     )
 
     expect(d).toEqual({
-      type: 'div',
+      _type: 'div',
       props: null,
       children: [
-        {type: 'h1', props: null, children: 'Heading'},
+        {_type: 'h1', props: null, children: 'Heading'},
         [
-          {type: 'div', props: null, children: 1},
-          {type: 'div', props: null, children: 2},
-          {type: 'div', props: null, children: 3},
+          {_type: 'div', props: null, children: 1},
+          {_type: 'div', props: null, children: 2},
+          {_type: 'div', props: null, children: 3},
         ],
       ],
     })

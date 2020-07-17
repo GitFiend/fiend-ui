@@ -7,7 +7,7 @@ export type Z = HostComponent | TextComponent | Component
 export type ParentComponent = HostComponent | RootNode | Component
 
 export interface Tree {
-  type: keyof HTMLElementTagNameMap | typeof Component
+  _type: keyof HTMLElementTagNameMap | typeof Component
   props: Record<string, unknown> | null
   children: Subtree
 }
@@ -25,13 +25,13 @@ export enum ZType {
 export interface ComponentBase {
   parent: unknown
   // element: unknown
-  type: ZType
+  _type: ZType
 
   remove(): void
 }
 
 export class RootNode implements ComponentBase {
-  type = ZType.host as const
+  _type = ZType.host as const
   parent: null
   subComponents: Z[] = []
   order: string = '1'

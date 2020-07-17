@@ -2,7 +2,7 @@ import {ParentComponent, Z, ComponentBase, ZType} from './base'
 import {removeSubComponents} from '../render'
 
 export class TextComponent implements ComponentBase {
-  type = ZType.text as const
+  _type = ZType.text as const
   element: Text
 
   constructor(public text: string, public parent: ParentComponent) {
@@ -25,7 +25,7 @@ export function renderTextComponent(
     return new TextComponent(text, parent)
   }
 
-  if (prevTree.type === ZType.text) {
+  if (prevTree._type === ZType.text) {
     if (prevTree.text === text) return prevTree
     else {
       prevTree.element.nodeValue = text

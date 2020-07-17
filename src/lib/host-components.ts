@@ -29,20 +29,20 @@ export function makeHtmlElementConstructor<T extends keyof HTMLElementTagNameMap
 
     if (args.length === 0) {
       return {
-        type: tagName,
+        _type: tagName,
         props: null,
         children: [],
       }
     } else {
       if (isPropsObject(a1)) {
         return {
-          type: tagName,
+          _type: tagName,
           props: a1 as any,
           children,
         }
       } else {
         return {
-          type: tagName,
+          _type: tagName,
           props: null,
           children: args as any[],
         }
@@ -53,7 +53,7 @@ export function makeHtmlElementConstructor<T extends keyof HTMLElementTagNameMap
 
 export function isPropsObject(o: Object | string | undefined | null): boolean {
   return (
-    typeof o !== 'string' && o?.hasOwnProperty !== undefined && !o.hasOwnProperty('type')
+    typeof o !== 'string' && o?.hasOwnProperty !== undefined && !o.hasOwnProperty('_type')
   )
 }
 
@@ -67,3 +67,5 @@ export const p = makeHtmlElementConstructor('p')
 export const img = makeHtmlElementConstructor('img')
 export const ul = makeHtmlElementConstructor('ul')
 export const li = makeHtmlElementConstructor('li')
+export const video = makeHtmlElementConstructor('video')
+export const source = makeHtmlElementConstructor('source')

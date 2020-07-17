@@ -23,12 +23,12 @@ export function renderTree(
   parent: ParentComponent,
   index: number
 ): Z {
-  const {type, props, children} = tree
+  const {_type, props, children} = tree
 
-  if (typeof type === 'string') {
-    return renderHost(type, props, children, parent, prevTree, index)
+  if (typeof _type === 'string') {
+    return renderHost(_type, props, children, parent, prevTree, index)
   } else {
-    return renderCustom(type, props, children, parent, prevTree, index)
+    return renderCustom(_type, props, children, parent, prevTree, index)
   }
 }
 
@@ -87,7 +87,7 @@ export function renderSubtree(
 }
 
 export function removeSubComponents(parent: ParentComponent, index: number): void {
-  switch (parent.type) {
+  switch (parent._type) {
     case ZType.custom:
     case ZType.host:
       const siblings: Z[] = parent.subComponents

@@ -9,7 +9,7 @@ describe('div renders', () => {
     const el = div()
 
     expect(el).toEqual({
-      type: 'div',
+      _type: 'div',
       props: null,
       children: [],
     })
@@ -19,7 +19,7 @@ describe('div renders', () => {
     const el = div('hello')
 
     expect(el).toEqual({
-      type: 'div',
+      _type: 'div',
       props: null,
       children: ['hello'],
     })
@@ -29,7 +29,7 @@ describe('div renders', () => {
     const el = div({className: 'hi'})
 
     expect(el).toEqual({
-      type: 'div',
+      _type: 'div',
       props: {className: 'hi'},
       children: [],
     })
@@ -39,7 +39,7 @@ describe('div renders', () => {
     const el = div({className: 'hi'}, 'hello')
 
     expect(el).toEqual({
-      type: 'div',
+      _type: 'div',
       props: {className: 'hi'},
       children: ['hello'],
     })
@@ -49,7 +49,7 @@ describe('div renders', () => {
     const el = div('hello', 'hello')
 
     expect(el).toEqual({
-      type: 'div',
+      _type: 'div',
       props: null,
       children: ['hello', 'hello'],
     })
