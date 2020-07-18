@@ -178,3 +178,16 @@ export function $<C extends Component>(
     }
   }
 }
+
+export function $$<C extends Component>(
+  cons: new (...a: any[]) => C,
+  props?: C['props']
+) {
+  return (...children: SubtreeFlat[]): Tree => {
+    return {
+      _type: cons as any,
+      props: props ?? null,
+      children,
+    }
+  }
+}
