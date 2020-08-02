@@ -1,4 +1,5 @@
 import {SubtreeFlat, Tree} from './component-types/base'
+import {Component} from './component-types/component'
 
 type DataPropertyNames<T> = {
   [K in keyof T]: T[K] extends Function ? never : K
@@ -43,6 +44,36 @@ export function makeHtmlElementConstructor<T extends keyof HTMLElementTagNameMap
       } else {
         return {
           _type: tagName,
+          props: null,
+          children: args as any[],
+        }
+      }
+    }
+  }
+}
+
+export function makeCustomComponentConstructor<C extends Component>(
+  cons: new (...a: any[]) => C
+): (...args: [C['props'] | SubtreeFlat, ...SubtreeFlat[]]) => Tree {
+  return (...args: [(C['props'] | SubtreeFlat)?, ...SubtreeFlat[]]): Tree => {
+    const [props, ...children] = args
+
+    if (args.length === 0) {
+      return {
+        _type: cons as any,
+        props: null,
+        children: [],
+      }
+    } else {
+      if (isPropsObject(props)) {
+        return {
+          _type: cons as any,
+          props: props as any,
+          children,
+        }
+      } else {
+        return {
+          _type: cons as any,
           props: null,
           children: args as any[],
         }

@@ -59,23 +59,23 @@ export function renderSubtree(
   const newChildren: Z[] = []
 
   if (children === null) {
-    if (prevChildren[0]) {
+    if (prevChildren[0] !== undefined) {
       removeSubComponents(parent, 0)
     }
   } else if (!Array.isArray(children)) {
-    const s = renderFlatSubtree(children, prevChildren[0] || null, parent, 0)
+    const s = renderFlatSubtree(children, prevChildren[0] ?? null, parent, 0)
     if (s !== null) newChildren.push(s)
   } else {
     let i = 0
     for (const c of children) {
       if (Array.isArray(c)) {
         for (const c_ of c) {
-          const s = renderFlatSubtree(c_, prevChildren[i] || null, parent, i)
+          const s = renderFlatSubtree(c_, prevChildren[i] ?? null, parent, i)
           if (s !== null) newChildren.push(s)
           i++
         }
       } else {
-        const s = renderFlatSubtree(c, prevChildren[i] || null, parent, i)
+        const s = renderFlatSubtree(c, prevChildren[i] ?? null, parent, i)
 
         if (s !== null) newChildren.push(s)
         i++
