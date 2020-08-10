@@ -2,7 +2,6 @@ import {Responder} from './responder'
 import {Notifier} from './notifier'
 import {ActionState} from './action'
 import {Computed} from './computed'
-import {ZComponent} from './z-component'
 
 export class GlobalStack {
   responderStack: Responder[] = []

@@ -1,4 +1,6 @@
 import {globalStack} from './global-stack'
+import {computed} from './computed'
+import {runInAction} from './action'
 
 /*
 A Responder is an object that listens accesses to notifiers (observables). When these
@@ -44,4 +46,24 @@ export class AutoRun implements UnorderedResponder {
 
 export function autoRun(f: () => void) {
   return new AutoRun(f)
+}
+
+export class Reaction<T> {
+  c: () => T
+
+  constructor(calc: () => T, f: (result: T) => void) {
+    this.c = computed(calc)
+
+    autoRun(() => {
+      const result = this.c()
+
+      runInAction(() => {
+        f(result)
+      })
+    })
+  }
+}
+
+export function reaction<T>(calc: () => T, f: (result: T) => void) {
+  return new Reaction(calc, f)
 }

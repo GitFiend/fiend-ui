@@ -1,6 +1,6 @@
 import {addResponder, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
-import {OrderedResponder, Responder, UnorderedResponder} from './responder'
+import {OrderedResponder, UnorderedResponder} from './responder'
 
 /*
 Notes:
@@ -31,13 +31,10 @@ If get is called on the computed, then we need to recalculate and remove it from
 export class Computed<T> implements UnorderedResponder, Notifier {
   ordered = false as const
 
-  // responders = new Set<Responder>()
   orderedResponders = new Map<string, OrderedResponder>()
   unorderedResponders = new Set<UnorderedResponder>()
 
   value: T
-
-  // queuedNotify = false
 
   constructor(public f: () => T) {
     globalStack.pushResponder(this)
@@ -45,12 +42,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     globalStack.popResponder()
   }
 
-  // Run is called by an observable (Notifier).
-  // TODO: Check for setting observables inside computeds and throw?
   run(): void {
-    // console.log('run computed. action stack size: ', reactionStack.actionStack.length)
-    // this.queuedNotify = false
-
     globalStack.pushResponder(this)
     const result = this.f()
     globalStack.popResponder()
@@ -58,33 +50,17 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     if (result !== this.value) {
       this.value = result
 
-      // TODO: simplify
-      // if (reactionStack.insideAction()) this.queuedNotify = true
-
       notify(this)
     }
   }
 
-  /*
-  TODO:
-
-  If we are inside an action, check if action stack contains this computed.
-  (This means the computed is dirty)
-
-  If it does, then we need to recalculate computed value, and then remove this
-  from action stack.
-   */
   get(): T {
     globalStack.runComputedNowIfDirty(this)
-    // if (globalStack.actionHasResponder(this)) {
-    //   this.run()
-    // }
 
     const responder = globalStack.getCurrentResponder()
 
     if (responder !== null) {
       addResponder(this, responder)
-      // this.responders.add(responder)
     }
 
     return this.value
