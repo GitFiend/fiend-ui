@@ -9,11 +9,6 @@ notifiers change, the responder is run.
 Could be a Computed or a reaction such as AutoRun.
 
  */
-// export interface Responder {
-//   // TODO: responder could say whether it cares about order???
-//
-//   run(): void
-// }
 
 export type Responder = OrderedResponder | UnorderedResponder
 
@@ -48,19 +43,44 @@ export function autoRun(f: () => void) {
   return new AutoRun(f)
 }
 
-export class Reaction<T> {
-  c: () => T
+// class Reaction<T> {
+//   c: () => T
+//
+//   constructor(calc: () => T, f: (result: T) => void) {
+//     this.c = computed(calc)
+//
+//     autoRun(() => {
+//       const result = this.c()
+//
+//       runInAction(() => {
+//         f(result)
+//       })
+//     })
+//   }
+// }
 
-  constructor(calc: () => T, f: (result: T) => void) {
-    this.c = computed(calc)
+class Reaction<T> implements UnorderedResponder {
+  ordered = false as const
+  value: T
 
-    autoRun(() => {
-      const result = this.c()
+  constructor(private calc: () => T, private f: (result: T) => void) {
+    globalStack.pushResponder(this)
+    this.value = this.calc()
+    globalStack.popResponder()
+  }
+
+  run(): void {
+    globalStack.pushResponder(this)
+    const value = this.calc()
+    globalStack.popResponder()
+
+    if (this.value !== value) {
+      this.value = value
 
       runInAction(() => {
-        f(result)
+        this.f(value)
       })
-    })
+    }
   }
 }
 
