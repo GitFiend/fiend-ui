@@ -1,7 +1,7 @@
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {$RunInAction} from './action'
-import {$Computed} from './computed'
+import {$Calc} from './computed'
 
 describe('observables', () => {
   test('autorun', () => {
@@ -26,7 +26,7 @@ describe('observables', () => {
     let count = 0
     const a = $Val(5)
 
-    const c = $Computed(() => {
+    const c = $Calc(() => {
       count++
       return a() * 3
     })
@@ -48,12 +48,12 @@ describe('observables', () => {
 
     const a = $Val(5)
 
-    const c = $Computed(() => {
+    const c = $Calc(() => {
       count1++
       return a() * 3
     })
 
-    const c2 = $Computed(() => {
+    const c2 = $Calc(() => {
       count2++
       return c() + 2
     })
@@ -82,7 +82,7 @@ describe('observables', () => {
     let count = 0
 
     const a = $Val(2)
-    const c = $Computed(() => {
+    const c = $Calc(() => {
       count++
       return a() + 1
     })

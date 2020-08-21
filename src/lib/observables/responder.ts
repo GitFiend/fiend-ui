@@ -1,5 +1,5 @@
 import {globalStack} from './global-stack'
-import {$Computed} from './computed'
+import {$Calc} from './computed'
 import {$RunInAction} from './action'
 
 /*

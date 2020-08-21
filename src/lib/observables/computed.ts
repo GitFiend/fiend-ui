@@ -72,7 +72,7 @@ export interface Calc<T> {
   length: unknown
 }
 
-export function $Computed<T>(f: () => T): Calc<T> {
+export function $Calc<T>(f: () => T): Calc<T> {
   const c = new Computed(f)
 
   return () => {

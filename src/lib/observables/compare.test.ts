@@ -1,7 +1,7 @@
 import {autorun, computed, IReactionDisposer, observable, runInAction} from 'mobx'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
-import {$Computed as zComputed} from './computed'
+import {$Calc as zComputed} from './computed'
 
 describe('compare mbox computeds with zeact', () => {
   const loops = 1000

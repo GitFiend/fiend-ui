@@ -1,7 +1,7 @@
 import {$Action, $AsyncAction, $RunInAction} from './action'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
-import {$Computed} from './computed'
+import {$Calc} from './computed'
 import {sleep} from '../../dom-tests/simple-switcher-z.test'
 
 describe('action', () => {
@@ -39,7 +39,7 @@ describe('action', () => {
   test('autoRun with computed inside behaves', () => {
     const a = $Val(2)
     const b = $Val(2)
-    const c = $Computed(() => a() * b())
+    const c = $Calc(() => a() * b())
     let d: number = c()
 
     expect(c()).toEqual(4)
