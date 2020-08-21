@@ -5,7 +5,7 @@ import {addResponder, Notifier, notify} from './notifier'
 export type Observable<T> = {(): Readonly<T>; (newValue: T): void}
 export type ObservableArray<T> = {(): ReadonlyArray<T>; (newValue: T[]): void}
 
-export function val<T>(value: T): Observable<T> {
+export function $Val<T>(value: T): Observable<T> {
   const a = new Atom(value)
 
   function inner(): T

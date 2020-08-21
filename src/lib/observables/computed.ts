@@ -67,7 +67,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   }
 }
 
-export function computed<T>(f: () => T): () => Readonly<T> {
+export function $Computed<T>(f: () => T): () => Readonly<T> {
   const c = new Computed(f)
 
   return () => {

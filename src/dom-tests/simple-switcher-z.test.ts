@@ -1,8 +1,8 @@
 import {F} from '../lib/component-types/fragment'
 import {render} from '../lib/render'
 import {screen} from '@testing-library/dom'
-import {val} from '../lib/observables/observable'
-import {ZComponent} from '../lib/observables/z-component'
+import {$Val} from '../lib/observables/observable'
+import {$Component} from '../lib/observables/$-component'
 import {div} from '../lib/host-components'
 import {$} from '../lib/component-types/component'
 
@@ -34,14 +34,14 @@ describe('simple switching with own observer library', () => {
 })
 
 class Store {
-  a = val(true)
+  a = $Val(true)
 }
 
 interface SwitcherProps {
   store: Store
 }
 
-class Switcher extends ZComponent<SwitcherProps> {
+class Switcher extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 

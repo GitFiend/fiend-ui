@@ -1,6 +1,6 @@
 import {autorun, computed, IReactionDisposer, observable} from 'mobx'
-import {val} from './observable'
-import {autoRun} from './responder'
+import {$Val} from './observable'
+import {$AutoRun} from './responder'
 import {globalStack} from './global-stack'
 
 function ob<T>(value: T): {(): T; (newValue: T): undefined} {
@@ -214,20 +214,20 @@ xdescribe('test decorator perf', () => {
 
   test('e', () => {
     class E {
-      a = val(5)
+      a = $Val(5)
 
-      b = val(5)
+      b = $Val(5)
 
-      c = val(5)
+      c = $Val(5)
 
-      d = val([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+      d = $Val([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     }
 
     class Run {
       b = new E()
 
       constructor() {
-        autoRun(() => {
+        $AutoRun(() => {
           const {a, b, c, d} = this.b
 
           const array = [...d()]

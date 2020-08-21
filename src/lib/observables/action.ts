@@ -3,7 +3,7 @@ import {OrderedResponder, Responder, UnorderedResponder} from './responder'
 import {Notifier, runResponders} from './notifier'
 
 //
-export function runInAction(f: () => void) {
+export function $RunInAction(f: () => void) {
   globalStack.startAction()
   f()
   globalStack.endAction()
@@ -17,7 +17,7 @@ export function runInAction(f: () => void) {
  *
  * @param f
  */
-export const action = <T extends unknown[], U>(f: (...args: T) => U) => {
+export const $Action = <T extends unknown[], U>(f: (...args: T) => U) => {
   return (...args: T): U => {
     globalStack.startAction()
     const result = f(...args)
@@ -27,7 +27,7 @@ export const action = <T extends unknown[], U>(f: (...args: T) => U) => {
   }
 }
 
-export const asyncAction = <T extends unknown[], U>(f: (...args: T) => Promise<U>) => {
+export const $AsyncAction = <T extends unknown[], U>(f: (...args: T) => Promise<U>) => {
   return async (...args: T): Promise<U> => {
     globalStack.startAction()
     const result = await f(...args)

@@ -5,7 +5,7 @@ This is a React alternative that's focused on safe and fast client-side renderin
 ```jsx
 
 export class MyComponentStore {   
-   num = val(2)
+   num = $Val(2)
 
    square = calc(() => this.num() * this.num())
 }
@@ -14,7 +14,7 @@ interface MyComponentProps {
   store: MyComponentStore
 }
 
-export class MyComponent extends ZComponent<MyComponentProps> {
+export class MyComponent extends $Component<MyComponentProps> {
    render() {
       const {num, square} = this.props.store;
 

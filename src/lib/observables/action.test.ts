@@ -1,20 +1,20 @@
-import {action, asyncAction, runInAction} from './action'
-import {autoRun} from './responder'
-import {val} from './observable'
-import {computed} from './computed'
+import {$Action, $AsyncAction, $RunInAction} from './action'
+import {$AutoRun} from './responder'
+import {$Val} from './observable'
+import {$Computed} from './computed'
 import {sleep} from '../../dom-tests/simple-switcher-z.test'
 
 describe('action', () => {
   test('action batches updates', () => {
-    const a = val(1)
+    const a = $Val(1)
     let count = 0
 
-    autoRun(() => {
+    $AutoRun(() => {
       count++
       a()
     })
 
-    runInAction(() => {
+    $RunInAction(() => {
       a(2)
       a(3)
       a(4)
@@ -24,11 +24,11 @@ describe('action', () => {
   })
 
   test('autorun supports setting', () => {
-    const a = val(1)
-    const b = val(2)
+    const a = $Val(1)
+    const b = $Val(2)
     let count = 0
 
-    autoRun(() => {
+    $AutoRun(() => {
       count++
       b(a() * 5)
     })
@@ -37,16 +37,16 @@ describe('action', () => {
   })
 
   test('autoRun with computed inside behaves', () => {
-    const a = val(2)
-    const b = val(2)
-    const c = computed(() => a() * b())
+    const a = $Val(2)
+    const b = $Val(2)
+    const c = $Computed(() => a() * b())
     let d: number = c()
 
     expect(c()).toEqual(4)
 
     let count = 0
 
-    autoRun(() => {
+    $AutoRun(() => {
       count++
       b(a() * 5)
 
@@ -65,24 +65,24 @@ describe('action', () => {
 describe('async action behaviour', () => {
   test('simple case', async () => {
     class Actions {
-      num = val(1)
+      num = $Val(1)
 
       updates = 0
 
       constructor() {
-        autoRun(() => {
+        $AutoRun(() => {
           this.num()
           this.updates++
         })
       }
 
-      run = action(() => {
+      run = $Action(() => {
         this.num(2)
         this.num(3)
         this.num(4)
       })
 
-      runAsync = action(async () => {
+      runAsync = $Action(async () => {
         this.num(2)
         await sleep(1)
         this.num(3)
@@ -90,7 +90,7 @@ describe('async action behaviour', () => {
         this.num(4)
       })
 
-      runAsync2 = asyncAction(async () => {
+      runAsync2 = $AsyncAction(async () => {
         this.num(2)
         await sleep(1)
         this.num(3)

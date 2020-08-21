@@ -1,14 +1,14 @@
-import {autoRun} from './responder'
-import {val} from './observable'
-import {runInAction} from './action'
-import {computed} from './computed'
+import {$AutoRun} from './responder'
+import {$Val} from './observable'
+import {$RunInAction} from './action'
+import {$Computed} from './computed'
 
 describe('observables', () => {
   test('autorun', () => {
     let count = 0
-    const a = val(5)
+    const a = $Val(5)
 
-    autoRun(() => {
+    $AutoRun(() => {
       count++
       a()
     })
@@ -24,9 +24,9 @@ describe('observables', () => {
 
   test('computed', () => {
     let count = 0
-    const a = val(5)
+    const a = $Val(5)
 
-    const c = computed(() => {
+    const c = $Computed(() => {
       count++
       return a() * 3
     })
@@ -46,14 +46,14 @@ describe('observables', () => {
     let count1 = 0
     let count2 = 0
 
-    const a = val(5)
+    const a = $Val(5)
 
-    const c = computed(() => {
+    const c = $Computed(() => {
       count1++
       return a() * 3
     })
 
-    const c2 = computed(() => {
+    const c2 = $Computed(() => {
       count2++
       return c() + 2
     })
@@ -81,8 +81,8 @@ describe('observables', () => {
   test('computeds in actions', () => {
     let count = 0
 
-    const a = val(2)
-    const c = computed(() => {
+    const a = $Val(2)
+    const c = $Computed(() => {
       count++
       return a() + 1
     })
@@ -91,7 +91,7 @@ describe('observables', () => {
     c()
     expect(count).toEqual(1)
 
-    runInAction(() => {
+    $RunInAction(() => {
       a(3)
       expect(a()).toEqual(3)
       expect(c()).toEqual(4)

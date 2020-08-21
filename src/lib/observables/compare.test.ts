@@ -1,7 +1,7 @@
 import {autorun, computed, IReactionDisposer, observable, runInAction} from 'mobx'
-import {autoRun} from './responder'
-import {val} from './observable'
-import {computed as zComputed} from './computed'
+import {$AutoRun} from './responder'
+import {$Val} from './observable'
+import {$Computed as zComputed} from './computed'
 
 describe('compare mbox computeds with zeact', () => {
   const loops = 1000
@@ -69,20 +69,20 @@ describe('compare mbox computeds with zeact', () => {
 
   test('zeact', () => {
     class E {
-      a = val(5)
+      a = $Val(5)
 
-      b = val(5)
+      b = $Val(5)
 
-      c = val(5)
+      c = $Val(5)
 
-      d = val([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+      d = $Val([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     }
 
     class Run {
       b = new E()
 
       constructor() {
-        autoRun(() => {
+        $AutoRun(() => {
           const {a, b, c, d} = this.b
 
           const array = [...d()]

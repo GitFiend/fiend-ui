@@ -1,15 +1,15 @@
-import {val} from './observable'
-import {computed} from './computed'
-import {reaction} from './responder'
+import {$Val} from './observable'
+import {$Computed} from './computed'
+import {$Reaction} from './responder'
 
 describe('reaction tests', () => {
   test('basic reaction', () => {
-    const n = val(4)
+    const n = $Val(4)
 
-    const sqr = computed(() => n() * n())
+    const sqr = $Computed(() => n() * n())
 
     let out = 0
-    reaction(
+    $Reaction(
       () => sqr(),
       result => {
         out = result

@@ -46,7 +46,7 @@ We could let the observables run, and schedule the apply?
 // TODO: Run scheduled (also using tree order) at the end of an action?
  */
 
-export class ZComponent<P extends {} = {}> extends Component<P>
+export class $Component<P extends {} = {}> extends Component<P>
   implements OrderedResponder {
   ordered = true as const
   disposers: IReactionDisposer[] = []

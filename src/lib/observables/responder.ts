@@ -1,6 +1,6 @@
 import {globalStack} from './global-stack'
-import {computed} from './computed'
-import {runInAction} from './action'
+import {$Computed} from './computed'
+import {$RunInAction} from './action'
 
 /*
 A Responder is an object that listens accesses to notifiers (observables). When these
@@ -39,7 +39,7 @@ export class AutoRun implements UnorderedResponder {
   }
 }
 
-export function autoRun(f: () => void) {
+export function $AutoRun(f: () => void) {
   return new AutoRun(f)
 }
 
@@ -77,13 +77,13 @@ class Reaction<T> implements UnorderedResponder {
     if (this.value !== value) {
       this.value = value
 
-      runInAction(() => {
+      $RunInAction(() => {
         this.f(value)
       })
     }
   }
 }
 
-export function reaction<T>(calc: () => T, f: (result: T) => void) {
+export function $Reaction<T>(calc: () => T, f: (result: T) => void) {
   return new Reaction(calc, f)
 }

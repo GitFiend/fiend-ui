@@ -2,8 +2,8 @@ import {createElement} from '../lib/create-element'
 import {F} from '../lib/component-types/fragment'
 import {render} from '../lib/render'
 import {screen} from '@testing-library/dom'
-import {val} from '../lib/observables/observable'
-import {ZComponent} from '../lib/observables/z-component'
+import {$Val} from '../lib/observables/observable'
+import {$Component} from '../lib/observables/$-component'
 
 export function sleep(ms: number) {
   return new Promise(resolve => {
@@ -37,15 +37,15 @@ xdescribe('test scheduling', () => {
 })
 
 class Store {
-  a = val(2)
-  b = val(3)
-  c = val(4)
+  a = $Val(2)
+  b = $Val(3)
+  c = $Val(4)
 }
 
 interface SwitcherProps {
   store: Store
 }
-class A extends ZComponent<SwitcherProps> {
+class A extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
@@ -57,7 +57,7 @@ class A extends ZComponent<SwitcherProps> {
     )
   }
 }
-class B extends ZComponent<SwitcherProps> {
+class B extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
@@ -70,7 +70,7 @@ class B extends ZComponent<SwitcherProps> {
     // )
   }
 }
-class C extends ZComponent<SwitcherProps> {
+class C extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 

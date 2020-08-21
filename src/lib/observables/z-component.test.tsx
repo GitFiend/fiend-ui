@@ -1,5 +1,5 @@
-import {ZComponent} from './z-component'
-import {val} from './observable'
+import {$Component} from './$-component'
+import {$Val} from './observable'
 import {Subtree} from '../component-types/base'
 import {createElement} from '../create-element'
 import {mkRoot} from '../../dom-tests/host.test'
@@ -30,7 +30,7 @@ describe('ZComponent', () => {
 })
 
 class Store {
-  num = val(5)
+  num = $Val(5)
 }
 
 interface Props {
@@ -38,7 +38,7 @@ interface Props {
   depth: number
 }
 
-class A extends ZComponent<Props> {
+class A extends $Component<Props> {
   render(): Subtree | null {
     const {store, depth} = this.props
 
