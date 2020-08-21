@@ -1,7 +1,8 @@
-import {runInAction} from './action'
+import {action, asyncAction, runInAction} from './action'
 import {autoRun} from './responder'
 import {val} from './observable'
 import {computed} from './computed'
+import {sleep} from '../../dom-tests/simple-switcher-z.test'
 
 describe('action', () => {
   test('action batches updates', () => {
@@ -58,5 +59,63 @@ describe('action', () => {
     })
 
     expect(count).toEqual(1)
+  })
+})
+
+describe('async action behaviour', () => {
+  test('simple case', async () => {
+    class Actions {
+      num = val(1)
+
+      updates = 0
+
+      constructor() {
+        autoRun(() => {
+          this.num()
+          this.updates++
+        })
+      }
+
+      run = action(() => {
+        this.num(2)
+        this.num(3)
+        this.num(4)
+      })
+
+      runAsync = action(async () => {
+        this.num(2)
+        await sleep(1)
+        this.num(3)
+        await sleep(1)
+        this.num(4)
+      })
+
+      runAsync2 = asyncAction(async () => {
+        this.num(2)
+        await sleep(1)
+        this.num(3)
+        await sleep(1)
+        this.num(4)
+      })
+    }
+
+    const a = new Actions()
+
+    await a.runAsync()
+
+    expect(a.num()).toEqual(4)
+    expect(a.updates).toEqual(4)
+
+    a.num(1)
+    a.run()
+
+    expect(a.num()).toEqual(4)
+    expect(a.updates).toEqual(6)
+
+    a.num(1)
+    await a.runAsync2()
+
+    expect(a.num()).toEqual(4)
+    expect(a.updates).toEqual(8)
   })
 })

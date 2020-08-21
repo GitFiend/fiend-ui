@@ -1,7 +1,6 @@
 import {globalStack} from './global-stack'
 import {OrderedResponder, Responder, UnorderedResponder} from './responder'
 import {Notifier, runResponders} from './notifier'
-import {ZComponent} from './z-component'
 
 //
 export function runInAction(f: () => void) {
@@ -22,6 +21,16 @@ export const action = <T extends unknown[], U>(f: (...args: T) => U) => {
   return (...args: T): U => {
     globalStack.startAction()
     const result = f(...args)
+    globalStack.endAction()
+
+    return result
+  }
+}
+
+export const asyncAction = <T extends unknown[], U>(f: (...args: T) => Promise<U>) => {
+  return async (...args: T): Promise<U> => {
+    globalStack.startAction()
+    const result = await f(...args)
     globalStack.endAction()
 
     return result
