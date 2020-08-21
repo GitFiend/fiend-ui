@@ -2,8 +2,24 @@ import {globalStack} from './global-stack'
 import {OrderedResponder, UnorderedResponder} from './responder'
 import {addResponder, Notifier, notify} from './notifier'
 
-export type Observable<T> = {(): Readonly<T>; (newValue: T): void}
-export type ObservableArray<T> = {(): ReadonlyArray<T>; (newValue: T[]): void}
+// export type Observable<T> = {(): Readonly<T>; (newValue: T): void; length: unknown}
+export interface Observable<T> {
+  (): Readonly<T>
+  (newValue: T): void
+  length: unknown
+}
+
+export interface ObservableArray<T> {
+  (): ReadonlyArray<T>
+  (newValue: T[]): void
+  length: unknown
+}
+
+export interface ObservableMap<K, V> {
+  (): ReadonlyMap<K, V>
+  (newValue: Map<K, V>): void
+  length: unknown
+}
 
 export function $Val<T>(value: T): Observable<T> {
   const a = new Atom(value)
@@ -20,8 +36,6 @@ export function $Val<T>(value: T): Observable<T> {
 
   return inner
 }
-
-export type ObservableMap<K, V> = {(): ReadonlyMap<K, V>; (newValue: Map<K, V>): void}
 
 export function $Map<K, V>(
   entries?: readonly (readonly [K, V])[] | null
