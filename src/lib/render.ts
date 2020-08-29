@@ -1,12 +1,4 @@
-import {
-  ParentComponent,
-  RootNode,
-  Subtree,
-  SubtreeFlat,
-  Tree,
-  Z,
-  ZType,
-} from './component-types/base'
+import {ParentComponent, RootNode, Subtree, Tree, Z, ZType} from './component-types/base'
 import {renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {renderCustom} from './component-types/component'
@@ -33,7 +25,7 @@ export function renderTree(
 }
 
 export function renderFlatSubtree(
-  subtree: SubtreeFlat,
+  subtree: Subtree,
   prevTree: Z | null,
   parent: ParentComponent,
   index: number
@@ -52,7 +44,7 @@ export function renderFlatSubtree(
 }
 
 export function renderSubtree(
-  children: Subtree,
+  children: Subtree[],
   prevChildren: Z[],
   parent: ParentComponent
 ): Z[] {

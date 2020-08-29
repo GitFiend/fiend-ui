@@ -19,6 +19,7 @@ export function createElement(
   return {
     _type: type,
     props,
-    children: (children.length === 1 ? children[0] : children) as Subtree,
+    children,
+    // children: (children.length === 1 ? children[0] : children) as Subtree,
   }
 }

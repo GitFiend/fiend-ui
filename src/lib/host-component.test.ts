@@ -1,4 +1,4 @@
-import {div} from './host-components'
+import {div, isPropsObject, s} from './host-components'
 import {$, Component} from './component-types/component'
 import {Subtree} from './component-types/base'
 import {mkRoot} from '../dom-tests/host.test'
@@ -69,6 +69,62 @@ class A extends Component {
     return div('omg')
   }
 }
+
+describe('s - tagged style string template function', () => {
+  const text = 'width: 50px; height: 2px'
+  const style = s`width: 50px; height: 2px`
+
+  test(text, () => {
+    expect(style).toEqual(text)
+  })
+
+  test('empty string', () => {
+    expect(s``).toEqual('')
+  })
+
+  test('templates', () => {
+    expect(s`height: ${50}px; width: ${30}px`).toEqual('height: 50px; width: 30px')
+  })
+})
+
+describe('isPropsObject', () => {
+  test('number', () => {
+    expect(isPropsObject(3)).toEqual(false)
+
+    const n = 12
+
+    expect(isPropsObject(n)).toEqual(false)
+  })
+
+  test('strings', () => {
+    expect(isPropsObject('omg')).toEqual(false)
+  })
+
+  test('null', () => {
+    expect(isPropsObject(null)).toEqual(false)
+    expect(isPropsObject(undefined)).toEqual(false)
+  })
+
+  test('host components', () => {
+    expect(isPropsObject(div())).toEqual(false)
+  })
+
+  test('custom components', () => {
+    class A extends Component {
+      render(): Subtree {
+        return div('omg')
+      }
+    }
+
+    expect(isPropsObject(A)).toEqual(false)
+    expect(isPropsObject($(A))).toEqual(false)
+  })
+
+  test('possible objects', () => {
+    expect(isPropsObject({})).toEqual(true)
+    expect(isPropsObject({style: s`height: 10px`})).toEqual(true)
+  })
+})
 
 // describe('test construction perf', () => {
 //   const numLoops = 1000000

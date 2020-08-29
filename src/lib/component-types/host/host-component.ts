@@ -12,7 +12,7 @@ export class HostComponent implements ComponentBase {
     public tag: keyof HTMLElementTagNameMap,
     public props: Record<string, unknown> | null,
     public parent: ParentComponent,
-    childrenSlices: Subtree,
+    childrenSlices: Subtree[],
     index: number
   ) {
     this.order = this.parent.order + index
@@ -37,7 +37,7 @@ export class HostComponent implements ComponentBase {
 export function renderHost(
   tag: keyof HTMLElementTagNameMap,
   props: Record<string, unknown> | null,
-  children: Subtree,
+  children: Subtree[],
   parent: ParentComponent,
   prevTree: Z | null,
   index: number

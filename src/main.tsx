@@ -1,5 +1,3 @@
-import {createElement} from './lib/create-element'
-
 function main(): void {
   const root = document.getElementById('root')
 

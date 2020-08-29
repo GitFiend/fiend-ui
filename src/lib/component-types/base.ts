@@ -1,7 +1,6 @@
 import {HostComponent} from './host/host-component'
 import {TextComponent} from './text-component'
 import {Component, Rec} from './component'
-// import {ObserverComponent} from './observer-component'
 
 export type Z = HostComponent | TextComponent | Component
 export type ParentComponent = HostComponent | RootNode | Component
@@ -9,11 +8,12 @@ export type ParentComponent = HostComponent | RootNode | Component
 export interface Tree {
   _type: keyof HTMLElementTagNameMap | typeof Component
   props: Record<string, unknown> | null
-  children: Subtree
+  children: Subtree[]
 }
 
-export type SubtreeFlat = Tree | string | number | null
-export type Subtree = SubtreeFlat | SubtreeFlat[] | (SubtreeFlat | SubtreeFlat[])[]
+// export type SubtreeFlat = Tree | string | number | null
+// export type Subtree = SubtreeFlat | SubtreeFlat[] | (SubtreeFlat | SubtreeFlat[])[]
+export type Subtree = Tree | string | number | null
 
 export enum ZType {
   host,

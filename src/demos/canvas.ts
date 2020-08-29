@@ -1,7 +1,7 @@
-import {Component} from '../lib/component-types/component'
-import {createElement} from '../lib/create-element'
+import {$, Component} from '../lib/component-types/component'
 import {createRef} from '../lib/util/ref'
 import {render} from '../lib/render'
+import {canvas, s} from '../lib/host-components'
 
 interface TextCanvasProps {
   width: number
@@ -16,18 +16,18 @@ export class TextCanvas extends Component<TextCanvasProps> {
   render() {
     const {width, height} = this.props
 
-    return <canvas ref={this.ref} style={{width: width + 'px', height: height + 'px'}} />
+    return canvas({ref: this.ref, style: s`width: ${width}px; height: ${height}px`})
   }
 
   componentDidMount(): void {
     const el = this.ref.current
 
-    if (el) {
+    if (el !== null) {
       const {width, height} = this.props
 
       const context = getCanvasContext(el, width, height)
 
-      if (context) this.drawStuff(context, width, height)
+      if (context !== null) this.drawStuff(context, width, height)
     }
   }
 
@@ -44,7 +44,12 @@ export class TextCanvas extends Component<TextCanvasProps> {
   }
 }
 
-function drawBoxes(ctx: CanvasRenderingContext2D, width: number, height: number, top: number) {
+function drawBoxes(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  top: number
+) {
   // console.time('draw boxes')
   ctx.clearRect(0, 0, width, height)
   ctx.beginPath()
@@ -61,7 +66,13 @@ function drawBoxes(ctx: CanvasRenderingContext2D, width: number, height: number,
   // console.timeEnd('draw boxes')
 }
 
-function drawBox(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
+function drawBox(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number
+) {
   ctx.rect(x, y, w, h)
 
   ctx.font = '13px Arial'
@@ -71,7 +82,10 @@ function drawBox(ctx: CanvasRenderingContext2D, x: number, y: number, w: number,
 export function canvasTest(root: HTMLElement) {
   console.time('render')
 
-  render(<TextCanvas width={window.innerWidth} height={window.innerHeight} />, document.body)
+  render(
+    $(TextCanvas, {width: window.innerWidth, height: window.innerHeight}),
+    document.body
+  )
 
   console.timeEnd('render')
 }

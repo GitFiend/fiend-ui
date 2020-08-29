@@ -1,42 +1,27 @@
-import {Component} from '../lib/component-types/component'
+import {$, Component} from '../lib/component-types/component'
 import {Subtree} from '../lib/component-types/base'
-import {createElement} from '../lib/create-element'
 import {mkRoot} from './host.test'
 import {render, renderTree} from '../lib/render'
-import {F} from '../lib/component-types/fragment'
-// import {ObserverComponent} from '../lib/component-types/observer-component'
+import {$F} from '../lib/component-types/fragment'
+import {div, h1} from '../lib/host-components'
 
 describe('deletion of custom component', () => {
   test('host inside custom', () => {
     const root = mkRoot()
 
-    const c = (
-      <C>
-        <div>a</div>
-        <div>b</div>
-      </C>
-    )
+    const c = $(C, div('a'), div('b'))
 
     const divs = renderTree(c, null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    const c2 = (
-      <C>
-        <div>a</div>
-      </C>
-    )
+    const c2 = $(C, div('a'))
 
     const divs2 = renderTree(c2, divs, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
 
-    const c3 = (
-      <C>
-        <div>a</div>
-        <div>b</div>
-      </C>
-    )
+    const c3 = $(C, div('a'), div('b'))
 
     renderTree(c3, divs2, root, 0)
 
@@ -46,35 +31,21 @@ describe('deletion of custom component', () => {
   test('custom inside custom', () => {
     const root = mkRoot()
 
-    let c = (
-      <C>
-        <C>a</C>
-        <C>b</C>
-      </C>
-    )
+    let c = $(C, $(C, 'a'), $(C, 'b'))
 
     let divs = renderTree(c, null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    c = (
-      <C>
-        <C>a</C>
-      </C>
-    )
+    c = $(C, $(C, 'a'))
 
     divs = renderTree(c, divs, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
 
-    c = (
-      <C>
-        <C>a</C>
-        <C>b</C>
-      </C>
-    )
+    c = $(C, $(C, 'a'), $(C, 'b'))
 
-    divs = renderTree(c, divs, root, 0)
+    renderTree(c, divs, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
   })
@@ -108,47 +79,27 @@ describe('deletion of custom component', () => {
   test('different order', () => {
     class Outer extends Component {
       render(): Subtree | null {
-        console.log('render Outer')
-        return (
-          <F>
-            <A />
-            <h1>Heading</h1>
-          </F>
-        )
+        return $F($(A), h1('Heading'))
       }
     }
 
-    const div = document.createElement('div')
-    render(<Outer />, div)
+    const divElement = document.createElement('div')
+    render($(Outer), divElement)
 
-    expect(div.innerHTML).toEqual(`<div>A</div><h1>Heading</h1>`)
+    expect(divElement.innerHTML).toEqual(`<div>A</div><h1>Heading</h1>`)
   })
 })
 
 class C extends Component {
-  render(): Subtree | null {
-    const {children} = this.props
+  render(): Subtree {
+    const {children = []} = this.props
 
-    return <div>{children}</div>
+    return div(...children)
   }
 }
-
-// function pickComponent(component: 'a' | 'b') {
-//   if (component === 'a') {
-//     return <A />
-//   }
-//   return <B />
-// }
 
 class A extends Component {
   render(): Subtree | null {
-    console.log('render A')
-    return <div>A</div>
+    return div('A')
   }
 }
-
-// class B extends ObserverComponent {
-//   render(): Subtree | null {
-//     return <div>B</div>
-//   }
-// }

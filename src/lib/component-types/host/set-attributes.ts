@@ -64,37 +64,36 @@ function setAttribute(
   }
 }
 
-function setStyles(
-  element: HTMLElement,
-  styles: CSSStyleDeclaration,
-  oldStyles: CSSStyleDeclaration | null
-) {
-  const styleKeys = Object.keys(styles)
-
-  if (oldStyles !== null) {
-    for (const s of styleKeys) {
-      const style = styles[s as any]
-
-      if (oldStyles[s as any] !== style) {
-        element.style[s as any] = styles[s as any]
-      }
-    }
-  } else {
-    element.setAttribute(
-      'style',
-      Object.entries(styles)
-        .map(pair => pair.join(':'))
-        .join(';')
-    )
-    // for (const s of styleKeys) {
-    //   if (__DEV__) {
-    //     if (typeof styles[s as any] === 'number') {
-    //       console.warn(`${s}: ${styles[s as any]}`)
-    //     }
-    //   }
-    //   element.style[s as any] = styles[s as any]
-    // }
+function setStyles(element: HTMLElement, styles: string, oldStyles: string | null) {
+  if (styles !== oldStyles) {
+    element.setAttribute('style', styles)
   }
+  // const styleKeys = Object.keys(styles)
+  //
+  // if (oldStyles !== null) {
+  //   for (const s of styleKeys) {
+  //     const style = styles[s as any]
+  //
+  //     if (oldStyles[s as any] !== style) {
+  //       element.style[s as any] = styles[s as any]
+  //     }
+  //   }
+  // } else {
+  //   element.setAttribute(
+  //     'style',
+  //     Object.entries(styles)
+  //       .map(pair => pair.join(':'))
+  //       .join(';')
+  //   )
+  //   // for (const s of styleKeys) {
+  //   //   if (__DEV__) {
+  //   //     if (typeof styles[s as any] === 'number') {
+  //   //       console.warn(`${s}: ${styles[s as any]}`)
+  //   //     }
+  //   //   }
+  //   //   element.style[s as any] = styles[s as any]
+  //   // }
+  // }
 }
 
 function deleteAttribute(element: HTMLElement, attr: string, oldValue: unknown): void {

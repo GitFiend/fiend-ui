@@ -1,7 +1,7 @@
-import {Component} from '../lib/component-types/component'
-import {createElement} from '../lib/create-element'
+import {$, Component} from '../lib/component-types/component'
 import {render} from '../lib/render'
 import {Tree} from '../lib/component-types/base'
+import {div, s} from '../lib/host-components'
 
 const boxHeight = 14
 
@@ -16,7 +16,7 @@ export class Boxes extends Component<BoxesProps> {
 
     const {width, height} = this.props
 
-    return <div>{this.drawBoxes(width, height, -t)}</div>
+    return div(...this.drawBoxes(width, height, -t))
   }
 
   drawBoxes(width: number, height: number, top: number) {
@@ -34,23 +34,22 @@ export class Boxes extends Component<BoxesProps> {
   }
 
   drawBox(x: number, y: number, w: number, h: number): Tree {
-    return (
-      <div
-        style={{
-          position: 'absolute',
-          left: x + 'px',
-          top: y + 'px',
-          width: w + 'px',
-          height: h + 'px',
-          border: '1px solid',
-          display: 'flex',
-          alignItems: 'center',
-          paddingLeft: '5px',
-          fontSize: '8px',
-        }}
-      >
-        I am a commit message. Here is some text.
-      </div>
+    return div(
+      {
+        style: s`
+          position: absolute;
+          left: ${x}px;
+          top: ${y}px;
+          width: ${w}px;
+          height: ${h}px;
+          border: 1px solid;
+          display: flex;
+          align-items: center;
+          padding-left: 5px;
+          font-size: 8px;
+        `,
+      },
+      `I am a commit message. Here is some text.`
     )
   }
 
@@ -74,7 +73,7 @@ export class Boxes extends Component<BoxesProps> {
 export function boxesTest() {
   console.time('render')
 
-  render(<Boxes width={window.innerWidth} height={window.innerHeight} />, document.body)
+  render($(Boxes, {width: window.innerWidth, height: window.innerHeight}), document.body)
 
   console.timeEnd('render')
 }

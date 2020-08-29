@@ -1,13 +1,4 @@
-import {
-  ComponentBase,
-  equalProps,
-  ParentComponent,
-  Subtree,
-  SubtreeFlat,
-  Tree,
-  Z,
-  ZType,
-} from './base'
+import {ComponentBase, equalProps, ParentComponent, Subtree, Tree, Z, ZType} from './base'
 import {removeSubComponents, renderSubtree} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {isPropsObject} from '../host-components'
@@ -16,29 +7,29 @@ export interface Rec {
   [prop: string]: unknown
 }
 
-export type Props<T> = T & {children?: Subtree}
+export type PropsWithChildren<T> = T & {children?: Subtree[]}
 
 export class Component<P extends {} = {}> implements ComponentBase {
   _type = ZType.custom as const
   element: HTMLElement
   subComponents: Z[] = []
-  props: Props<P>
+  props: PropsWithChildren<P>
   order: string
 
   constructor(
     props: P,
     public parent: ParentComponent,
-    public children: Subtree,
+    public children: Subtree[],
     public index: number
   ) {
     this.order = this.parent.order + index
-    this.props = props
-    this.props.children = children
+    this.props = {...props, children}
+    // this.props.children = children
 
     this.element = parent.element
   }
 
-  render(): Subtree | null {
+  render(): Subtree {
     return null
   }
 
@@ -48,14 +39,14 @@ export class Component<P extends {} = {}> implements ComponentBase {
     }
     const res = this.render()
 
-    this.subComponents = renderSubtree(res, this.subComponents, this)
+    this.subComponents = renderSubtree([res], this.subComponents, this)
     if (__DEV__) {
       timeEnd(this.constructor.name)
     }
   }
 
-  updateWithNewProps(props: P, children: Subtree): void {
-    const p = props as Props<P>
+  updateWithNewProps(props: P, children: Subtree[]): void {
+    const p = props as PropsWithChildren<P>
     p.children = children
 
     if (!equalProps(this.props, p)) {
@@ -77,48 +68,13 @@ export class Component<P extends {} = {}> implements ComponentBase {
     this.subComponents.forEach(s => s.remove())
     this.componentWillUnmount()
   }
-
-  // TODO: Props aren't typed.
-  // Might help https://github.com/microsoft/TypeScript/issues/5863
-  // static init<P extends {} = {}>(...args: [(P | SubtreeFlat)?, ...SubtreeFlat[]]): Tree {
-  //   const [props, ...children] = args
-  //
-  //   if (args.length === 0) {
-  //     return {
-  //       type: this,
-  //       props: null,
-  //       children: [],
-  //     }
-  //   } else {
-  //     if (isPropsObject(props)) {
-  //       return {
-  //         type: this,
-  //         props: props as any,
-  //         children,
-  //       }
-  //     } else {
-  //       return {
-  //         type: this,
-  //         props: null,
-  //         children: args as any[],
-  //       }
-  //     }
-  //   }
-  // }
-
-  // Required by JSX
-  context: any
-  refs: any
-  state: any
-  setState: any
-  forceUpdate: any
 }
 
 export function makeCustomComponent<P extends Rec>(
   cons: typeof Component,
   props: P | null,
   parent: ParentComponent,
-  children: Subtree,
+  children: Subtree[],
   index: number
 ) {
   const component = new cons<P>(props ?? ({} as P), parent, children, index)
@@ -130,7 +86,7 @@ export function makeCustomComponent<P extends Rec>(
 export function renderCustom<P extends Rec>(
   cons: typeof Component,
   props: P | null,
-  children: Subtree,
+  children: Subtree[],
   parent: ParentComponent,
   prevTree: Z | null,
   index: number
@@ -150,9 +106,9 @@ export function renderCustom<P extends Rec>(
   return makeCustomComponent(cons, props, parent, children, index)
 }
 
-export function $<C extends Component>(
+export function $<P extends C['props'], C extends Component>(
   cons: new (...a: any[]) => C,
-  ...args: [(C['props'] | SubtreeFlat)?, ...SubtreeFlat[]]
+  ...args: [P, ...Subtree[]] | Subtree[]
 ): Tree {
   const [props, ...children] = args
 
@@ -167,7 +123,7 @@ export function $<C extends Component>(
       return {
         _type: cons as any,
         props: props as any,
-        children,
+        children: children as Subtree[],
       }
     } else {
       return {
@@ -179,15 +135,32 @@ export function $<C extends Component>(
   }
 }
 
-export function $$<C extends Component>(
-  cons: new (...a: any[]) => C,
-  props?: C['props']
-) {
-  return (...children: SubtreeFlat[]): Tree => {
-    return {
-      _type: cons as any,
-      props: props ?? null,
-      children,
+export function makeCustomComponentConstructor<P extends C['props'], C extends Component>(
+  cons: new (...a: any[]) => C
+): (...args: [P, ...Subtree[]] | Subtree[]) => Tree {
+  return (...args: [P, ...Subtree[]] | Subtree[]): Tree => {
+    const [props, ...children] = args
+
+    if (args.length === 0) {
+      return {
+        _type: cons as any,
+        props: null,
+        children: [],
+      }
+    } else {
+      if (isPropsObject(props)) {
+        return {
+          _type: cons as any,
+          props: props as any,
+          children: children as Subtree[],
+        }
+      } else {
+        return {
+          _type: cons as any,
+          props: null,
+          children: args as any[],
+        }
+      }
     }
   }
 }
