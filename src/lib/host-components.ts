@@ -17,6 +17,10 @@ export type HostAttributes<E> = Partial<
     style: string
     ref: RefObject<E>
     // styleObject: InlineStyles
+    ariaLabel: string
+    ariaSelected: boolean
+    ariaModal: boolean
+    role: 'tab'
   }
 >
 

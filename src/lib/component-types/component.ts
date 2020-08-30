@@ -9,7 +9,7 @@ export interface Rec {
 
 export type PropsWithChildren<T> = T & {children?: Subtree[]}
 
-export class Component<P extends {} = {}> implements ComponentBase {
+export class Component<P = {}> implements ComponentBase {
   _type = ZType.custom as const
   element: HTMLElement
   subComponents: Z[] = []
@@ -106,9 +106,9 @@ export function renderCustom<P extends Rec>(
   return makeCustomComponent(cons, props, parent, children, index)
 }
 
-export function $<P extends C['props'], C extends Component>(
+export function $<C extends Component>(
   cons: new (...a: any[]) => C,
-  ...args: [P, ...Subtree[]] | Subtree[]
+  ...args: [C['props'], ...Subtree[]] | Subtree[]
 ): Tree {
   const [props, ...children] = args
 
@@ -135,10 +135,10 @@ export function $<P extends C['props'], C extends Component>(
   }
 }
 
-export function makeCustomComponentConstructor<P extends C['props'], C extends Component>(
+export function makeCustomComponentConstructor<C extends Component>(
   cons: new (...a: any[]) => C
-): (...args: [P, ...Subtree[]] | Subtree[]) => Tree {
-  return (...args: [P, ...Subtree[]] | Subtree[]): Tree => {
+): (...args: [C['props'], ...Subtree[]] | Subtree[]) => Tree {
+  return (...args: [C['props'], ...Subtree[]] | Subtree[]): Tree => {
     const [props, ...children] = args
 
     if (args.length === 0) {

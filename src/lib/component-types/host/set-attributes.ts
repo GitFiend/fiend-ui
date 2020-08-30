@@ -44,71 +44,72 @@ function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
   }
 }
 
+// TODO: Improve types.
 function setAttribute(
   element: HTMLElement,
   attr: string,
   value: any,
   oldValue: any
 ): void {
-  if (attr === 'className') {
-    element.setAttribute('class', value)
-  } else if (attr.startsWith('on')) {
-    element.addEventListener(attr.slice(2).toLowerCase(), value)
-  } else if (attr === 'style') {
-    setStyles(element, value, oldValue)
-  } else if (attr === 'ref') {
+  if (attr === 'ref') {
     ;(value as RefObject<any>).current = element
   } else {
-    if (typeof value === 'boolean' && value) element.setAttribute(attr, '')
-    else element.setAttribute(attr, value)
+    ;(element as any)[attr] = value
   }
-}
 
-function setStyles(element: HTMLElement, styles: string, oldStyles: string | null) {
-  if (styles !== oldStyles) {
-    element.setAttribute('style', styles)
-  }
-  // const styleKeys = Object.keys(styles)
-  //
-  // if (oldStyles !== null) {
-  //   for (const s of styleKeys) {
-  //     const style = styles[s as any]
-  //
-  //     if (oldStyles[s as any] !== style) {
-  //       element.style[s as any] = styles[s as any]
-  //     }
-  //   }
+  // if (attr === 'className') {
+  //   element.setAttribute('class', value)
+  // } else if (attr.startsWith('on')) {
+  //   element.addEventListener(attr.slice(2), value)
+  // } else if (attr === 'style') {
+  //   setStyles(element, value, oldValue)
+  // } else if (attr === 'ref') {
+  //   ;(value as RefObject<any>).current = element
   // } else {
-  //   element.setAttribute(
-  //     'style',
-  //     Object.entries(styles)
-  //       .map(pair => pair.join(':'))
-  //       .join(';')
-  //   )
-  //   // for (const s of styleKeys) {
-  //   //   if (__DEV__) {
-  //   //     if (typeof styles[s as any] === 'number') {
-  //   //       console.warn(`${s}: ${styles[s as any]}`)
-  //   //     }
-  //   //   }
-  //   //   element.style[s as any] = styles[s as any]
-  //   // }
+  //   if (typeof value === 'boolean' && value) element.setAttribute(attr, '')
+  //   else element.setAttribute(attr, value)
   // }
 }
 
+// function setStyles(element: HTMLElement, styles: string, oldStyles: string | null) {
+//   if (styles !== oldStyles) {
+//     element.setAttribute('style', styles)
+//   }
+//   // const styleKeys = Object.keys(styles)
+//   //
+//   // if (oldStyles !== null) {
+//   //   for (const s of styleKeys) {
+//   //     const style = styles[s as any]
+//   //
+//   //     if (oldStyles[s as any] !== style) {
+//   //       element.style[s as any] = styles[s as any]
+//   //     }
+//   //   }
+//   // } else {
+//   //   element.setAttribute(
+//   //     'style',
+//   //     Object.entries(styles)
+//   //       .map(pair => pair.join(':'))
+//   //       .join(';')
+//   //   )
+//   //   // for (const s of styleKeys) {
+//   //   //   if (__DEV__) {
+//   //   //     if (typeof styles[s as any] === 'number') {
+//   //   //       console.warn(`${s}: ${styles[s as any]}`)
+//   //   //     }
+//   //   //   }
+//   //   //   element.style[s as any] = styles[s as any]
+//   //   // }
+//   // }
+// }
+
 function deleteAttribute(element: HTMLElement, attr: string, oldValue: unknown): void {
   if (attr.startsWith('on')) {
-    element.removeEventListener(attr.slice(2).toLowerCase(), oldValue as any)
+    element.removeEventListener(attr.slice(2), oldValue as any)
   } else if (attr === 'className') {
     element.removeAttribute('class')
   } else if (attr === 'ref') {
     ;(oldValue as RefObject<any>).current = null
-  } else if (attr === 'style') {
-    // const styleKeys = Object.keys(value)
-    //
-    // for (const s of styleKeys) {
-    //   element.style[s] = value[s]
-    // }
   } else {
     element.removeAttribute(attr)
   }

@@ -4,7 +4,7 @@ import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
 export class HostComponent implements ComponentBase {
   _type = ZType.host as const
-  element: HTMLElement
+  element: HTMLElementTagNameMap[this['tag']]
   subComponents: Z[] = []
   order: string
 
@@ -17,7 +17,8 @@ export class HostComponent implements ComponentBase {
   ) {
     this.order = this.parent.order + index
 
-    this.element = document.createElement(tag)
+    // TODO: Could improve types.
+    this.element = document.createElement(tag) as any
 
     if (props !== null) setAttributesFromProps(this.element, props)
 
