@@ -21,6 +21,7 @@ export function updateAttributes(
   }
 }
 
+// TODO: Could we remove a loop by using Array.from?
 function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
   const newKeys = Object.keys(newProps)
   const oldKeys = Object.keys(oldProps)

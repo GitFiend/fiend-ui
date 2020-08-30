@@ -1,6 +1,6 @@
 import {Component, makeCustomComponentConstructor} from './component'
 import {time, timeEnd} from '../util/measure'
-import {renderSubtree} from '../render'
+import {renderSubtrees} from '../render'
 
 export class F extends Component {
   update = () => {
@@ -8,7 +8,7 @@ export class F extends Component {
       time(this.constructor.name)
     }
 
-    this.subComponents = renderSubtree(
+    this.subComponents = renderSubtrees(
       this.props.children ?? [],
       this.subComponents,
       this

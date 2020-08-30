@@ -1,5 +1,5 @@
 import {ComponentBase, equalProps, ParentComponent, Subtree, Tree, Z, ZType} from './base'
-import {removeSubComponents, renderSubtree} from '../render'
+import {removeSubComponents, renderSubtrees} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {isPropsObject} from '../host-components'
 
@@ -39,7 +39,7 @@ export class Component<P = {}> implements ComponentBase {
     }
     const res = this.render()
 
-    this.subComponents = renderSubtree([res], this.subComponents, this)
+    this.subComponents = renderSubtrees([res], this.subComponents, this)
     if (__DEV__) {
       timeEnd(this.constructor.name)
     }

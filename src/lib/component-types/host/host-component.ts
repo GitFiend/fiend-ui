@@ -1,5 +1,5 @@
 import {ComponentBase, ParentComponent, Subtree, Z, ZType} from '../base'
-import {removeSubComponents, renderSubtree} from '../../render'
+import {removeSubComponents, renderSubtrees} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 
 export class HostComponent implements ComponentBase {
@@ -24,7 +24,7 @@ export class HostComponent implements ComponentBase {
 
     parent.element.appendChild(this.element)
 
-    this.subComponents = renderSubtree(childrenSlices, [], this)
+    this.subComponents = renderSubtrees(childrenSlices, [], this)
   }
 
   remove(): void {
@@ -53,7 +53,7 @@ export function renderHost(
     }
 
     prevTree.props = props
-    prevTree.subComponents = renderSubtree(children, prevTree.subComponents, prevTree)
+    prevTree.subComponents = renderSubtrees(children, prevTree.subComponents, prevTree)
 
     return prevTree
   } else {
