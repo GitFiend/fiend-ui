@@ -1,6 +1,7 @@
 import {addResponder, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
 import {OrderedResponder, UnorderedResponder} from './responder'
+import {$Val} from './observable'
 
 /*
 Notes:
@@ -69,13 +70,13 @@ export class Computed<T> implements UnorderedResponder, Notifier {
 
 export interface Calc<T> {
   (): Readonly<T>
-  length: unknown
+  length: Symbol // This is to prevent accidental comparisons.
 }
 
 export function $Calc<T>(f: () => T): Calc<T> {
   const c = new Computed(f)
 
-  return () => {
+  return (() => {
     return c.get()
-  }
+  }) as any
 }
