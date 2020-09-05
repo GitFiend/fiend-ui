@@ -73,7 +73,7 @@ export function zeact<T extends {new (...args: any[]): {}}>(constructor: T) {
   }
 }
 
-export function zeact2<T extends {new (...args: any[]): {}}>(constructor: T) {
+export function fiend<T extends {new (...args: any[]): {}}>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
       super(...args)

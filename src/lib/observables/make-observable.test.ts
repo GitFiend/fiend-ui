@@ -1,4 +1,4 @@
-import {makeObservable, zeact, zeact2} from './make-observable'
+import {makeObservable, zeact, fiend} from './make-observable'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {observable} from 'mobx'
@@ -65,7 +65,7 @@ class D {
   b = 6
 }
 
-@zeact2
+@fiend
 class E {
   a = 5
   b = 6
@@ -152,7 +152,7 @@ describe('access and set observable speed', () => {
 })
 
 describe('makeObservable Alternative', () => {
-  @zeact2
+  @fiend
   class Test {
     a = 4
     b = 3
