@@ -180,3 +180,43 @@ describe('makeObservable Alternative', () => {
     expect(t.n).toEqual(6)
   })
 })
+
+describe('check that only correct fields are modified', () => {
+  @fiend
+  class Test {
+    a = 2
+
+    b = () => {
+      return this.a
+    }
+
+    e = 9
+
+    get c(): number {
+      return this.a * this.a
+    }
+
+    d(a: number) {
+      this.a = a
+    }
+  }
+
+  test('fields are as expected', () => {
+    const t = new Test()
+
+    const keys = Object.keys(t)
+    const e = Object.entries(t)
+    console.log(e)
+
+    for (const k in t) {
+      // @ts-ignore
+      console.log(k, t[k] instanceof Function)
+    }
+
+    const descriptors = keys.map(key => {
+      return {key, descriptor: Object.getOwnPropertyDescriptor(t, key)}
+    })
+
+    console.log(descriptors)
+  })
+})

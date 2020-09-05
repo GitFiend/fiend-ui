@@ -24,27 +24,13 @@ export function makeObservable(object: Object) {
   }
 }
 
-export function makeObservable2(object: Object) {
+export function makeObservable3(object: Object, Con: Cons) {
   for (const p in object) {
     if (!p.startsWith('_')) {
       const innerName = `__${p}`
       const value: unknown = object[p as keyof object]
 
-      if (
-        value instanceof Function &&
-        Object.getOwnPropertyDescriptor(object, p)?.get !== undefined
-      ) {
-        Object.defineProperties(object, {
-          [innerName]: {
-            value: new Computed(value as any),
-          },
-          [p]: {
-            get() {
-              return this[innerName].get()
-            },
-          },
-        })
-      } else {
+      if (!(value instanceof Function)) {
         Object.defineProperties(object, {
           [innerName]: {
             value: new Atom(value),
@@ -61,9 +47,31 @@ export function makeObservable2(object: Object) {
       }
     }
   }
+
+  const descriptors = Object.getOwnPropertyDescriptors(Con.prototype)
+
+  for (const [key, descriptor] of Object.entries(descriptors)) {
+    if (descriptor.get !== undefined) {
+      // Make a computed
+      const innerName = `__${key}`
+
+      Object.defineProperties(object, {
+        [innerName]: {
+          value: new Computed(descriptor.get.bind(object)),
+        },
+        [key]: {
+          get() {
+            return this[innerName].get()
+          },
+        },
+      })
+    }
+  }
 }
 
-export function zeact<T extends {new (...args: any[]): {}}>(constructor: T) {
+type Cons = {new (...args: any[]): {}}
+
+export function zeact<T extends Cons>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
       super(...args)
@@ -73,12 +81,12 @@ export function zeact<T extends {new (...args: any[]): {}}>(constructor: T) {
   }
 }
 
-export function fiend<T extends {new (...args: any[]): {}}>(constructor: T) {
+export function fiend<T extends Cons>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
       super(...args)
 
-      makeObservable2(this)
+      makeObservable3(this, constructor)
     }
   }
 }
