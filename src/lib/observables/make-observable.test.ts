@@ -1,43 +1,9 @@
-import {makeObservable, zeact, fiend} from './make-observable'
+import {fiend2} from './make-observable'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {observable} from 'mobx'
 
-describe('computed', () => {
-  @zeact
-  class Test {
-    $a = 5
-    $b = 6
-
-    $f = () => 4
-  }
-
-  test('', () => {
-    const t = new Test()
-
-    $AutoRun(() => {
-      console.log('value: ', t.$a)
-    })
-
-    t.$a = 100
-
-    expect(t.$a).toEqual(100)
-  })
-
-  test('instanceof', () => {
-    const a: any = () => 3
-    const b: any = 5
-
-    console.time('instanceof')
-    for (let i = 0; i < 100_000; i++) {
-      let res = a instanceof Function
-      res = b instanceof Function
-    }
-    console.timeEnd('instanceof')
-  })
-})
-
-@zeact
+@fiend2
 class A {
   $a = 5
   $b = 6
@@ -48,15 +14,6 @@ class B {
   b = $Val(6)
 }
 
-class C {
-  $a = 5
-  $b = 6
-
-  constructor() {
-    makeObservable(this)
-  }
-}
-
 class D {
   @observable
   a = 5
@@ -65,20 +22,12 @@ class D {
   b = 6
 }
 
-@fiend
-class E {
-  a = 5
-  b = 6
-}
-
 describe('new zeact class construction speed', () => {
   const loops = 10_000
 
   timeConstructor(B, 'plain', loops)
   timeConstructor(A, 'decorator', loops)
-  timeConstructor(C, 'in constructor', loops)
   timeConstructor(D, 'mobx', loops)
-  timeConstructor(E, 'magic', loops)
 })
 
 function timeConstructor<T extends {new (...args: any[]): {}}>(
@@ -110,16 +59,6 @@ describe('access and set observable speed', () => {
     console.timeEnd('plain')
   })
 
-  test('constructor', () => {
-    console.time('constructor1')
-    const c = new C()
-    for (let i = 0; i < loops; i++) {
-      c.$a = c.$a + 1
-      c.$b = c.$a
-    }
-    console.timeEnd('constructor1')
-  })
-
   test('mobx', () => {
     console.time('mobx')
     const c = new D()
@@ -139,27 +78,17 @@ describe('access and set observable speed', () => {
     }
     console.timeEnd('decorator')
   })
-
-  test('magic', () => {
-    console.time('magic')
-    const c = new E()
-    for (let i = 0; i < loops; i++) {
-      c.a = c.a + 1
-      c.b = c.a
-    }
-    console.timeEnd('magic')
-  })
 })
 
 describe('makeObservable Alternative', () => {
-  @fiend
+  @fiend2
   class Test {
-    a = 4
-    b = 3
-    _c = 'omg'
+    $a = 4
+    $b = 3
+    c = 'omg'
 
-    get n(): number {
-      return this.a * this.b
+    get $n(): number {
+      return this.$a * this.$b
     }
   }
 
@@ -167,56 +96,60 @@ describe('makeObservable Alternative', () => {
     const t = new Test()
 
     $AutoRun(() => {
-      console.log(t.n)
+      console.log(t.$n)
     })
 
-    expect(t.a).toEqual(4)
-    expect(t.b).toEqual(3)
-    expect(t.n).toEqual(12)
+    expect(t.$a).toEqual(4)
+    expect(t.$b).toEqual(3)
+    expect(t.$n).toEqual(12)
 
-    t.a = 2
+    t.$a = 2
 
-    expect(t.a).toEqual(2)
-    expect(t.n).toEqual(6)
+    expect(t.$a).toEqual(2)
+    expect(t.$n).toEqual(6)
   })
 })
 
 describe('check that only correct fields are modified', () => {
-  @fiend
-  class Test {
-    a = 2
+  let computedRuns = 0
+
+  @fiend2
+  class Test2 {
+    $a = 2
 
     b = () => {
-      return this.a
+      return this.$a
     }
 
     e = 9
 
-    get c(): number {
-      return this.a * this.a
+    get $c(): number {
+      computedRuns++
+
+      return this.$a * this.$a
     }
 
     d(a: number) {
-      this.a = a
+      this.$a = a
     }
   }
 
   test('fields are as expected', () => {
-    const t = new Test()
+    const t = new Test2()
 
-    const keys = Object.keys(t)
-    const e = Object.entries(t)
-    console.log(e)
+    const entries = t as any
+    expect(entries['__$a']).toBeDefined()
+    expect(entries['__$c']).toBeDefined()
+    expect(entries['__e']).toBeFalsy()
+    expect(entries['__d']).toBeFalsy()
 
-    for (const k in t) {
-      // @ts-ignore
-      console.log(k, t[k] instanceof Function)
-    }
+    expect(computedRuns).toEqual(1)
+    expect(t.$c).toEqual(4)
+    expect(computedRuns).toEqual(1)
 
-    const descriptors = keys.map(key => {
-      return {key, descriptor: Object.getOwnPropertyDescriptor(t, key)}
-    })
+    t.$a = 3
+    expect(t.$c).toEqual(9)
 
-    console.log(descriptors)
+    expect(computedRuns).toEqual(2)
   })
 })
