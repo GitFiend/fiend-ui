@@ -67,6 +67,11 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     }
     globalStack.runComputedNowIfDirty(this)
 
+    /*
+    If this computed is being run inside a responder (reaction) then,
+    remember that responder and call it on new value. A computed can be in more than one
+    responder, hence a list.
+     */
     addCurrentResponderToThisNotifier(this)
     // const responder = globalStack.getCurrentResponder()
     //
