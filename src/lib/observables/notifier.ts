@@ -12,9 +12,20 @@ export interface Notifier {
   orderedResponders: Map<string, OrderedResponder>
 }
 
-export function addResponder(notifier: Notifier, responder: Responder) {
-  if (responder.ordered) notifier.orderedResponders.set(responder.order, responder)
-  else notifier.unorderedResponders.add(responder)
+// export function addResponder(notifier: Notifier, responder: Responder) {
+//   if (responder.ordered) notifier.orderedResponders.set(responder.order, responder)
+//   else notifier.unorderedResponders.add(responder)
+// }
+
+export function addCurrentResponderToThisNotifier(notifier: Notifier) {
+  const responder = globalStack.getCurrentResponder()
+
+  if (responder !== null) {
+    // TODO: Do we need to make sure we aren't adding ourselves to ourself?
+    // (In the case of a computed)
+    if (responder.ordered) notifier.orderedResponders.set(responder.order, responder)
+    else notifier.unorderedResponders.add(responder)
+  }
 }
 
 export function notify(notifier: Notifier) {
@@ -22,10 +33,12 @@ export function notify(notifier: Notifier) {
     const orderedResponders = notifier.orderedResponders
     const unorderedResponders = notifier.unorderedResponders
 
-    notifier.orderedResponders = new Map()
-    notifier.unorderedResponders = new Set()
+    if (orderedResponders.size + unorderedResponders.size > 0) {
+      notifier.orderedResponders = new Map()
+      notifier.unorderedResponders = new Set()
 
-    runResponders(unorderedResponders, orderedResponders)
+      runResponders(unorderedResponders, orderedResponders)
+    }
   }
 }
 

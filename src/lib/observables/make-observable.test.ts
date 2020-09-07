@@ -143,7 +143,7 @@ describe('check that only correct fields are modified', () => {
     expect(entries['__e']).toBeFalsy()
     expect(entries['__d']).toBeFalsy()
 
-    expect(computedRuns).toEqual(1)
+    expect(computedRuns).toEqual(0)
     expect(t.$c).toEqual(4)
     expect(computedRuns).toEqual(1)
 

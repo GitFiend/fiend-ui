@@ -1,6 +1,8 @@
 import {$Val} from './observable'
 import {$Calc} from './computed'
 import {$AutoRun, $Reaction} from './responder'
+import {fiend2} from './make-observable'
+import {autorun, computed, observable} from 'mobx'
 
 describe('reaction tests', () => {
   test('basic reaction', () => {
@@ -67,12 +69,12 @@ describe('proxy test', () => {
 
 describe('reaction scope', () => {
   let count = 0
-  const n = $Val(1)
+  const n = $Val<number>(1)
 
   test('init reaction', () => {
     let i = 0
 
-    const a: any = $AutoRun(() => {
+    const a = $AutoRun(() => {
       i = n()
       count++
     })
@@ -81,11 +83,121 @@ describe('reaction scope', () => {
     n(n() + 1)
     expect(count).toEqual(2)
 
-    a.run = null
+    a.end()
   })
 
   test('out of scope', () => {
+    console.log('out of scope')
+
+    const before = count
+
     n(n() + 1)
-    expect(count).toEqual(3)
+    n(n() + 1)
+    n(n() + 1)
+    n(n() + 1)
+    expect(count).toEqual(before)
+  })
+})
+
+/*
+When a class with a computed goes out of scope we want any computeds referencing
+external observables to stop running.
+ */
+describe('computed scope', () => {
+  let count = 0
+
+  const n = $Val<number>(1)
+
+  /*
+  The computed is inside n's responder list. The computed doesn't have any
+  responders. If it doesn't have any responders, then it shouldn't be inside n's list?
+
+  When n changes, it calls $num's run method. $num has no responders. It shouldn't run unless
+  it's called via a get().
+   */
+
+  @fiend2
+  class A {
+    get $num(): number {
+      count++
+      return n() * n()
+    }
+
+    get $num2(): number {
+      return this.$num
+    }
+  }
+
+  test('init computed', () => {
+    const a = new A()
+
+    const d = $AutoRun(() => {
+      console.log(a.$num2)
+    })
+
+    expect(count).toEqual(1)
+    n(n() + 1)
+    expect(count).toEqual(2)
+
+    d.end()
+  })
+
+  test('out of scope', () => {
+    console.log('out of scope')
+
+    const before = count
+
+    n(n() + 1)
+    n(n() + 1)
+    n(n() + 1)
+    n(n() + 1)
+
+    expect(count).toEqual(before)
+  })
+})
+
+describe('mobx computed scope', () => {
+  let count = 0
+
+  const n = observable.box(1)
+
+  class A {
+    @computed
+    get num(): number {
+      count++
+      return n.get() * n.get()
+    }
+
+    @computed
+    get num2(): number {
+      return this.num
+    }
+  }
+
+  test('init computed', () => {
+    const a = new A()
+
+    const d = autorun(() => {
+      console.log(a.num2)
+    })
+
+    expect(count).toEqual(1)
+    n.set(n.get() + 1)
+    expect(count).toEqual(2)
+
+    d()
+  })
+
+  test('out of scope', () => {
+    console.log('out of scope')
+
+    const before = count
+
+    n.set(n.get() + 1)
+    n.set(n.get() + 1)
+    n.set(n.get() + 1)
+    n.set(n.get() + 1)
+
+    expect(count).toEqual(before)
   })
 })

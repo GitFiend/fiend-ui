@@ -1,6 +1,5 @@
-import {globalStack} from './global-stack'
 import {OrderedResponder, UnorderedResponder} from './responder'
-import {addResponder, Notifier, notify} from './notifier'
+import {Notifier, notify, addCurrentResponderToThisNotifier} from './notifier'
 
 // export type Observable<T> = {(): Readonly<T>; (newValue: T): void; length: unknown}
 export interface Observable<T> {
@@ -81,13 +80,14 @@ export class Atom<T> implements Notifier {
   constructor(public value: T) {}
 
   get(): T {
-    const responder = globalStack.getCurrentResponder()
-
-    if (responder !== null) {
-      // TODO: distinguish between components and other responders?
-      // this.responders.add(responder)
-      addResponder(this, responder)
-    }
+    addCurrentResponderToThisNotifier(this)
+    // const responder = globalStack.getCurrentResponder()
+    //
+    // if (responder !== null) {
+    //   // TODO: distinguish between components and other responders?
+    //   // this.responders.add(responder)
+    //   addResponder(this, responder)
+    // }
 
     return this.value
   }

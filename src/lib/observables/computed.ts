@@ -1,7 +1,6 @@
-import {addResponder, Notifier, notify} from './notifier'
+import {Notifier, notify, addCurrentResponderToThisNotifier} from './notifier'
 import {globalStack} from './global-stack'
 import {OrderedResponder, UnorderedResponder} from './responder'
-import {$Val} from './observable'
 
 /*
 Notes:
@@ -35,12 +34,13 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   orderedResponders = new Map<string, OrderedResponder>()
   unorderedResponders = new Set<UnorderedResponder>()
 
-  value: T
+  value: T | any
+  firstRun = true
 
   constructor(public f: () => T) {
-    globalStack.pushResponder(this)
-    this.value = f()
-    globalStack.popResponder()
+    // globalStack.pushResponder(this)
+    // this.value = f()
+    // globalStack.popResponder()
   }
 
   run(): void {
@@ -48,21 +48,32 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     const result = this.f()
     globalStack.popResponder()
 
+    // console.log('num responders: ', this.orderedResponders.size + this.unorderedResponders.size)
+
     if (result !== this.value) {
       this.value = result
 
+      // TODO: Check if we have any responders first here or somewhere else
       notify(this)
     }
   }
 
   get(): T {
+    if (this.firstRun) {
+      globalStack.pushResponder(this)
+      this.value = this.f()
+      globalStack.popResponder()
+      this.firstRun = false
+    }
     globalStack.runComputedNowIfDirty(this)
 
-    const responder = globalStack.getCurrentResponder()
-
-    if (responder !== null) {
-      addResponder(this, responder)
-    }
+    addCurrentResponderToThisNotifier(this)
+    // const responder = globalStack.getCurrentResponder()
+    //
+    // // TODO: Do we need to make sure we aren't adding ourselves to ourself?
+    // if (responder !== null) {
+    //   addResponder(this, responder)
+    // }
 
     return this.value
   }

@@ -56,13 +56,13 @@ export class GlobalStack {
   computeds need to always return the correct value.
    */
   runComputedNowIfDirty(computed: Computed<unknown>) {
-    if (this.insideAction()) {
-      const action = last(this.actionStack)
+    // if (this.insideAction()) {
+    const action = last(this.actionStack)
 
-      if (action !== undefined && action.unorderedResponders.delete(computed)) {
-        computed.run()
-      }
+    if (action?.unorderedResponders.delete(computed) === true) {
+      computed.run()
     }
+    // }
   }
 
   startAction(): void {

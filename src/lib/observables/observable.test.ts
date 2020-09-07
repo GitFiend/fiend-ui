@@ -87,7 +87,7 @@ describe('observables', () => {
       return a() + 1
     })
 
-    expect(count).toEqual(1)
+    expect(count).toEqual(0)
     c()
     expect(count).toEqual(1)
 
