@@ -1,6 +1,6 @@
 import {$Val} from './observable'
 import {$Calc} from './computed'
-import {$Reaction} from './responder'
+import {$AutoRun, $Reaction} from './responder'
 
 describe('reaction tests', () => {
   test('basic reaction', () => {
@@ -62,5 +62,30 @@ describe('proxy test', () => {
     }
 
     console.timeEnd('normy')
+  })
+})
+
+describe('reaction scope', () => {
+  let count = 0
+  const n = $Val(1)
+
+  test('init reaction', () => {
+    let i = 0
+
+    const a: any = $AutoRun(() => {
+      i = n()
+      count++
+    })
+
+    expect(count).toEqual(1)
+    n(n() + 1)
+    expect(count).toEqual(2)
+
+    a.run = null
+  })
+
+  test('out of scope', () => {
+    n(n() + 1)
+    expect(count).toEqual(3)
   })
 })

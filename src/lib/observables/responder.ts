@@ -25,39 +25,30 @@ export interface UnorderedResponder {
 
 export class AutoRun implements UnorderedResponder {
   ordered = false as const
+  active = true
 
   constructor(public f: () => void) {
     this.run()
   }
 
   run() {
+    if (!this.active) return
+
     globalStack.pushResponder(this)
     globalStack.startAction()
     this.f()
     globalStack.endAction()
     globalStack.popResponder()
   }
+
+  end() {
+    this.active = false
+  }
 }
 
 export function $AutoRun(f: () => void) {
   return new AutoRun(f)
 }
-
-// class Reaction<T> {
-//   c: () => T
-//
-//   constructor(calc: () => T, f: (result: T) => void) {
-//     this.c = computed(calc)
-//
-//     autoRun(() => {
-//       const result = this.c()
-//
-//       runInAction(() => {
-//         f(result)
-//       })
-//     })
-//   }
-// }
 
 class Reaction<T> implements UnorderedResponder {
   ordered = false as const
