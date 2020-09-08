@@ -47,7 +47,11 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   }
 
   run(): void {
-    if (!this.active) return
+    if (!this.active) {
+      this.orderedResponders.clear()
+      this.unorderedResponders.clear()
+      return
+    }
 
     globalStack.pushResponder(this)
     const result = this.f()
