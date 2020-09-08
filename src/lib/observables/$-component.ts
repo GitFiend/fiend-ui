@@ -1,7 +1,7 @@
 import {IReactionDisposer} from 'mobx'
 import {Component} from '../component-types/component'
 import {globalStack} from './global-stack'
-import {OrderedResponder} from './responder'
+import {OrderedResponder, ResponderType} from './responder'
 
 // class ObserverScheduler {
 //   updates = new Map<string, () => void>()
@@ -48,6 +48,8 @@ We could let the observables run, and schedule the apply?
 
 export class $Component<P extends {} = {}> extends Component<P>
   implements OrderedResponder {
+  type = ResponderType.component as const
+
   ordered = true as const
   disposers: IReactionDisposer[] = []
 

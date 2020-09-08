@@ -1,4 +1,4 @@
-import {Responder} from './responder'
+import {Responder, ResponderType} from './responder'
 import {Notifier} from './notifier'
 import {ActionState} from './action'
 import {Computed} from './computed'
@@ -46,6 +46,10 @@ export class GlobalStack {
   //     this.actionStack[numActions - 1].addComponent(component)
   //   }
   // }
+
+  insideNonComputedResponder(): boolean {
+    return this.responderStack.some(r => r.type !== ResponderType.computed)
+  }
 
   insideAction(): boolean {
     return this.actionStack.length > 0

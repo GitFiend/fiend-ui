@@ -1,6 +1,6 @@
-import {Notifier, notify, addCurrentResponderToThisNotifier} from './notifier'
+import {Notifier, notify, addCurrentResponderToOurList} from './notifier'
 import {globalStack} from './global-stack'
-import {OrderedResponder, UnorderedResponder} from './responder'
+import {OrderedResponder, ResponderType, UnorderedResponder} from './responder'
 
 /*
 Notes:
@@ -29,6 +29,7 @@ If get is called on the computed, then we need to recalculate and remove it from
  */
 
 export class Computed<T> implements UnorderedResponder, Notifier {
+  type = ResponderType.computed as const
   ordered = false as const
 
   orderedResponders = new Map<string, OrderedResponder>()
@@ -37,6 +38,8 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   value: T | any
   firstRun = true
 
+  active = false
+
   constructor(public f: () => T) {
     // globalStack.pushResponder(this)
     // this.value = f()
@@ -44,11 +47,11 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   }
 
   run(): void {
+    if (!this.active) return
+
     globalStack.pushResponder(this)
     const result = this.f()
     globalStack.popResponder()
-
-    // console.log('num responders: ', this.orderedResponders.size + this.unorderedResponders.size)
 
     if (result !== this.value) {
       this.value = result
@@ -59,26 +62,18 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   }
 
   get(): T {
-    if (this.firstRun) {
+    this.active = globalStack.insideNonComputedResponder()
+
+    if (this.firstRun || !this.active) {
       globalStack.pushResponder(this)
       this.value = this.f()
       globalStack.popResponder()
       this.firstRun = false
+    } else {
+      globalStack.runComputedNowIfDirty(this)
     }
-    globalStack.runComputedNowIfDirty(this)
 
-    /*
-    If this computed is being run inside a responder (reaction) then,
-    remember that responder and call it on new value. A computed can be in more than one
-    responder, hence a list.
-     */
-    addCurrentResponderToThisNotifier(this)
-    // const responder = globalStack.getCurrentResponder()
-    //
-    // // TODO: Do we need to make sure we aren't adding ourselves to ourself?
-    // if (responder !== null) {
-    //   addResponder(this, responder)
-    // }
+    addCurrentResponderToOurList(this)
 
     return this.value
   }

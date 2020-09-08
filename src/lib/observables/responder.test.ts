@@ -1,5 +1,5 @@
 import {$Val} from './observable'
-import {$Calc} from './computed'
+import {$Calc, Computed} from './computed'
 import {$AutoRun, $Reaction} from './responder'
 import {fiend2} from './make-observable'
 import {autorun, computed, observable} from 'mobx'
@@ -87,8 +87,6 @@ describe('reaction scope', () => {
   })
 
   test('out of scope', () => {
-    console.log('out of scope')
-
     const before = count
 
     n(n() + 1)
@@ -132,19 +130,17 @@ describe('computed scope', () => {
     const a = new A()
 
     const d = $AutoRun(() => {
-      console.log(a.$num2)
+      a.$num2
     })
 
     expect(count).toEqual(1)
     n(n() + 1)
-    expect(count).toEqual(2)
+    expect(count).toEqual(3)
 
     d.end()
   })
 
   test('out of scope', () => {
-    console.log('out of scope')
-
     const before = count
 
     n(n() + 1)
@@ -189,8 +185,6 @@ describe('mobx computed scope', () => {
   })
 
   test('out of scope', () => {
-    console.log('out of scope')
-
     const before = count
 
     n.set(n.get() + 1)

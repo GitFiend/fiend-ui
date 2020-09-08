@@ -1,5 +1,4 @@
 import {globalStack} from './global-stack'
-import {$Calc} from './computed'
 import {$RunInAction} from './action'
 
 /*
@@ -10,20 +9,30 @@ Could be a Computed or a reaction such as AutoRun.
 
  */
 
+export enum ResponderType {
+  computed,
+  autoRun,
+  reaction,
+  component,
+}
+
 export type Responder = OrderedResponder | UnorderedResponder
 
 export interface OrderedResponder {
+  type: ResponderType
   ordered: true
   order: string
   run(): void
 }
 
 export interface UnorderedResponder {
+  type: ResponderType
   ordered: false
   run(): void
 }
 
 export class AutoRun implements UnorderedResponder {
+  type = ResponderType.autoRun as const
   ordered = false as const
   active = true
 
@@ -51,6 +60,7 @@ export function $AutoRun(f: () => void) {
 }
 
 class Reaction<T> implements UnorderedResponder {
+  type = ResponderType.reaction
   ordered = false as const
   value: T
 

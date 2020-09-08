@@ -1,5 +1,5 @@
 import {globalStack} from './global-stack'
-import {OrderedResponder, Responder, UnorderedResponder} from './responder'
+import {OrderedResponder, UnorderedResponder} from './responder'
 
 /*
 A Notifier is something with observable-like behaviour.
@@ -17,7 +17,7 @@ export interface Notifier {
 //   else notifier.unorderedResponders.add(responder)
 // }
 
-export function addCurrentResponderToThisNotifier(notifier: Notifier) {
+export function addCurrentResponderToOurList(notifier: Notifier) {
   const responder = globalStack.getCurrentResponder()
 
   if (responder !== null) {
