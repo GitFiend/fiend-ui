@@ -1,11 +1,10 @@
 import {OrderedResponder, UnorderedResponder} from './responder'
 import {addCurrentResponderToOurList, Notifier, notify} from './notifier'
 
-// export type Observable<T> = {(): Readonly<T>; (newValue: T): void; length: unknown}
 export interface Observable<T> {
   (): Readonly<T>
   (newValue: T): T
-  length: Symbol
+  length: Symbol // We override length to be symbol to prevent accidental length checks.
 }
 
 export interface ObservableArray<T> {
@@ -33,7 +32,7 @@ export function $Val<T>(value: T): Observable<T> {
     return newValue
   }
 
-  return inner as any
+  return inner as Observable<T>
 }
 
 export function $Map<K, V>(
@@ -53,7 +52,7 @@ export function $Map<K, V>(
     return newValue
   }
 
-  return inner as any
+  return inner as ObservableMap<K, V>
 }
 
 export function $Array<T>(...items: T[]): ObservableArray<T> {
@@ -69,11 +68,10 @@ export function $Array<T>(...items: T[]): ObservableArray<T> {
     return newValue
   }
 
-  return inner as any
+  return inner as ObservableArray<T>
 }
 
 export class Atom<T> implements Notifier {
-  // responders = new Set<Responder>()
   orderedResponders = new Map<string, OrderedResponder>()
   unorderedResponders = new Set<UnorderedResponder>()
 
@@ -81,13 +79,6 @@ export class Atom<T> implements Notifier {
 
   get(): T {
     addCurrentResponderToOurList(this)
-    // const responder = globalStack.getCurrentResponder()
-    //
-    // if (responder !== null) {
-    //   // TODO: distinguish between components and other responders?
-    //   // this.responders.add(responder)
-    //   addResponder(this, responder)
-    // }
 
     return this.value
   }
