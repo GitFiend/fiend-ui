@@ -29,11 +29,11 @@ export function addCurrentResponderToOurList(notifier: Notifier) {
 }
 
 export function notify(notifier: Notifier) {
-  if (!globalStack.queueNotifierIfInAction(notifier)) {
-    const orderedResponders = notifier.orderedResponders
-    const unorderedResponders = notifier.unorderedResponders
+  const orderedResponders = notifier.orderedResponders
+  const unorderedResponders = notifier.unorderedResponders
 
-    if (orderedResponders.size + unorderedResponders.size > 0) {
+  if (orderedResponders.size + unorderedResponders.size > 0) {
+    if (!globalStack.queueNotifierIfInAction(notifier)) {
       notifier.orderedResponders = new Map()
       notifier.unorderedResponders = new Set()
 
