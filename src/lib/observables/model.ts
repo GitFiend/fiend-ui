@@ -1,20 +1,7 @@
 import {Constructor, makeObservable} from './make-observable'
 
 export class Model {
-  static $() {
-    // const Con = this
-
-    return this
-    // return class extends Con {
-    //   constructor(...args: unknown[]) {
-    //     super()
-    //
-    //     makeObservable(this, Con)
-    //   }
-    // }
-  }
-
-  static create<T>(this: new () => T): new () => T {
+  static $<T>(this: new () => T): new () => T {
     const C: any = this
 
     return class extends C {
@@ -24,12 +11,6 @@ export class Model {
         makeObservable(this, C)
       }
     } as new () => T
-
-    // return this;
-  }
-
-  static get it() {
-    return this.create()
   }
 }
 
@@ -37,9 +18,9 @@ const Omg = class extends Model {
   $a = 4
 }.$()
 
-const Omg3 = class extends Model {
+const Omg3 = class O extends Model {
   $a = 4
-}.create()
+}.$()
 
 const o = new Omg3()
 o.$a

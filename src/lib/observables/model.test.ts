@@ -1,4 +1,5 @@
-import {makeModel} from './model'
+import {makeModel, Model} from './model'
+import {makeObservable} from './make-observable'
 
 describe('model', () => {
   // const A = class extends Model {
@@ -10,7 +11,7 @@ describe('model', () => {
   // }.$()
 
   const B = makeModel(
-    class B {
+    class {
       $a = 2
 
       get $c(): number {
@@ -19,8 +20,28 @@ describe('model', () => {
     }
   )
 
+  const B2 = class extends Model {
+    $a = 2
+
+    get $c(): number {
+      return this.$a * this.$a
+    }
+  }.$()
+
+  class B3 {
+    constructor() {
+      makeObservable(this, B3)
+    }
+
+    $a = 2
+
+    get $c(): number {
+      return this.$a * this.$a
+    }
+  }
+
   test('observables work as expected', () => {
-    const instance = new B()
+    const instance = new B3()
 
     expect(instance.$c).toEqual(4)
 

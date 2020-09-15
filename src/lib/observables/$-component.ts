@@ -1,7 +1,6 @@
 import {Component} from '../component-types/component'
 import {globalStack} from './global-stack'
 import {F0, OrderedResponder, ResponderType} from './responder'
-import {makeObservable} from './make-observable'
 
 export class $Component<P extends {} = {}> extends Component<P>
   implements OrderedResponder {
