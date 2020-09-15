@@ -31,7 +31,9 @@ export interface UnorderedResponder {
   run(): void
 }
 
-export class AutoRun implements UnorderedResponder {
+export type F0 = () => void
+
+class AutoRun implements UnorderedResponder {
   type = ResponderType.autoRun as const
   ordered = false as const
   active = true
@@ -50,19 +52,21 @@ export class AutoRun implements UnorderedResponder {
     globalStack.popResponder()
   }
 
-  end() {
+  end: F0 = () => {
     this.active = false
   }
 }
 
-export function $AutoRun(f: () => void) {
-  return new AutoRun(f)
+export function $AutoRun(f: () => void): F0 {
+  return new AutoRun(f).end
 }
 
 class Reaction<T> implements UnorderedResponder {
   type = ResponderType.reaction
   ordered = false as const
   value: T
+
+  active = true
 
   constructor(private calc: () => T, private f: (result: T) => void) {
     globalStack.pushResponder(this)
@@ -71,6 +75,8 @@ class Reaction<T> implements UnorderedResponder {
   }
 
   run(): void {
+    if (!this.active) return
+
     globalStack.pushResponder(this)
     const value = this.calc()
     globalStack.popResponder()
@@ -83,8 +89,17 @@ class Reaction<T> implements UnorderedResponder {
       })
     }
   }
+
+  end: F0 = () => {
+    this.active = false
+  }
 }
 
-export function $Reaction<T>(calc: () => T, f: (result: T) => void) {
-  return new Reaction(calc, f)
+/*
+A Reaction will keep going so long as the observables inside it's function still exist.
+
+If a fiend class has a shorter lifetime than observables it depends on, they should be cleaned up.
+ */
+export function $Reaction<T>(calc: () => T, f: (result: T) => void): F0 {
+  return new Reaction(calc, f).end
 }

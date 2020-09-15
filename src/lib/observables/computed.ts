@@ -40,11 +40,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
 
   active = false
 
-  constructor(public f: () => T) {
-    // globalStack.pushResponder(this)
-    // this.value = f()
-    // globalStack.popResponder()
-  }
+  constructor(public f: () => T) {}
 
   run(): void {
     if (!this.active) {

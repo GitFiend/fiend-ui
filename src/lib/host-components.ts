@@ -13,7 +13,7 @@ type DataPropertiesOnly<T> = {
 export type InlineStyles = Partial<CSSStyleDeclaration>
 
 export type HostAttributes<E> = Partial<
-  Omit<DataPropertiesOnly<E>, 'style'> & {
+  Omit<DataPropertiesOnly<E>, 'style' | 'children'> & {
     style: string
     ref: RefObject<E>
     // styleObject: InlineStyles

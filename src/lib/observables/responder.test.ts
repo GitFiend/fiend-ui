@@ -1,7 +1,7 @@
 import {$Val} from './observable'
-import {$Calc, Computed} from './computed'
+import {$Calc} from './computed'
 import {$AutoRun, $Reaction} from './responder'
-import {fiend2} from './make-observable'
+import {fiend} from './make-observable'
 import {autorun, computed, observable} from 'mobx'
 
 describe('reaction tests', () => {
@@ -67,6 +67,35 @@ describe('proxy test', () => {
   })
 })
 
+describe('$AutoRun cleanup', () => {
+  let count = 0
+  const n = $Val<number>(1)
+  let dispose: () => void
+
+  test('autorun', () => {
+    dispose = $AutoRun(() => {
+      n()
+      count++
+    })
+
+    expect(count).toEqual(1)
+    n(2)
+    expect(count).toEqual(2)
+  })
+
+  test('out of scope, no cleanup', () => {
+    // a.end()
+    n(3)
+    expect(count).toEqual(3)
+  })
+
+  test('out of scope, with cleanup', () => {
+    dispose()
+    n(4)
+    expect(count).toEqual(3)
+  })
+})
+
 describe('reaction scope', () => {
   let count = 0
   const n = $Val<number>(1)
@@ -83,7 +112,7 @@ describe('reaction scope', () => {
     n(n() + 1)
     expect(count).toEqual(2)
 
-    a.end()
+    a()
   })
 
   test('out of scope', () => {
@@ -114,7 +143,7 @@ describe('computed scope', () => {
   it's called via a get().
    */
 
-  @fiend2
+  @fiend
   class A {
     get $num(): number {
       count++
@@ -137,7 +166,7 @@ describe('computed scope', () => {
     n(n() + 1)
     expect(count).toEqual(3)
 
-    d.end()
+    d()
   })
 
   test('out of scope', () => {

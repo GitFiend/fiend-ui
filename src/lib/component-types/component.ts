@@ -1,7 +1,7 @@
 import {ComponentBase, equalProps, ParentComponent, Subtree, Tree, Z, ZType} from './base'
 import {removeSubComponents, renderSubtrees} from '../render'
 import {time, timeEnd} from '../util/measure'
-import {isPropsObject} from '../host-components'
+import {$$, isPropsObject} from '../host-components'
 
 export interface Rec {
   [prop: string]: unknown
@@ -19,8 +19,8 @@ export class Component<P = {}> implements ComponentBase {
   constructor(
     props: P,
     public parent: ParentComponent,
-    public children: Subtree[],
-    public index: number
+    private children: Subtree[],
+    private index: number
   ) {
     this.order = this.parent.order + index
     this.props = {...props, children}
@@ -67,6 +67,10 @@ export class Component<P = {}> implements ComponentBase {
   remove(): void {
     this.subComponents.forEach(s => s.remove())
     this.componentWillUnmount()
+  }
+
+  static get n() {
+    return $$(this)
   }
 }
 
@@ -133,6 +137,12 @@ export function $<C extends Component>(
       }
     }
   }
+}
+
+export function $$$<C extends Component>(
+  cons: new (...a: any[]) => C
+): (...args: [C['props'], ...Subtree[]] | Subtree[]) => Tree {
+  return (...args) => $(cons, ...args)
 }
 
 export function makeCustomComponentConstructor<C extends Component>(

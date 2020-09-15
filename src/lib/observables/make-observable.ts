@@ -46,7 +46,7 @@ import {Computed} from './computed'
 //   }
 // }
 
-type Cons = {new (...args: any[]): {}}
+export type Constructor = {new (...args: any[]): {}}
 
 // export function fiend<T extends Cons>(constructor: T) {
 //   return class extends constructor {
@@ -58,17 +58,17 @@ type Cons = {new (...args: any[]): {}}
 //   }
 // }
 
-export function fiend2<T extends Cons>(constructor: T) {
+export function fiend<T extends Constructor>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
       super(...args)
 
-      makeObservable4(this, constructor)
+      makeObservable(this, constructor)
     }
   }
 }
 
-export function makeObservable4(object: Object, Con: Cons) {
+export function makeObservable(object: Object, Con: Constructor) {
   for (const key in object) {
     if (key.startsWith('$')) {
       const valueName = `__${key}`

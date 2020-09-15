@@ -1,7 +1,8 @@
 import {autorun, computed, IReactionDisposer, observable, runInAction} from 'mobx'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
-import {$Calc as zComputed} from './computed'
+import {$Calc} from './computed'
+import {fiend} from './make-observable'
 
 describe('compare mbox computeds with zeact', () => {
   const loops = 1000
@@ -17,7 +18,7 @@ describe('compare mbox computeds with zeact', () => {
       @observable
       c = 5
 
-      @observable
+      @observable.ref
       d = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     }
 
@@ -30,7 +31,7 @@ describe('compare mbox computeds with zeact', () => {
         this.disposer = autorun(() => {
           const {a, b, c, d} = this.a
 
-          d.push(a, b, c)
+          this.a.d = [...d, a, b, c]
         })
       }
 
@@ -57,8 +58,6 @@ describe('compare mbox computeds with zeact', () => {
       })
 
       z = a.c
-
-      // console.log('mobx', z)
 
       a.disposer()
     }
@@ -99,7 +98,7 @@ describe('compare mbox computeds with zeact', () => {
     for (let i = 0; i < loops; i++) {
       const r = new Run()
 
-      const c = zComputed(() => {
+      const c = $Calc(() => {
         return r.b.a() + r.b.b() + r.b.c()
       })
 
@@ -112,5 +111,49 @@ describe('compare mbox computeds with zeact', () => {
 
     expect(z).toEqual(24)
     console.timeEnd('zeact')
+  })
+
+  test('fiend', () => {
+    @fiend
+    class E {
+      $a = 5
+
+      $b = 5
+
+      $c = 5
+
+      $d = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    }
+
+    class Run {
+      b = new E()
+
+      constructor() {
+        $AutoRun(() => {
+          const {$a, $b, $c, $d} = this.b
+
+          this.b.$d = [...$d, $a, $b, $c]
+        })
+      }
+    }
+
+    console.time('fiend')
+    let z = 0
+    for (let i = 0; i < loops; i++) {
+      const r = new Run()
+
+      const c = $Calc(() => {
+        return r.b.$a + r.b.$b + r.b.$c
+      })
+
+      r.b.$a = 10
+      r.b.$a = 12
+      r.b.$a = 14
+      z = c()
+      // console.log('zeact', z)
+    }
+
+    expect(z).toEqual(24)
+    console.timeEnd('fiend')
   })
 })
