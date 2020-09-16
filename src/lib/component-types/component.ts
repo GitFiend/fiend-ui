@@ -7,7 +7,7 @@ export interface Rec {
   [prop: string]: unknown
 }
 
-export type PropsWithChildren<T> = T & {children?: Subtree[]}
+export type PropsWithChildren<T> = T & {children?: Subtree[]; key?: string}
 
 export class Component<P = {}> implements ComponentBase {
   _type = ZType.custom as const
