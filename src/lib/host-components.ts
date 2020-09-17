@@ -10,14 +10,13 @@ type DataPropertiesOnly<T> = {
   [P in DataPropertyNames<T>]: T[P] //extends object ? DataPropertiesOnly<T[P]> : T[P]
 }
 
-export type InlineStyles = Partial<CSSStyleDeclaration>
+// export type InlineStyles = Partial<CSSStyleDeclaration>
 
 export type HostAttributes<E> = Partial<
   Omit<DataPropertiesOnly<E>, 'style' | 'children'> & {
     key: string
     style: string
     ref: RefObject<E>
-    // styleObject: InlineStyles
     ariaLabel: string
     ariaSelected: boolean
     ariaModal: boolean
@@ -99,6 +98,8 @@ export const source = makeHtmlElementConstructor('source')
 export const idiomatic = makeHtmlElementConstructor('i')
 export const button = makeHtmlElementConstructor('button')
 export const canvas = makeHtmlElementConstructor('canvas')
+export const svg = makeHtmlElementConstructor('svg')
+export const polyline = makeHtmlElementConstructor('polyline')
 
 export function s(
   literals: TemplateStringsArray,
