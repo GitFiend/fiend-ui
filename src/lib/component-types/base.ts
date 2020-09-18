@@ -6,7 +6,7 @@ export type Z = HostComponent | TextComponent | Component
 export type ParentComponent = HostComponent | RootNode | Component
 
 export interface Tree {
-  _type: keyof HTMLElementTagNameMap | typeof Component
+  _type: keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap | typeof Component
   props: Record<string, unknown> | null
   children: Subtree[]
 }

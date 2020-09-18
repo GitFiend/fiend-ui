@@ -1,15 +1,16 @@
 import {ComponentBase, ParentComponent, Subtree, Z, ZType} from '../base'
 import {removeSubComponents, renderSubtrees} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
+import {ElementNameMap} from '../../host-components'
 
 export class HostComponent implements ComponentBase {
   _type = ZType.host as const
-  element: HTMLElementTagNameMap[this['tag']]
+  element: ElementNameMap[this['tag']]
   subComponents: Z[] = []
   order: string
 
   constructor(
-    public tag: keyof HTMLElementTagNameMap,
+    public tag: keyof ElementNameMap,
     public props: Record<string, unknown> | null,
     public parent: ParentComponent,
     childrenSlices: Subtree[],
@@ -36,7 +37,7 @@ export class HostComponent implements ComponentBase {
 
 // TODO: prevTree.children? parent.children? Seems there might be a bug here.
 export function renderHost(
-  tag: keyof HTMLElementTagNameMap,
+  tag: keyof ElementNameMap,
   props: Record<string, unknown> | null,
   children: Subtree[],
   parent: ParentComponent,

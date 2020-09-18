@@ -7,16 +7,16 @@ type DataPropertyNames<T> = {
 }[keyof T]
 
 type DataPropertiesOnly<T> = {
-  [P in DataPropertyNames<T>]: T[P] //extends object ? DataPropertiesOnly<T[P]> : T[P]
+  [P in DataPropertyNames<T>]: T[P]
 }
 
-// export type InlineStyles = Partial<CSSStyleDeclaration>
+export type ElementNameMap = SVGElementTagNameMap | HTMLElementTagNameMap
 
-export type HostAttributes<E> = Partial<
-  Omit<DataPropertiesOnly<E>, 'style' | 'children'> & {
+export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Partial<
+  Omit<DataPropertiesOnly<HTMLElementTagNameMap[N]>, 'style' | 'children' | 'points'> & {
     key: string
     style: string
-    ref: RefObject<E>
+    ref: RefObject<HTMLElementTagNameMap[N]>
     ariaLabel: string
     ariaSelected: boolean
     ariaModal: boolean
@@ -24,23 +24,22 @@ export type HostAttributes<E> = Partial<
   }
 >
 
-// type HTMLElementArgs<K extends keyof HTMLElementTagNameMap> = [
-//   HostAttributes<HTMLElementTagNameMap[K]>?,
-//   ...Subtree[]
-// ]
+export type SvgElementAttributes<N extends keyof SVGElementTagNameMap> = Partial<
+  Omit<DataPropertiesOnly<SVGElementTagNameMap[N]>, 'style' | 'children' | 'points'> & {
+    key: string
+    style: string
+    ref: RefObject<SVGElementTagNameMap[N]>
+    ariaLabel: string
+    ariaSelected: boolean
+    ariaModal: boolean
+    role: 'tab'
+  }
+>
 
-// type HTMLElementArgs<K extends keyof HTMLElementTagNameMap> =
-//   | [HostAttributes<HTMLElementTagNameMap[K]>, ...Subtree[]]
-//   | Subtree[]
-
-export function makeHtmlElementConstructor<T extends keyof HTMLElementTagNameMap>(
-  tagName: T
-): (
-  ...args: [HostAttributes<HTMLElementTagNameMap[T]>, ...Subtree[]] | Subtree[]
-) => Tree {
-  return (
-    ...args: [HostAttributes<HTMLElementTagNameMap[T]>, ...Subtree[]] | Subtree[]
-  ): Tree => {
+export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap>(
+  tagName: N
+): (...args: [HostAttributes<N>, ...Subtree[]] | Subtree[]) => Tree {
+  return (...args) => {
     const [a1, ...children] = args
 
     if (args.length === 0) {
@@ -67,10 +66,34 @@ export function makeHtmlElementConstructor<T extends keyof HTMLElementTagNameMap
   }
 }
 
-export function isPropsObject2(o: Object | string | undefined | null): boolean {
-  return (
-    typeof o !== 'string' && o?.hasOwnProperty !== undefined && !o.hasOwnProperty('_type')
-  )
+export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
+  tagName: N
+): (...args: [SvgElementAttributes<N>, ...Subtree[]] | Subtree[]) => Tree {
+  return (...args) => {
+    const [a1, ...children] = args
+
+    if (args.length === 0) {
+      return {
+        _type: tagName,
+        props: null,
+        children: [],
+      }
+    } else {
+      if (isPropsObject(a1)) {
+        return {
+          _type: tagName,
+          props: a1 as any,
+          children: children as Subtree[],
+        }
+      } else {
+        return {
+          _type: tagName,
+          props: null,
+          children: args as any[],
+        }
+      }
+    }
+  }
 }
 
 export function isPropsObject(o: Object | string | undefined | null): boolean {
@@ -98,8 +121,21 @@ export const source = makeHtmlElementConstructor('source')
 export const idiomatic = makeHtmlElementConstructor('i')
 export const button = makeHtmlElementConstructor('button')
 export const canvas = makeHtmlElementConstructor('canvas')
-export const svg = makeHtmlElementConstructor('svg')
-export const polyline = makeHtmlElementConstructor('polyline')
+
+type SvgAttributes = Omit<SvgElementAttributes<'svg'>, 'width' | 'height'> & {
+  width?: number
+  height?: number
+}
+export const svg = makeSvgElementConstructor('svg') as (
+  ...args: [SvgAttributes, ...Subtree[]] | Subtree[]
+) => Tree
+
+type PolyLineAttributes = Omit<SvgElementAttributes<'polyline'>, 'points'> & {
+  points?: string
+}
+export const polyline = makeSvgElementConstructor('polyline') as (
+  ...args: [PolyLineAttributes, ...Subtree[]] | Subtree[]
+) => Tree
 
 export function s(
   literals: TemplateStringsArray,

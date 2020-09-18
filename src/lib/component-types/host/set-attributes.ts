@@ -2,19 +2,15 @@ import {Rec} from '../component'
 import {RefObject} from '../../util/ref'
 
 //
-export function setAttributesFromProps(element: HTMLElement, props: Rec) {
+export function setAttributesFromProps(element: Element, props: Rec) {
   const attributes = Object.keys(props)
 
   for (const attr of attributes) {
-    setAttribute(element, attr, props[attr], null)
+    setAttribute(element, attr, props[attr])
   }
 }
 
-export function updateAttributes(
-  element: HTMLElement,
-  newProps: Rec,
-  oldProps: Rec | null
-) {
+export function updateAttributes(element: Element, newProps: Rec, oldProps: Rec | null) {
   if (oldProps === null) setAttributesFromProps(element, newProps)
   else {
     updateAttrInner(element, newProps, oldProps)
@@ -22,7 +18,7 @@ export function updateAttributes(
 }
 
 // TODO: Could we remove a loop by using Array.from?
-function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
+function updateAttrInner(element: Element, newProps: Rec, oldProps: Rec) {
   const newKeys = Object.keys(newProps)
   const oldKeys = Object.keys(oldProps)
 
@@ -31,11 +27,11 @@ function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
     const n = newProps[key]
 
     if (o === undefined) {
-      setAttribute(element, key, n, o)
+      setAttribute(element, key, n)
     } //
     else if (o !== n) {
       deleteAttribute(element, key, o)
-      setAttribute(element, key, n, o)
+      setAttribute(element, key, n)
     }
   }
   for (const key of oldKeys) {
@@ -47,29 +43,31 @@ function updateAttrInner(element: HTMLElement, newProps: Rec, oldProps: Rec) {
 
 // TODO: Improve types.
 function setAttribute(
-  element: HTMLElement,
+  element: Element,
   attr: string,
-  value: any,
-  oldValue: any
+  value: any
+  // oldValue: any
 ): void {
-  if (attr === 'ref') {
-    ;(value as RefObject<any>).current = element
-  } else {
-    ;(element as any)[attr] = value
-  }
-
-  // if (attr === 'className') {
-  //   element.setAttribute('class', value)
-  // } else if (attr.startsWith('on')) {
-  //   element.addEventListener(attr.slice(2), value)
-  // } else if (attr === 'style') {
-  //   setStyles(element, value, oldValue)
-  // } else if (attr === 'ref') {
+  // if (attr === 'ref') {
   //   ;(value as RefObject<any>).current = element
   // } else {
-  //   if (typeof value === 'boolean' && value) element.setAttribute(attr, '')
-  //   else element.setAttribute(attr, value)
+  //   ;(element as any)[attr] = value
   // }
+
+  if (attr === 'className') {
+    element.setAttribute('class', value)
+  } else if (attr.startsWith('on')) {
+    element.addEventListener(attr.slice(2), value)
+  } else if (attr === 'style') {
+    // setStyles(element, value, oldValue)
+    ;(element as any)[attr] = value
+  } else if (attr === 'ref') {
+    ;(value as RefObject<any>).current = element
+  } else {
+    if (typeof value === 'boolean' && value) {
+      element.setAttribute(attr, '')
+    } else element.setAttribute(attr, value)
+  }
 }
 
 // function setStyles(element: HTMLElement, styles: string, oldStyles: string | null) {
@@ -104,7 +102,7 @@ function setAttribute(
 //   // }
 // }
 
-function deleteAttribute(element: HTMLElement, attr: string, oldValue: unknown): void {
+function deleteAttribute(element: Element, attr: string, oldValue: unknown): void {
   if (attr.startsWith('on')) {
     element.removeEventListener(attr.slice(2), oldValue as any)
   } else if (attr === 'className') {

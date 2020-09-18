@@ -11,7 +11,7 @@ export type PropsWithChildren<T> = T & {children?: Subtree[]; key?: string}
 
 export class Component<P = {}> implements ComponentBase {
   _type = ZType.custom as const
-  element: HTMLElement
+  element: Element
   subComponents: Z[] = []
   props: PropsWithChildren<P>
   order: string
@@ -139,11 +139,11 @@ export function $<C extends Component>(
   }
 }
 
-export function $$$<C extends Component>(
-  cons: new (...a: any[]) => C
-): (...args: [C['props'], ...Subtree[]] | Subtree[]) => Tree {
-  return (...args) => $(cons, ...args)
-}
+// export function $$$<C extends Component>(
+//   cons: new (...a: any[]) => C
+// ): (...args: [C['props'], ...Subtree[]] | Subtree[]) => Tree {
+//   return (...args) => $(cons, ...args)
+// }
 
 export function makeCustomComponentConstructor<C extends Component>(
   cons: new (...a: any[]) => C
