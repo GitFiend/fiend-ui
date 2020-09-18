@@ -50,20 +50,14 @@ export function renderSubtrees(
 ): Z[] {
   const newChildren: Z[] = []
 
-  if (children.length === 0) {
-    if (prevChildren.length > 0) {
-      removeSubComponents(parent, 0)
-    }
-  } else {
-    let i = 0
-    for (const c of children) {
-      const s = renderSubtree(c, prevChildren[i] ?? null, parent, i)
+  for (let i = 0; i < children.length; i++) {
+    const s = renderSubtree(children[i], prevChildren[i] ?? null, parent, i)
 
-      if (s !== null) newChildren.push(s)
-      i++
-    }
+    if (s !== null) newChildren.push(s)
   }
-  removeSubComponents(parent, newChildren.length)
+
+  if (prevChildren.length > 0) removeSubComponents(parent, newChildren.length)
+
   return newChildren
 }
 
