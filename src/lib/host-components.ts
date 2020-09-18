@@ -10,7 +10,7 @@ type DataPropertiesOnly<T> = {
   [P in DataPropertyNames<T>]: T[P]
 }
 
-export type ElementNameMap = SVGElementTagNameMap | HTMLElementTagNameMap
+export type ElementNameMap = SVGElementTagNameMap & HTMLElementTagNameMap
 
 export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Partial<
   Omit<DataPropertiesOnly<HTMLElementTagNameMap[N]>, 'style' | 'children' | 'points'> & {

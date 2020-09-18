@@ -54,24 +54,13 @@ export function renderSubtrees(
     if (prevChildren.length > 0) {
       removeSubComponents(parent, 0)
     }
-    // } else if (!Array.isArray(children)) {
-    //   const s = renderFlatSubtree(children, prevChildren[0] ?? null, parent, 0)
-    //   if (s !== null) newChildren.push(s)
   } else {
     let i = 0
     for (const c of children) {
-      // if (Array.isArray(c)) {
-      //   for (const c_ of c) {
-      //     const s = renderFlatSubtree(c_, prevChildren[i] ?? null, parent, i)
-      //     if (s !== null) newChildren.push(s)
-      //     i++
-      //   }
-      // } else {
       const s = renderSubtree(c, prevChildren[i] ?? null, parent, i)
 
       if (s !== null) newChildren.push(s)
       i++
-      // }
     }
   }
   removeSubComponents(parent, newChildren.length)
@@ -88,7 +77,8 @@ export function removeSubComponents(parent: ParentComponent, index: number): voi
       for (let i = index; i < len; i++) {
         siblings[i].remove()
       }
-      siblings.length = index
+
+      if (siblings.length > index) siblings.length = index
       break
   }
 }
