@@ -11,20 +11,16 @@ export interface Tree {
   children: Subtree[]
 }
 
-// export type SubtreeFlat = Tree | string | number | null
-// export type Subtree = SubtreeFlat | SubtreeFlat[] | (SubtreeFlat | SubtreeFlat[])[]
 export type Subtree = Tree | string | number | null
 
 export enum ZType {
   host,
   custom,
   text,
-  // empty,
 }
 
 export interface ComponentBase {
   parent: unknown
-  // element: unknown
   _type: ZType
 
   remove(): void
@@ -50,12 +46,8 @@ export function equalProps(a: Rec, b: Rec): boolean {
 
   if (aKeys.length !== bKeys.length) return false
 
-  for (const key of aKeys) {
-    if (a[key] !== b[key]) return false
-  }
-  for (const key of bKeys) {
-    if (b[key] !== a[key]) return false
-  }
+  // We should only need to loop over aKeys since the length must be the same.
+  for (const key of aKeys) if (a[key] !== b[key]) return false
 
   return true
 }
