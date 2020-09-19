@@ -3,10 +3,36 @@ import {renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {renderCustom} from './component-types/component'
 
-export function render(tree: Tree, target: HTMLElement): void {
-  const root = new RootNode(target)
+class RenderManager {
+  rootNode: RootNode | null = null
+  component: Z | null = null
+  target: HTMLElement | null = null
 
-  renderTree(tree, null, root, 0)
+  render(tree: Tree, target: HTMLElement) {
+    if (this.target !== target) {
+      this.clear()
+      this.rootNode = new RootNode(target)
+    } else if (this.rootNode === null) {
+      this.rootNode = new RootNode(target)
+    }
+
+    this.component = renderTree(tree, this.component, this.rootNode, 0)
+  }
+
+  clear() {
+    this.rootNode?.subComponents.forEach(c => c.remove())
+  }
+}
+
+const renderManager = new RenderManager()
+
+export function render(tree: Tree | null, target: HTMLElement): void {
+  if (tree === null) renderManager.clear()
+  else renderManager.render(tree, target)
+
+  // const root = new RootNode(target)
+  //
+  // renderTree(tree, null, root, 0)
 }
 
 export function renderTree(
