@@ -63,10 +63,14 @@ function setAttribute(
     ;(element as any)[attr] = value
   } else if (attr === 'ref') {
     ;(value as RefObject<any>).current = element
+  } else if (typeof value === 'boolean') {
+    if (value) element.setAttribute(attr, '')
+    else element.removeAttribute(attr)
   } else {
-    if (typeof value === 'boolean' && value) {
-      element.setAttribute(attr, '')
-    } else element.setAttribute(attr, value)
+    // if (typeof value === 'boolean' && value) {
+    //   element.setAttribute(attr, '')
+    // } else
+    element.setAttribute(attr, value)
   }
 }
 
