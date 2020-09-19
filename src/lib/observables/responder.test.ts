@@ -1,7 +1,7 @@
 import {$Val} from './observable'
 import {$Calc} from './computed'
 import {$AutoRun, $Reaction} from './responder'
-import {fiend} from './make-observable'
+import {model} from './make-observable'
 import {autorun, computed, observable} from 'mobx'
 
 describe('reaction tests', () => {
@@ -143,7 +143,7 @@ describe('computed scope', () => {
   it's called via a get().
    */
 
-  @fiend
+  @model
   class A {
     get $num(): number {
       count++

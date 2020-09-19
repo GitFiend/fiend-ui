@@ -1,9 +1,9 @@
-import {fiend} from './make-observable'
+import {model} from './make-observable'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {observable} from 'mobx'
 
-@fiend
+@model
 class A {
   $a = 5
   $b = 6
@@ -81,7 +81,7 @@ describe('access and set observable speed', () => {
 })
 
 describe('makeObservable Alternative', () => {
-  @fiend
+  @model
   class Test {
     $a = 4
     $b = 3
@@ -113,7 +113,7 @@ describe('makeObservable Alternative', () => {
 describe('check that only correct fields are modified', () => {
   let computedRuns = 0
 
-  @fiend
+  @model
   class Test2 {
     $a = 2
 

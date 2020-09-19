@@ -9,6 +9,8 @@ export function $RunInAction(f: () => void) {
   globalStack.endAction()
 }
 
+type ForbidPromise<T> = T extends Promise<any> ? never : T
+
 /**
  * Wraps passed in function in an action. Keeps the same type signature.
  *
@@ -17,8 +19,8 @@ export function $RunInAction(f: () => void) {
  *
  * @param f
  */
-export const $Action = <T extends unknown[], U>(f: (...args: T) => U) => {
-  return (...args: T): U => {
+export const $Action = <T extends unknown[], U>(f: (...args: T) => ForbidPromise<U>) => {
+  return (...args: T): ForbidPromise<U> => {
     globalStack.startAction()
     const result = f(...args)
     globalStack.endAction()

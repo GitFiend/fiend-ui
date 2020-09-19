@@ -71,10 +71,12 @@ export class GlobalStack {
 
   startAction(): void {
     this.actionStack.push(new ActionState(this.getCurrentResponder()))
+    console.log('actionStack.length: ', this.actionStack.length)
   }
 
   endAction(): void {
     const queue = this.actionStack.pop()
+    console.log('actionStack.length: ', this.actionStack.length)
 
     queue?.run()
   }

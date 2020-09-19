@@ -58,7 +58,7 @@ export type Constructor = {new (...args: any[]): {}}
 //   }
 // }
 
-export function fiend<T extends Constructor>(constructor: T) {
+export function model<T extends Constructor>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
       super(...args)
@@ -84,6 +84,8 @@ export function makeObservable(object: Object, Con: Constructor) {
               return this[valueName].get()
             },
             set(value) {
+              if (__DEV__) console.debug(`${Con.name}.${key} <- `, value)
+
               this[valueName].set(value)
             },
           },

@@ -10,20 +10,18 @@ export class $Component<P extends {} = {}> extends Component<P>
   disposers: F0[] = []
 
   mount() {
-    this.runInner()
+    this.run()
 
     this.componentDidMount()
   }
 
   run() {
-    this.runInner()
-  }
+    if (__DEV__) {
+      console.debug('run', this.constructor.name)
+    }
 
-  runInner = () => {
     globalStack.pushResponder(this)
-
     this.update()
-
     globalStack.popResponder()
   }
 
