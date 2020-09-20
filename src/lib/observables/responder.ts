@@ -46,9 +46,9 @@ class AutoRun implements UnorderedResponder {
     if (!this.active) return
 
     globalStack.pushResponder(this)
-    globalStack.startAction()
+    // globalStack.startAction()
     this.f()
-    globalStack.endAction()
+    // globalStack.endAction()
     globalStack.popResponder()
   }
 
@@ -84,9 +84,9 @@ class Reaction<T> implements UnorderedResponder {
     if (this.value !== value) {
       this.value = value
 
-      $RunInAction(() => {
-        this.f(value)
-      })
+      // $RunInAction(() => {
+      this.f(value)
+      // })
     }
   }
 

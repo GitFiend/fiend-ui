@@ -164,7 +164,7 @@ describe('computed scope', () => {
 
     expect(count).toEqual(1)
     n(n() + 1)
-    expect(count).toEqual(3)
+    expect(count).toEqual(2)
 
     d()
   })

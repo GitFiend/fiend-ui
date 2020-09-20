@@ -62,8 +62,6 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   }
 
   get(): T {
-    this.active = globalStack.insideNonComputedResponder()
-
     if (this.firstRun || !this.active) {
       globalStack.pushResponder(this)
       this.value = this.f()
@@ -74,6 +72,8 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     }
 
     addCurrentResponderToOurList(this)
+
+    this.active = globalStack.insideNonComputedResponder()
 
     return this.value
   }

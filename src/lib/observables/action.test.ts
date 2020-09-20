@@ -82,6 +82,7 @@ describe('async action behaviour', () => {
         this.num(4)
       })
 
+      // @ts-expect-error
       runAsync = $Action(async () => {
         this.num(2)
         await sleep(1)

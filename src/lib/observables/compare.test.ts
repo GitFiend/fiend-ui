@@ -4,7 +4,7 @@ import {$Val} from './observable'
 import {$Calc} from './computed'
 import {model} from './make-observable'
 
-describe('compare mbox computeds with zeact', () => {
+xdescribe('compare mbox computeds with zeact', () => {
   const loops = 1000
 
   test('time b', () => {
