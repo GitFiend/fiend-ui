@@ -1,5 +1,4 @@
 import {globalStack} from './global-stack'
-import {$RunInAction} from './action'
 
 /*
 A Responder is an object that listens accesses to notifiers (observables). When these

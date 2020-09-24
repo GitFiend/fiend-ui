@@ -56,29 +56,59 @@ export class ActionState {
     for (const [key, r] of notifier.orderedResponders) {
       if (r !== this.runningResponder) this.orderedResponders.set(key, r)
     }
-
-    // for (const s of notifier.responders) {
-    //   if (s !== this.runningResponder) {
-    //     if (s.ordered)
-    //       this.orderedResponders.add(s)
-    //     else
-    //       this.unorderedResponders.add(s)
-    //   }
-    // }
   }
 
   // This whole object gets deleted after running, so I don't think cleanup is required.
   run() {
-    runResponders(this.unorderedResponders, this.orderedResponders)
+    // const orderedResponders = this.orderedResponders
+    // const unorderedResponders = this.unorderedResponders
+    //
+    // if (orderedResponders.size + unorderedResponders.size > 0) {
+    //   this.orderedResponders = new Map()
+    //   this.unorderedResponders = new Set()
+    //
+    //   runResponders(unorderedResponders, orderedResponders)
+    // }
 
-    // for (const s of this.unorderedResponders) {
-    //   s.run()
-    // }
-    // for (const s of this.orderedResponders) {
-    //   s.run()
-    // }
-    // for (const s of this.responders) {
-    //   s.run()
-    // }
+    runResponders(this.unorderedResponders, this.orderedResponders)
   }
 }
+
+/*
+
+setting an observable:
+ -> computeds
+ -> autorun/reaction
+ -> components
+
+ */
+
+/*
+LayoutSt.$scrollTop <-  1000
+
+RefVirtualPositions.$firstVisible <-  0
+RefVirtualPositions.$lastVisible <-  10
+RefVirtualPositions.$current <-  (2000)[…]
+
+CommitVirtualPositions.$current <-  (2000)[…]
+CommitVirtualPositions.$firstVisible <-  0
+CommitVirtualPositions.$lastVisible <-  66
+
+RefVirtualPositions.$firstVisible <-  8
+RefVirtualPositions.$lastVisible <-  10
+RefVirtualPositions.$current <-  (2000)[…]
+
+$-component.ts?49e1:20 run CommitCardList
+commit-card-list.tsx?2833:84 CommitCardList render
+commit-card-list.tsx?2833:34 CommitCardListInner render 1000
+$-component.ts?49e1:20 run CommitCardBackground
+$-component.ts?49e1:20 run CommitCardListInner
+commit-card-list.tsx?2833:34 CommitCardListInner render 1000
+
+Explanation:
+scrollTop changes, so ref positions are recalculated.
+scrollTop also causes commit positions to change, which in turn causes a
+rerun of ref positions.
+
+
+ */

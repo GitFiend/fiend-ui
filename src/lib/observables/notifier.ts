@@ -12,11 +12,6 @@ export interface Notifier {
   orderedResponders: Map<string, OrderedResponder>
 }
 
-// export function addResponder(notifier: Notifier, responder: Responder) {
-//   if (responder.ordered) notifier.orderedResponders.set(responder.order, responder)
-//   else notifier.unorderedResponders.add(responder)
-// }
-
 export function addCurrentResponderToOurList(notifier: Notifier) {
   const responder = globalStack.getCurrentResponder()
 
