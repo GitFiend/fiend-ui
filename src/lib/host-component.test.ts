@@ -1,4 +1,4 @@
-import {div, isPropsObject, s} from './host-components'
+import {div, s} from './host-components'
 import {Component} from './component-types/component'
 import {Subtree} from './component-types/base'
 import {mkRoot} from '../dom-tests/host.test'
@@ -82,44 +82,44 @@ describe('s - tagged style string template function', () => {
   })
 })
 
-describe('isPropsObject', () => {
-  test('number', () => {
-    expect(isPropsObject(3)).toEqual(false)
-
-    const n = 12
-
-    expect(isPropsObject(n)).toEqual(false)
-  })
-
-  test('strings', () => {
-    expect(isPropsObject('omg')).toEqual(false)
-  })
-
-  test('null', () => {
-    expect(isPropsObject(null)).toEqual(false)
-    expect(isPropsObject(undefined)).toEqual(false)
-  })
-
-  test('host components', () => {
-    expect(isPropsObject(div({}))).toEqual(false)
-  })
-
-  test('custom components', () => {
-    class A extends Component {
-      render(): Subtree {
-        return div('omg')
-      }
-    }
-
-    expect(isPropsObject(A)).toEqual(false)
-    expect(isPropsObject(A.$({}))).toEqual(false)
-  })
-
-  test('possible objects', () => {
-    expect(isPropsObject({})).toEqual(true)
-    expect(isPropsObject({style: s`height: 10px`})).toEqual(true)
-  })
-})
+// describe('isPropsObject', () => {
+//   test('number', () => {
+//     expect(isPropsObject(3)).toEqual(false)
+//
+//     const n = 12
+//
+//     expect(isPropsObject(n)).toEqual(false)
+//   })
+//
+//   test('strings', () => {
+//     expect(isPropsObject('omg')).toEqual(false)
+//   })
+//
+//   test('null', () => {
+//     expect(isPropsObject(null)).toEqual(false)
+//     expect(isPropsObject(undefined)).toEqual(false)
+//   })
+//
+//   test('host components', () => {
+//     expect(isPropsObject(div({}))).toEqual(false)
+//   })
+//
+//   test('custom components', () => {
+//     class A extends Component {
+//       render(): Subtree {
+//         return div('omg')
+//       }
+//     }
+//
+//     expect(isPropsObject(A)).toEqual(false)
+//     expect(isPropsObject(A.$({}))).toEqual(false)
+//   })
+//
+//   test('possible objects', () => {
+//     expect(isPropsObject({})).toEqual(true)
+//     expect(isPropsObject({style: s`height: 10px`})).toEqual(true)
+//   })
+// })
 
 // describe('test construction perf', () => {
 //   const numLoops = 1000000

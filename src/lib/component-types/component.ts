@@ -69,8 +69,6 @@ export class Component<P = {}> implements ComponentBase {
       _type: this as any,
       props,
     }
-
-    // return $<T>(this, props ?? {})
   }
 }
 
@@ -142,37 +140,37 @@ export function renderCustom<P extends StandardProps>(
 //   // }
 // }
 
-export function makeCustomComponentConstructor<C extends Component>(
-  cons: new (...a: any[]) => C
-): (props: C['props']) => Tree {
-  return props => {
-    return {
-      _type: cons as any,
-      props,
-    }
-
-    // const [props, ...children] = args
-    //
-    // if (args.length === 0) {
-    //   return {
-    //     _type: cons as any,
-    //     props: null,
-    //     children: [],
-    //   }
-    // } else {
-    //   if (isPropsObject(props)) {
-    //     return {
-    //       _type: cons as any,
-    //       props: props as any,
-    //       children: children as Subtree[],
-    //     }
-    //   } else {
-    //     return {
-    //       _type: cons as any,
-    //       props: null,
-    //       children: args as any[],
-    //     }
-    //   }
-    // }
-  }
-}
+// export function makeCustomComponentConstructor<C extends Component>(
+//   cons: new (...a: any[]) => C
+// ): (props: C['props']) => Tree {
+//   return props => {
+//     return {
+//       _type: cons as any,
+//       props,
+//     }
+//
+//     // const [props, ...children] = args
+//     //
+//     // if (args.length === 0) {
+//     //   return {
+//     //     _type: cons as any,
+//     //     props: null,
+//     //     children: [],
+//     //   }
+//     // } else {
+//     //   if (isPropsObject(props)) {
+//     //     return {
+//     //       _type: cons as any,
+//     //       props: props as any,
+//     //       children: children as Subtree[],
+//     //     }
+//     //   } else {
+//     //     return {
+//     //       _type: cons as any,
+//     //       props: null,
+//     //       children: args as any[],
+//     //     }
+//     //   }
+//     // }
+//   }
+// }
