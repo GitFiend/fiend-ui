@@ -99,11 +99,11 @@ RefVirtualPositions.$lastVisible <-  10
 RefVirtualPositions.$current <-  (2000)[…]
 
 $-component.ts?49e1:20 run CommitCardList
-commit-card-list.tsx?2833:84 CommitCardList render
-commit-card-list.tsx?2833:34 CommitCardListInner render 1000
+commit-card-list.ts?2833:84 CommitCardList render
+commit-card-list.ts?2833:34 CommitCardListInner render 1000
 $-component.ts?49e1:20 run CommitCardBackground
 $-component.ts?49e1:20 run CommitCardListInner
-commit-card-list.tsx?2833:34 CommitCardListInner render 1000
+commit-card-list.ts?2833:34 CommitCardListInner render 1000
 
 Explanation:
 scrollTop changes, so ref positions are recalculated.

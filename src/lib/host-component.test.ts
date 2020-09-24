@@ -1,5 +1,5 @@
 import {div, isPropsObject, s} from './host-components'
-import {$, Component} from './component-types/component'
+import {Component} from './component-types/component'
 import {Subtree} from './component-types/base'
 import {mkRoot} from '../dom-tests/host.test'
 import {renderTree} from './render'
@@ -53,7 +53,7 @@ describe('div renders', () => {
   test('custom component', () => {
     const root = mkRoot()
 
-    renderTree($(A, {}), null, root, 0)
+    renderTree(A.$({}), null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
   })
@@ -112,7 +112,7 @@ describe('isPropsObject', () => {
     }
 
     expect(isPropsObject(A)).toEqual(false)
-    expect(isPropsObject($(A, {}))).toEqual(false)
+    expect(isPropsObject(A.$({}))).toEqual(false)
   })
 
   test('possible objects', () => {

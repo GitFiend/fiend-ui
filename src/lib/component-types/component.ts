@@ -18,17 +18,9 @@ export class Component<P = {}> implements ComponentBase {
   props: PropsWithChildren<P>
   order: string
 
-  constructor(
-    props: P,
-    public parent: ParentComponent,
-    // public children: Subtree[],
-    private index: number
-  ) {
+  constructor(props: P, public parent: ParentComponent, private index: number) {
     this.order = this.parent.order + index
     this.props = props
-    // this.props = {...props, children}
-    // this.props.children = children
-
     this.element = parent.element
   }
 
@@ -49,9 +41,6 @@ export class Component<P = {}> implements ComponentBase {
   }
 
   updateWithNewProps(props: PropsWithChildren<P>): void {
-    // const p = props as PropsWithChildren<P>
-    // p.children = children
-
     if (!equalProps(this.props, props)) {
       this.props = props
       this.update()
@@ -72,12 +61,16 @@ export class Component<P = {}> implements ComponentBase {
     this.componentWillUnmount()
   }
 
-  // static $<T extends Component>(this: new (...args: never[]) => T, props?: {}): Tree
   static $<T extends Component>(
     this: new (...args: never[]) => T,
     props: T['props']
   ): Tree {
-    return $<T>(this, props ?? {})
+    return {
+      _type: this as any,
+      props,
+    }
+
+    // return $<T>(this, props ?? {})
   }
 }
 
@@ -115,44 +108,38 @@ export function renderCustom<P extends StandardProps>(
   return makeCustomComponent(cons, props, parent, index)
 }
 
-export function $<C extends Component>(
-  cons: new (...a: never[]) => C,
-  props: C['props']
-): Tree {
-  return {
-    _type: cons as any,
-    props,
-  }
-
-  // const [props, ...children] = args
-  //
-  // if (args.length === 0) {
-  //   return {
-  //     _type: cons as any,
-  //     props: null,
-  //     children: [],
-  //   }
-  // } else {
-  //   if (isPropsObject(props)) {
-  //     return {
-  //       _type: cons as any,
-  //       props: props as any,
-  //       children: children as Subtree[],
-  //     }
-  //   } else {
-  //     return {
-  //       _type: cons as any,
-  //       props: null,
-  //       children: args as any[],
-  //     }
-  //   }
-  // }
-}
-
-// export function $$$<C extends Component>(
-//   cons: new (...a: any[]) => C
-// ): (...args: [C['props'], ...Subtree[]] | Subtree[]) => Tree {
-//   return (...args) => $(cons, ...args)
+// function $<C extends Component>(
+//   cons: new (...a: never[]) => C,
+//   props: C['props']
+// ): Tree {
+//   return {
+//     _type: cons as any,
+//     props,
+//   }
+//
+//   // const [props, ...children] = args
+//   //
+//   // if (args.length === 0) {
+//   //   return {
+//   //     _type: cons as any,
+//   //     props: null,
+//   //     children: [],
+//   //   }
+//   // } else {
+//   //   if (isPropsObject(props)) {
+//   //     return {
+//   //       _type: cons as any,
+//   //       props: props as any,
+//   //       children: children as Subtree[],
+//   //     }
+//   //   } else {
+//   //     return {
+//   //       _type: cons as any,
+//   //       props: null,
+//   //       children: args as any[],
+//   //     }
+//   //   }
+//   // }
 // }
 
 export function makeCustomComponentConstructor<C extends Component>(

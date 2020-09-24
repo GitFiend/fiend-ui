@@ -4,7 +4,6 @@ import {screen} from '@testing-library/dom'
 import {$Val} from '../lib/observables/observable'
 import {$Component} from '../lib/observables/$-component'
 import {div} from '../lib/host-components'
-import {$} from '../lib/component-types/component'
 
 export function sleep(ms: number) {
   return new Promise(resolve => {
@@ -18,7 +17,7 @@ describe('simple switching with own observer library', () => {
   test('shows alternate div after state update', async () => {
     const store = new Store()
 
-    const s = $(Switcher, {store})
+    const s = Switcher.$({store})
     render(s, document.body)
 
     expect(screen.queryByText('a')).toBeDefined()

@@ -4,7 +4,6 @@ import {screen} from '@testing-library/dom'
 import {$Val} from '../lib/observables/observable'
 import {$Component} from '../lib/observables/$-component'
 import {div} from '../lib/host-components'
-import {$} from '../lib/component-types/component'
 
 export function sleep(ms: number) {
   return new Promise(resolve => {
@@ -21,7 +20,7 @@ xdescribe('test scheduling', () => {
     const store = new Store()
 
     // const s = <A store={store} />
-    const s = $(A, {store})
+    const s = A.$({store})
     render(s, document.body)
 
     console.log(document.body.innerHTML)
@@ -51,7 +50,7 @@ class A extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return $F(div(store.a().toString()), $(B, {store}))
+    return $F(div(store.a().toString()), B.$({store}))
 
     // return (
     //   <F>

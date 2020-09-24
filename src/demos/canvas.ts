@@ -1,4 +1,4 @@
-import {$, Component} from '../lib/component-types/component'
+import {Component} from '../lib/component-types/component'
 import {createRef} from '../lib/util/ref'
 import {render} from '../lib/render'
 import {canvas, s} from '../lib/host-components'
@@ -83,7 +83,7 @@ export function canvasTest(root: HTMLElement) {
   console.time('render')
 
   render(
-    $(TextCanvas, {width: window.innerWidth, height: window.innerHeight}),
+    TextCanvas.$({width: window.innerWidth, height: window.innerHeight}),
     document.body
   )
 
