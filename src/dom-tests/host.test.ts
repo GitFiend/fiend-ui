@@ -1,13 +1,13 @@
 import {renderHost} from '../lib/component-types/host/host-component'
 import {RootNode} from '../lib/component-types/base'
 import {renderTree} from '../lib/render'
-import {div} from '../lib/host-components'
+import {div, HostAttributes} from '../lib/host-components'
 
 describe('simple div', () => {
   test('render host', () => {
     const root = mkRoot()
 
-    renderHost('div', {}, [], root, null, 0)
+    renderHost('div', {}, root, null, 0)
 
     expect(root.element.innerHTML).toEqual('<div></div>')
   })
@@ -15,15 +15,21 @@ describe('simple div', () => {
   test('update div', () => {
     const root = mkRoot()
 
-    const host = renderHost('div', {}, [], root, null, 0)
+    const host = renderHost('div', {}, root, null, 0)
 
     expect(root.element.innerHTML).toEqual('<div></div>')
 
-    const host2 = renderHost('div', {className: 'simple'}, [], root, host, 0)
+    const host2 = renderHost<HostAttributes<'div'>>(
+      'div',
+      {className: 'simple'},
+      root,
+      host,
+      0
+    )
 
     expect(root.element.innerHTML).toEqual(`<div class="simple"></div>`)
 
-    renderHost('div', {}, [], root, host2, 0)
+    renderHost('div', {}, root, host2, 0)
 
     expect(root.element.innerHTML).toEqual('<div></div>')
   })
@@ -31,13 +37,13 @@ describe('simple div', () => {
   test('remove child on next render', () => {
     const root = mkRoot()
 
-    const h = div(div('a'), div('b'))
+    const h = div({children: [div('a'), div('b')]})
 
     const divs = renderTree(h, null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    const h2 = div(div('a'))
+    const h2 = div({children: [div('a')]})
 
     renderTree(h2, divs, root, 0)
 
@@ -47,11 +53,11 @@ describe('simple div', () => {
   test('remove child on next render2', () => {
     const root = mkRoot()
 
-    const divs = renderTree(div(div('a'), div('b')), null, root, 0)
+    const divs = renderTree(div({children: [div('a'), div('b')]}), null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    renderTree(div(div('a')), divs, root, 0)
+    renderTree(div({children: [div('a')]}), divs, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
   })

@@ -51,7 +51,7 @@ class A extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return $F(div(store.a()), $(B, {store}))
+    return $F(div(store.a().toString()), $(B, {store}))
 
     // return (
     //   <F>
@@ -65,13 +65,13 @@ class B extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return div(store.b())
+    return div(store.b().toString())
   }
 }
 class C extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return $F(div(store.c()))
+    return $F(div(store.c().toString()))
   }
 }

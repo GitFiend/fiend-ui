@@ -2,8 +2,9 @@ import {ComponentBase, ParentComponent, Subtree, Z, ZType} from '../base'
 import {removeSubComponents, renderSubtrees} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {ElementNameMap} from '../../host-components'
+import {StandardProps} from '../component'
 
-export class HostComponent implements ComponentBase {
+export class HostComponent<P extends StandardProps = {}> implements ComponentBase {
   _type = ZType.host as const
   element: ElementNameMap[this['tag']]
   subComponents: Z[] = []
@@ -11,9 +12,9 @@ export class HostComponent implements ComponentBase {
 
   constructor(
     public tag: keyof ElementNameMap,
-    public props: Record<string, unknown> | null,
+    public props: P,
     public parent: ParentComponent,
-    childrenSlices: Subtree[],
+    // childrenSlices: Subtree[],
     index: number
   ) {
     this.order = this.parent.order + index
@@ -21,11 +22,12 @@ export class HostComponent implements ComponentBase {
     // TODO: Could improve types.
     this.element = document.createElement(tag) as any
 
-    if (props !== null) setAttributesFromProps(this.element, props)
+    // if (props !== null)
+    setAttributesFromProps(this.element, props)
 
     parent.element.appendChild(this.element)
 
-    this.subComponents = renderSubtrees(childrenSlices, [], this)
+    this.subComponents = renderSubtrees(props.children ?? [], [], this)
   }
 
   remove(): void {
@@ -36,30 +38,33 @@ export class HostComponent implements ComponentBase {
 }
 
 // TODO: prevTree.children? parent.children? Seems there might be a bug here.
-export function renderHost(
+export function renderHost<P extends StandardProps = {}>(
   tag: keyof ElementNameMap,
-  props: Record<string, unknown> | null,
-  children: Subtree[],
+  props: P,
   parent: ParentComponent,
   prevTree: Z | null,
   index: number
 ): HostComponent {
   if (prevTree === null) {
-    return new HostComponent(tag, props, parent, children, index)
+    return new HostComponent(tag, props, parent, index)
   }
 
   if (prevTree._type === ZType.host && prevTree.tag === tag) {
-    if (props !== null) {
-      updateAttributes(prevTree.element, props, prevTree.props)
-    }
+    // if (props !== null) {
+    updateAttributes(prevTree.element, props, prevTree.props)
+    // }
 
     prevTree.props = props
-    prevTree.subComponents = renderSubtrees(children, prevTree.subComponents, prevTree)
+    prevTree.subComponents = renderSubtrees(
+      props.children ?? [],
+      prevTree.subComponents,
+      prevTree
+    )
 
     return prevTree
   } else {
     // Type has changed. Remove it.
     removeSubComponents(parent, index)
-    return new HostComponent(tag, props, parent, children, index)
+    return new HostComponent(tag, props, parent, index)
   }
 }

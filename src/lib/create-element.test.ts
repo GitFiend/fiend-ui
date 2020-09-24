@@ -14,62 +14,97 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'h1',
-      props: null,
-      children: ['Heading'],
+      props: {children: ['Heading']},
     })
   })
 
   test('2 children', () => {
-    const d = div(h1('Heading'), p('paragraph'))
+    const d = div({children: [h1('Heading'), p('paragraph')]})
 
     expect(d).toEqual({
       _type: 'div',
-      props: null,
-      children: [
-        {_type: 'h1', props: null, children: ['Heading']},
-        {_type: 'p', props: null, children: ['paragraph']},
-      ],
+      props: {
+        children: [
+          {
+            _type: 'h1',
+            props: {
+              children: ['Heading'],
+            },
+          },
+          {
+            _type: 'p',
+            props: {
+              children: ['paragraph'],
+            },
+          },
+        ],
+      },
     })
   })
 
   test('child array', () => {
-    const d = div(...[1, 2, 3].map(n => div(n)))
+    const d = div({children: [...[1, 2, 3].map(n => div(`${n}`))]})
 
     expect(d).toEqual({
       _type: 'div',
-      props: null,
-      children: [
-        {
-          _type: 'div',
-          props: null,
-          children: [1],
-        },
-        {
-          _type: 'div',
-          props: null,
-          children: [2],
-        },
-        {
-          _type: 'div',
-          props: null,
-          children: [3],
-        },
-      ],
+      props: {
+        children: [
+          {
+            _type: 'div',
+            props: {
+              children: ['1'],
+            },
+          },
+          {
+            _type: 'div',
+            props: {
+              children: ['2'],
+            },
+          },
+          {
+            _type: 'div',
+            props: {
+              children: ['3'],
+            },
+          },
+        ],
+      },
     })
   })
 
   test('child array mixed', () => {
-    const d = div(h1('Heading'), ...[1, 2, 3].map(n => div(n)))
+    const d = div({children: [h1('Heading'), ...[1, 2, 3].map(n => div(`${n}`))]})
 
     expect(d).toEqual({
       _type: 'div',
-      props: null,
-      children: [
-        {_type: 'h1', props: null, children: ['Heading']},
-        {_type: 'div', props: null, children: [1]},
-        {_type: 'div', props: null, children: [2]},
-        {_type: 'div', props: null, children: [3]},
-      ],
+      props: {
+        children: [
+          {
+            _type: 'h1',
+            props: {
+              children: ['Heading'],
+            },
+          },
+          {
+            _type: 'div',
+            props: {
+              children: ['1'],
+            },
+          },
+          {
+            _type: 'div',
+            props: {
+              children: ['2'],
+            },
+          },
+          {
+            _type: 'div',
+            props: {
+              children: ['3'],
+            },
+          },
+        ],
+      },
     })
   })
 })

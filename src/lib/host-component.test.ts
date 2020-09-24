@@ -6,12 +6,11 @@ import {renderTree} from './render'
 
 describe('div renders', () => {
   test('no args', () => {
-    const el = div()
+    const el = div({children: []})
 
     expect(el).toEqual({
       _type: 'div',
-      props: null,
-      children: [],
+      props: {children: []},
     })
   })
 
@@ -20,8 +19,7 @@ describe('div renders', () => {
 
     expect(el).toEqual({
       _type: 'div',
-      props: null,
-      children: ['hello'],
+      props: {children: ['hello']},
     })
   })
 
@@ -31,34 +29,31 @@ describe('div renders', () => {
     expect(el).toEqual({
       _type: 'div',
       props: {className: 'hi'},
-      children: [],
     })
   })
 
   test('both attributes and elements', () => {
-    const el = div({className: 'hi'}, 'hello')
+    const el = div({className: 'hi', children: ['hello']})
 
     expect(el).toEqual({
       _type: 'div',
-      props: {className: 'hi'},
-      children: ['hello'],
+      props: {className: 'hi', children: ['hello']},
     })
   })
 
   test('two elements only', () => {
-    const el = div('hello', 'hello')
+    const el = div({children: ['hello', 'hello']})
 
     expect(el).toEqual({
       _type: 'div',
-      props: null,
-      children: ['hello', 'hello'],
+      props: {children: ['hello', 'hello']},
     })
   })
 
   test('custom component', () => {
     const root = mkRoot()
 
-    renderTree($(A), null, root, 0)
+    renderTree($(A, {}), null, root, 0)
 
     expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
   })
@@ -106,7 +101,7 @@ describe('isPropsObject', () => {
   })
 
   test('host components', () => {
-    expect(isPropsObject(div())).toEqual(false)
+    expect(isPropsObject(div({}))).toEqual(false)
   })
 
   test('custom components', () => {
@@ -117,7 +112,7 @@ describe('isPropsObject', () => {
     }
 
     expect(isPropsObject(A)).toEqual(false)
-    expect(isPropsObject($(A))).toEqual(false)
+    expect(isPropsObject($(A, {}))).toEqual(false)
   })
 
   test('possible objects', () => {

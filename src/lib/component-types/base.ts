@@ -1,14 +1,14 @@
 import {HostComponent} from './host/host-component'
 import {TextComponent} from './text-component'
-import {Component, Rec} from './component'
+import {Component, Rec, StandardProps} from './component'
 
 export type Z = HostComponent | TextComponent | Component
 export type ParentComponent = HostComponent | RootNode | Component
 
-export interface Tree {
+export interface Tree<P extends StandardProps = {}> {
   _type: keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap | typeof Component
-  props: Record<string, unknown> | null
-  children: Subtree[]
+  props: P
+  // children: Subtree[]
 }
 
 export type Subtree = Tree | string | number | null

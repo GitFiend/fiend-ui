@@ -48,11 +48,11 @@ describe('updateAttributes', () => {
 
 describe('Applies expected attribute', () => {
   test('disabled', () => {
-    render(button({disabled: true}, ''), document.body)
+    render(button({disabled: true}), document.body)
     const b = document.getElementsByTagName('button').item(0)
     expect(b?.disabled).toEqual(true)
 
-    render(button({disabled: false}, ''), document.body)
+    render(button({disabled: false}), document.body)
 
     const b2 = document.getElementsByTagName('button').item(0)
     expect(b2?.disabled).toEqual(false)

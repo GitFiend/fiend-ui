@@ -41,12 +41,12 @@ export function renderTree(
   parent: ParentComponent,
   index: number
 ): Z {
-  const {_type, props, children} = tree
+  const {_type, props} = tree
 
   if (typeof _type === 'string') {
-    return renderHost(_type, props, children, parent, prevTree, index)
+    return renderHost(_type, props, parent, prevTree, index)
   } else {
-    return renderCustom(_type, props, children, parent, prevTree, index)
+    return renderCustom(_type, props, parent, prevTree, index)
   }
 }
 

@@ -21,6 +21,7 @@ export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Partial<
     ariaSelected: boolean
     ariaModal: boolean
     role: 'tab'
+    children: Subtree[]
   }
 >
 
@@ -33,69 +34,120 @@ export type SvgElementAttributes<N extends keyof SVGElementTagNameMap> = Partial
     ariaSelected: boolean
     ariaModal: boolean
     role: 'tab'
+    children: Subtree[]
   }
 >
 
+// export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap>(
+//   tagName: N
+// ): (...args: [HostAttributes<N>, ...Subtree[]] | Subtree[]) => Tree {
+//   return (...args) => {
+//     const [a1, ...children] = args
+//
+//     if (args.length === 0) {
+//       return {
+//         _type: tagName,
+//         props: null,
+//         children: [],
+//       }
+//     } else {
+//       if (isPropsObject(a1)) {
+//         return {
+//           _type: tagName,
+//           props: a1 as any,
+//           children: children as Subtree[],
+//         }
+//       } else {
+//         return {
+//           _type: tagName,
+//           props: null,
+//           children: args as any[],
+//         }
+//       }
+//     }
+//   }
+// }
+
 export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap>(
   tagName: N
-): (...args: [HostAttributes<N>, ...Subtree[]] | Subtree[]) => Tree {
-  return (...args) => {
-    const [a1, ...children] = args
+): (props: HostAttributes<N> | string) => Tree {
+  return props => {
+    // const [a1, ...children] = args
 
-    if (args.length === 0) {
+    if (typeof props === 'string') {
       return {
         _type: tagName,
-        props: null,
-        children: [],
-      }
-    } else {
-      if (isPropsObject(a1)) {
-        return {
-          _type: tagName,
-          props: a1 as any,
-          children: children as Subtree[],
-        }
-      } else {
-        return {
-          _type: tagName,
-          props: null,
-          children: args as any[],
-        }
+        props: {
+          children: [props],
+        },
       }
     }
+
+    return {
+      _type: tagName,
+      props,
+    }
+
+    // if (args.length === 0) {
+    //   return {
+    //     _type: tagName,
+    //     props: null,
+    //     children: [],
+    //   }
+    // } else {
+    //   if (isPropsObject(a1)) {
+    //     return {
+    //       _type: tagName,
+    //       props: a1 as any,
+    //       children: children as Subtree[],
+    //     }
+    //   } else {
+    //     return {
+    //       _type: tagName,
+    //       props: null,
+    //       children: args as any[],
+    //     }
+    //   }
+    // }
   }
 }
 
 export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
   tagName: N
-): (...args: [SvgElementAttributes<N>, ...Subtree[]] | Subtree[]) => Tree {
-  return (...args) => {
-    const [a1, ...children] = args
-
-    if (args.length === 0) {
-      return {
-        _type: tagName,
-        props: null,
-        children: [],
-      }
-    } else {
-      if (isPropsObject(a1)) {
-        return {
-          _type: tagName,
-          props: a1 as any,
-          children: children as Subtree[],
-        }
-      } else {
-        return {
-          _type: tagName,
-          props: null,
-          children: args as any[],
-        }
-      }
+): (props: SvgElementAttributes<N>) => Tree {
+  return props => {
+    return {
+      _type: tagName,
+      props,
     }
+
+    // const [a1, ...children] = args
+    //
+    // if (args.length === 0) {
+    //   return {
+    //     _type: tagName,
+    //     props: null,
+    //     children: [],
+    //   }
+    // } else {
+    //   if (isPropsObject(a1)) {
+    //     return {
+    //       _type: tagName,
+    //       props: a1 as any,
+    //       children: children as Subtree[],
+    //     }
+    //   } else {
+    //     return {
+    //       _type: tagName,
+    //       props: null,
+    //       children: args as any[],
+    //     }
+    //   }
+    // }
   }
 }
 
+// TODO: Remove
 export function isPropsObject(o: Object | string | undefined | null): boolean {
   if (o != null && o.constructor === Object) {
     return !o.hasOwnProperty('_type')

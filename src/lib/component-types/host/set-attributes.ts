@@ -53,25 +53,46 @@ function setAttribute(
   // } else {
   //   ;(element as any)[attr] = value
   // }
-
-  if (attr === 'className') {
-    element.setAttribute('class', value)
-  } else if (attr.startsWith('on')) {
-    element.addEventListener(attr.slice(2), value)
-  } else if (attr === 'style') {
-    // setStyles(element, value, oldValue)
-    ;(element as any)[attr] = value
-  } else if (attr === 'ref') {
-    ;(value as RefObject<any>).current = element
-  } else if (typeof value === 'boolean') {
-    if (value) element.setAttribute(attr, '')
-    else element.removeAttribute(attr)
-  } else {
-    // if (typeof value === 'boolean' && value) {
-    //   element.setAttribute(attr, '')
-    // } else
-    element.setAttribute(attr, value)
+  switch (attr) {
+    case 'children':
+      break
+    case 'className':
+      element.setAttribute('class', value)
+      break
+    case 'style':
+      ;(element as any)[attr] = value
+      break
+    case 'ref':
+      ;(value as RefObject<any>).current = element
+      break
+    default:
+      if (attr.startsWith('on')) {
+        element.addEventListener(attr.slice(2), value)
+      } else if (typeof value === 'boolean') {
+        if (value) element.setAttribute(attr, '')
+        else element.removeAttribute(attr)
+      } else {
+        element.setAttribute(attr, value)
+      }
+      break
   }
+
+  // if (attr === 'children') return
+  // if (attr === 'className') {
+  //   element.setAttribute('class', value)
+  // } else if (attr.startsWith('on')) {
+  //   element.addEventListener(attr.slice(2), value)
+  // } else if (attr === 'style') {
+  //   // setStyles(element, value, oldValue)
+  //   ;(element as any)[attr] = value
+  // } else if (attr === 'ref') {
+  //   ;(value as RefObject<any>).current = element
+  // } else if (typeof value === 'boolean') {
+  //   if (value) element.setAttribute(attr, '')
+  //   else element.removeAttribute(attr)
+  // } else {
+  //   element.setAttribute(attr, value)
+  // }
 }
 
 // function setStyles(element: HTMLElement, styles: string, oldStyles: string | null) {

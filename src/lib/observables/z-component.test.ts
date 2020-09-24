@@ -43,6 +43,8 @@ class A extends $Component<Props> {
 
     if (depth <= 0) return null
 
-    return div(`${store.num()} - ${depth}`, $(A, {store, depth: depth - 1}))
+    return div({
+      children: [`${store.num()} - ${depth}`, $(A, {store, depth: depth - 1})],
+    })
   }
 }
