@@ -67,6 +67,114 @@ describe('proxy test', () => {
   })
 })
 
+describe('construction speed', () => {
+  const num = 1_000_000
+
+  test('time things', () => {
+    console.time('array')
+    let a
+    for (let i = 0; i < num; i++) {
+      a = [i]
+    }
+    console.timeEnd('array')
+
+    console.time('array2')
+    let d
+    for (let i = 0; i < num; i++) {
+      d = Array.from([])
+    }
+    console.timeEnd('array2')
+
+    console.time('object')
+    let b
+    for (let i = 0; i < num; i++) {
+      b = {a: i}
+    }
+    console.timeEnd('object')
+
+    console.time('map')
+    let c
+    for (let i = 0; i < num; i++) {
+      c = new Map()
+    }
+    console.timeEnd('map')
+
+    expect(true).toBeTruthy()
+  })
+})
+
+describe('map vs object', () => {
+  const o = {
+    a: 1,
+    b: 2,
+    c: 3,
+    d: 4,
+    e: 5,
+    f: 6,
+    g: 7,
+    h: 8,
+    i: 9,
+    j: 10,
+    k: 11,
+    l: 12,
+  }
+
+  const m = new Map<string, number>()
+
+  m.set('a', 1)
+  m.set('b', 2)
+  m.set('c', 3)
+  m.set('d', 4)
+  m.set('e', 5)
+  m.set('f', 6)
+  m.set('g', 7)
+  m.set('h', 8)
+  m.set('i', 9)
+  m.set('j', 10)
+  m.set('k', 11)
+  m.set('l', 12)
+
+  const num = 100_000
+
+  test('object', () => {
+    let n = 0
+
+    console.time('object')
+
+    for (let i = 0; i < num; i++) {
+      // const keys = Object.keys(o) as (keyof typeof o)[]
+      //
+      // for (const key of keys) {
+      //   n = o[key]
+      // }
+
+      for (const key in o) {
+        n = o[key as keyof typeof o]
+      }
+    }
+
+    console.timeEnd('object')
+
+    expect(n).toEqual(12)
+  })
+
+  test('map', () => {
+    let n = 0
+
+    console.time('map')
+
+    for (let i = 0; i < num; i++) {
+      for (const [, value] of m) {
+        n = value
+      }
+    }
+
+    console.timeEnd('map')
+
+    expect(n).toEqual(12)
+  })
+})
+
 describe('$AutoRun cleanup', () => {
   let count = 0
   const n = $Val<number>(1)
