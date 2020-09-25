@@ -3,7 +3,6 @@ import {Component} from './component-types/component'
 import {Subtree} from './component-types/base'
 import {mkRoot} from '../dom-tests/host.test'
 import {renderTree} from './render'
-import {s} from './util/style'
 
 describe('div renders', () => {
   test('no args', () => {

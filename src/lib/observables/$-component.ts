@@ -16,7 +16,7 @@ export class $Component<P extends {} = {}> extends Component<P>
   }
 
   run() {
-    if (__DEV__) {
+    if (__FIEND_DEV__) {
       console.debug('run', this.constructor.name)
     }
 

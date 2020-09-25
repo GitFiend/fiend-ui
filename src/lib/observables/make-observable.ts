@@ -84,7 +84,7 @@ export function makeObservable(object: Object, Con: Constructor) {
               return this[valueName].get()
             },
             set(value) {
-              if (__DEV__) console.debug(`${Con.name}.${key} <- `, value)
+              if (__FIEND_DEV__) console.debug(`${Con.name}.${key} <- `, value)
 
               this[valueName].set(value)
             },

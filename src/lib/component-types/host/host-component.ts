@@ -1,4 +1,4 @@
-import {ComponentBase, ParentComponent, Subtree, Z, ZType} from '../base'
+import {ComponentBase, ParentComponent, Z, ZType} from '../base'
 import {removeSubComponents, renderSubtrees} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {StandardProps} from '../component'
@@ -14,7 +14,6 @@ export class HostComponent<P extends StandardProps = {}> implements ComponentBas
     public tag: keyof ElementNameMap,
     public props: P,
     public parent: ParentComponent,
-    // childrenSlices: Subtree[],
     index: number
   ) {
     this.order = this.parent.order + index
@@ -22,7 +21,6 @@ export class HostComponent<P extends StandardProps = {}> implements ComponentBas
     // TODO: Could improve types.
     this.element = document.createElement(tag) as any
 
-    // if (props !== null)
     setAttributesFromProps(this.element, props)
 
     parent.element.appendChild(this.element)
@@ -50,9 +48,7 @@ export function renderHost<P extends StandardProps = {}>(
   }
 
   if (prevTree._type === ZType.host && prevTree.tag === tag) {
-    // if (props !== null) {
     updateAttributes(prevTree.element, props, prevTree.props)
-    // }
 
     prevTree.props = props
     prevTree.subComponents = renderSubtrees(
