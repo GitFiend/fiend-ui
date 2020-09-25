@@ -1,13 +1,13 @@
-import {ComponentBase, ParentComponent, Z, ZType} from '../base'
-import {removeSubComponents, renderSubtrees} from '../../render'
+import {AnyComponent, ComponentBase, ComponentType, ParentComponent} from '../base'
+import {removeChildren, renderSubtrees} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {StandardProps} from '../component'
 import {ElementNameMap} from '../../host-component-types'
 
 export class HostComponent<P extends StandardProps = {}> implements ComponentBase {
-  _type = ZType.host as const
+  _type = ComponentType.host as const
   element: ElementNameMap[this['tag']]
-  subComponents: Z[] = []
+  subComponents: {[key: string]: AnyComponent} = {}
   order: string
 
   constructor(
@@ -25,13 +25,14 @@ export class HostComponent<P extends StandardProps = {}> implements ComponentBas
 
     parent.element.appendChild(this.element)
 
-    this.subComponents = renderSubtrees(props.children ?? [], [], this)
+    this.subComponents = renderSubtrees(props.children ?? [], {}, this)
   }
 
   remove(): void {
     this.element.remove()
 
-    for (const c of this.subComponents) c.remove()
+    removeChildren(this.subComponents)
+    // for (const c of this.subComponents) c.remove()
   }
 }
 
@@ -40,14 +41,14 @@ export function renderHost<P extends StandardProps = {}>(
   tag: keyof ElementNameMap,
   props: P,
   parent: ParentComponent,
-  prevTree: Z | null,
+  prevTree: AnyComponent | null,
   index: number
 ): HostComponent {
   if (prevTree === null) {
     return new HostComponent(tag, props, parent, index)
   }
 
-  if (prevTree._type === ZType.host && prevTree.tag === tag) {
+  if (prevTree._type === ComponentType.host && prevTree.tag === tag) {
     updateAttributes(prevTree.element, props, prevTree.props)
 
     prevTree.props = props
@@ -60,7 +61,8 @@ export function renderHost<P extends StandardProps = {}>(
     return prevTree
   } else {
     // Type has changed. Remove it.
-    removeSubComponents(parent, index)
+    prevTree.remove()
+    // removeSubComponents(parent, index)
     return new HostComponent(tag, props, parent, index)
   }
 }

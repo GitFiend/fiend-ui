@@ -7,7 +7,9 @@ type DataPropertyNames<T> = {
 type OptionalDataPropertiesOnly<T> = {
   [P in DataPropertyNames<T>]?: T[P]
 }
+
 export type ElementNameMap = SVGElementTagNameMap & HTMLElementTagNameMap
+
 export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Omit<
   OptionalDataPropertiesOnly<HTMLElementTagNameMap[N]>,
   'style' | 'children'
@@ -21,6 +23,7 @@ export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Omit<
   role?: 'tab'
   children?: Subtree[]
 }
+
 export type SvgElementAttributes<N extends keyof SVGElementTagNameMap> = Omit<
   OptionalDataPropertiesOnly<SVGElementTagNameMap[N]>,
   'style' | 'children'

@@ -1,19 +1,23 @@
 import {HostComponent} from './host/host-component'
 import {TextComponent} from './text-component'
 import {Component, Rec, StandardProps} from './component'
+import {removeChildren} from '../render'
 
-export type Z = HostComponent | TextComponent | Component
+export type AnyComponent = HostComponent | TextComponent | Component
 export type ParentComponent = HostComponent | RootNode | Component
 
 export interface Tree<P extends StandardProps = {}> {
   _type: keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap | typeof Component
   props: P
-  // children: Subtree[]
 }
 
 export type Subtree = Tree | string | number | null
+// export type Subtrees = [Subtree] | ((Tree & {key: string}) | string | number | null)[]
 
-export enum ZType {
+// const a: Subtrees = ['', '']
+// const b: Subtrees = [div({key: ''}), '']
+
+export enum ComponentType {
   host,
   custom,
   text,
@@ -21,22 +25,23 @@ export enum ZType {
 
 export interface ComponentBase {
   parent: unknown
-  _type: ZType
+  _type: ComponentType
 
   remove(): void
 }
 
 export class RootNode implements ComponentBase {
-  _type = ZType.host as const
+  _type = ComponentType.host as const
   parent: null
-  subComponents: Z[] = []
+  subComponents: {[key: string]: AnyComponent} = {}
   order: string = '1'
 
   constructor(public element: HTMLElement) {}
 
   remove(): void {
     this.element.remove()
-    this.subComponents.forEach(s => s.remove())
+    removeChildren(this.subComponents)
+    // this.subComponents.forEach(s => s.remove())
   }
 }
 

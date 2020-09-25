@@ -1,11 +1,17 @@
-import {ParentComponent, RootNode, Subtree, Tree, Z, ZType} from './component-types/base'
+import {
+  AnyComponent,
+  ParentComponent,
+  RootNode,
+  Subtree,
+  Tree,
+} from './component-types/base'
 import {renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {renderCustom} from './component-types/component'
 
 class RenderManager {
   rootNode: RootNode | null = null
-  component: Z | null = null
+  component: AnyComponent | null = null
   target: HTMLElement | null = null
 
   render(tree: Tree, target: HTMLElement) {
@@ -20,7 +26,10 @@ class RenderManager {
   }
 
   clear() {
-    this.rootNode?.subComponents.forEach(c => c.remove())
+    if (this.rootNode !== null) {
+      removeChildren(this.rootNode.subComponents)
+    }
+    // this.rootNode?.subComponents.forEach(c => c.remove())
   }
 }
 
@@ -37,10 +46,10 @@ export function render(tree: Tree | null, target: HTMLElement): void {
 
 export function renderTree(
   tree: Tree,
-  prevTree: Z | null,
+  prevTree: AnyComponent | null,
   parent: ParentComponent,
   index: number
-): Z {
+): AnyComponent {
   const {_type, props} = tree
 
   if (typeof _type === 'string') {
@@ -50,20 +59,20 @@ export function renderTree(
   }
 }
 
-export function renderSubtree(
-  subtree: Subtree,
-  prevTree: Z | null,
+function renderSubtree(
+  subtree: Tree | string | number,
+  prevTree: AnyComponent | null,
   parent: ParentComponent,
   index: number
-): Z | null {
-  if (subtree === null) {
-    removeSubComponents(parent, index)
-    return null
-  }
+): AnyComponent {
+  // if (subtree === null) {
+  //   // removeSubComponents(parent, index)
+  //   return null
+  // }
   if (typeof subtree === 'string') {
-    return renderTextComponent(subtree, prevTree, parent, index)
+    return renderTextComponent(subtree, prevTree, parent)
   } else if (typeof subtree === 'number') {
-    return renderTextComponent(subtree.toString(), prevTree, parent, index)
+    return renderTextComponent(subtree.toString(), prevTree, parent)
   } else {
     return renderTree(subtree, prevTree, parent, index)
   }
@@ -71,34 +80,50 @@ export function renderSubtree(
 
 export function renderSubtrees(
   children: Subtree[],
-  prevChildren: Z[],
+  prevChildren: {[key: string]: AnyComponent},
   parent: ParentComponent
-): Z[] {
-  const newChildren: Z[] = []
+): {[key: string]: AnyComponent} {
+  const newChildren: {[key: string]: AnyComponent} = {}
 
   for (let i = 0; i < children.length; i++) {
-    const s = renderSubtree(children[i], prevChildren[i] ?? null, parent, i)
+    const child = children[i]
 
-    if (s !== null) newChildren.push(s)
+    if (child !== null) {
+      const s = renderSubtree(child, prevChildren[i] ?? null, parent, i)
+
+      // if (s !== null) {
+      // newChildren.push(s)
+      delete prevChildren[i]
+
+      newChildren[i] = s
+      // }
+    }
   }
 
-  if (prevChildren.length > 0) removeSubComponents(parent, newChildren.length)
+  removeChildren(prevChildren)
+  // if (prevChildren.length > 0) removeSubComponents(parent, newChildren.length)
 
   return newChildren
 }
 
-export function removeSubComponents(parent: ParentComponent, index: number): void {
-  switch (parent._type) {
-    case ZType.custom:
-    case ZType.host:
-      const siblings: Z[] = parent.subComponents
-      const len = siblings.length
-
-      for (let i = index; i < len; i++) {
-        siblings[i].remove()
-      }
-
-      if (siblings.length > index) siblings.length = index
-      break
+export function removeChildren(children: {[key: string]: AnyComponent}): void {
+  for (const c in children) {
+    children[c as keyof typeof children].remove()
   }
 }
+
+// export function removeSubComponents(parent: ParentComponent, index: number): void {
+//   switch (parent._type) {
+//     case ComponentType.custom:
+//     case ComponentType.host:
+//       const siblings: AnyComponent[] = parent.subComponents
+//       const len = siblings.length
+//
+//       for (let i = index; i < len; i++) {
+//         siblings[i].remove()
+//       }
+//
+//       if (siblings.length > index) siblings.length = index
+//       break
+//   }
+// }

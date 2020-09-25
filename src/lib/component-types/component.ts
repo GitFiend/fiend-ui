@@ -1,5 +1,13 @@
-import {ComponentBase, equalProps, ParentComponent, Subtree, Tree, Z, ZType} from './base'
-import {removeSubComponents, renderSubtrees} from '../render'
+import {
+  AnyComponent,
+  ComponentBase,
+  ComponentType,
+  equalProps,
+  ParentComponent,
+  Subtree,
+  Tree,
+} from './base'
+import {removeChildren, renderSubtrees} from '../render'
 import {time, timeEnd} from '../util/measure'
 
 export interface Rec {
@@ -12,9 +20,9 @@ export type PropsWithChildren<T> = T & StandardProps
 
 // P = {} to simply prop type definitions.
 export class Component<P = {}> implements ComponentBase {
-  _type = ZType.custom as const
+  _type = ComponentType.custom as const
   element: Element
-  subComponents: Z[] = []
+  subComponents: {[key: string]: AnyComponent} = {}
   props: PropsWithChildren<P>
   order: string
 
@@ -57,7 +65,9 @@ export class Component<P = {}> implements ComponentBase {
   }
 
   remove(): void {
-    this.subComponents.forEach(s => s.remove())
+    // this.subComponents.forEach(s => s.remove())
+    removeChildren(this.subComponents)
+
     this.componentWillUnmount()
   }
 
@@ -72,7 +82,30 @@ export class Component<P = {}> implements ComponentBase {
   }
 }
 
-export function makeCustomComponent<P extends StandardProps>(
+export function renderCustom<P extends StandardProps>(
+  cons: typeof Component,
+  props: P,
+  parent: ParentComponent,
+  prevTree: AnyComponent | null,
+  index: number
+) {
+  if (prevTree === null) {
+    return makeCustomComponent(cons, props, parent, index)
+  }
+
+  if (prevTree._type === ComponentType.custom && prevTree instanceof cons) {
+    prevTree.updateWithNewProps(props)
+
+    return prevTree
+  }
+
+  prevTree.remove()
+  // removeSubComponents(parent, index)
+
+  return makeCustomComponent(cons, props, parent, index)
+}
+
+function makeCustomComponent<P extends StandardProps>(
   cons: typeof Component,
   props: P,
   parent: ParentComponent,
@@ -83,94 +116,3 @@ export function makeCustomComponent<P extends StandardProps>(
 
   return component
 }
-
-export function renderCustom<P extends StandardProps>(
-  cons: typeof Component,
-  props: P,
-  parent: ParentComponent,
-  prevTree: Z | null,
-  index: number
-) {
-  if (prevTree === null) {
-    return makeCustomComponent(cons, props, parent, index)
-  }
-
-  if (prevTree._type === ZType.custom && prevTree instanceof cons) {
-    prevTree.updateWithNewProps(props)
-
-    return prevTree
-  }
-
-  removeSubComponents(parent, index)
-
-  return makeCustomComponent(cons, props, parent, index)
-}
-
-// function $<C extends Component>(
-//   cons: new (...a: never[]) => C,
-//   props: C['props']
-// ): Tree {
-//   return {
-//     _type: cons as any,
-//     props,
-//   }
-//
-//   // const [props, ...children] = args
-//   //
-//   // if (args.length === 0) {
-//   //   return {
-//   //     _type: cons as any,
-//   //     props: null,
-//   //     children: [],
-//   //   }
-//   // } else {
-//   //   if (isPropsObject(props)) {
-//   //     return {
-//   //       _type: cons as any,
-//   //       props: props as any,
-//   //       children: children as Subtree[],
-//   //     }
-//   //   } else {
-//   //     return {
-//   //       _type: cons as any,
-//   //       props: null,
-//   //       children: args as any[],
-//   //     }
-//   //   }
-//   // }
-// }
-
-// export function makeCustomComponentConstructor<C extends Component>(
-//   cons: new (...a: any[]) => C
-// ): (props: C['props']) => Tree {
-//   return props => {
-//     return {
-//       _type: cons as any,
-//       props,
-//     }
-//
-//     // const [props, ...children] = args
-//     //
-//     // if (args.length === 0) {
-//     //   return {
-//     //     _type: cons as any,
-//     //     props: null,
-//     //     children: [],
-//     //   }
-//     // } else {
-//     //   if (isPropsObject(props)) {
-//     //     return {
-//     //       _type: cons as any,
-//     //       props: props as any,
-//     //       children: children as Subtree[],
-//     //     }
-//     //   } else {
-//     //     return {
-//     //       _type: cons as any,
-//     //       props: null,
-//     //       children: args as any[],
-//     //     }
-//     //   }
-//     // }
-//   }
-// }
