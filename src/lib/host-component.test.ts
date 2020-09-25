@@ -1,8 +1,9 @@
-import {div, s} from './host-components'
+import {div} from './host-components'
 import {Component} from './component-types/component'
 import {Subtree} from './component-types/base'
 import {mkRoot} from '../dom-tests/host.test'
 import {renderTree} from './render'
+import {s} from './util/style'
 
 describe('div renders', () => {
   test('no args', () => {
@@ -64,23 +65,6 @@ class A extends Component {
     return div('omg')
   }
 }
-
-describe('s - tagged style string template function', () => {
-  const text = 'width: 50px; height: 2px'
-  const style = s`width: 50px; height: 2px`
-
-  test(text, () => {
-    expect(style).toEqual(text)
-  })
-
-  test('empty string', () => {
-    expect(s``).toEqual('')
-  })
-
-  test('templates', () => {
-    expect(s`height: ${50}px; width: ${30}px`).toEqual('height: 50px; width: 30px')
-  })
-})
 
 // describe('isPropsObject', () => {
 //   test('number', () => {

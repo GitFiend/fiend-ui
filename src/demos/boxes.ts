@@ -1,7 +1,8 @@
 import {Component} from '../lib/component-types/component'
 import {render} from '../lib/render'
 import {Tree} from '../lib/component-types/base'
-import {div, s} from '../lib/host-components'
+import {div} from '../lib/host-components'
+import {s} from '../lib/util/style'
 
 const boxHeight = 14
 

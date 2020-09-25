@@ -1,8 +1,8 @@
 import {ComponentBase, ParentComponent, Subtree, Z, ZType} from '../base'
 import {removeSubComponents, renderSubtrees} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
-import {ElementNameMap} from '../../host-components'
 import {StandardProps} from '../component'
+import {ElementNameMap} from '../../host-component-types'
 
 export class HostComponent<P extends StandardProps = {}> implements ComponentBase {
   _type = ZType.host as const

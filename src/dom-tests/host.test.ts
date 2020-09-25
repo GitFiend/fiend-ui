@@ -1,7 +1,8 @@
 import {renderHost} from '../lib/component-types/host/host-component'
 import {RootNode} from '../lib/component-types/base'
 import {renderTree} from '../lib/render'
-import {div, HostAttributes} from '../lib/host-components'
+import {div} from '../lib/host-components'
+import {HostAttributes} from '../lib/host-component-types'
 
 describe('simple div', () => {
   test('render host', () => {
