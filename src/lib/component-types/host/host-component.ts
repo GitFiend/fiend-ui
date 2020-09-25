@@ -4,7 +4,7 @@ import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {StandardProps} from '../component'
 import {ElementNameMap} from '../../host-component-types'
 
-export class HostComponent<P extends StandardProps = {}> implements ComponentBase {
+export class HostComponent<P extends StandardProps = {}> implements ParentComponent {
   _type = ComponentType.host as const
   element: ElementNameMap[this['tag']]
   subComponents: {[key: string]: AnyComponent} = {}

@@ -1,6 +1,5 @@
 import {
   AnyComponent,
-  ComponentBase,
   ComponentType,
   equalProps,
   ParentComponent,
@@ -19,7 +18,7 @@ export type StandardProps = {children?: Subtree[]; key?: string}
 export type PropsWithChildren<T> = T & StandardProps
 
 // P = {} to simply prop type definitions.
-export class Component<P = {}> implements ComponentBase {
+export class Component<P = {}> implements ParentComponent {
   _type = ComponentType.custom as const
   element: Element
   subComponents: {[key: string]: AnyComponent} = {}

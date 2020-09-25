@@ -3,19 +3,14 @@ import {TextComponent} from './text-component'
 import {Component, Rec, StandardProps} from './component'
 import {removeChildren} from '../render'
 
-export type AnyComponent = HostComponent | TextComponent | Component
-export type ParentComponent = HostComponent | RootNode | Component
-
 export interface Tree<P extends StandardProps = {}> {
   _type: keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap | typeof Component
   props: P
 }
 
 export type Subtree = Tree | string | number | null
-// export type Subtrees = [Subtree] | ((Tree & {key: string}) | string | number | null)[]
 
-// const a: Subtrees = ['', '']
-// const b: Subtrees = [div({key: ''}), '']
+export type AnyComponent = HostComponent | TextComponent | Component
 
 export enum ComponentType {
   host,
@@ -26,15 +21,23 @@ export enum ComponentType {
 export interface ComponentBase {
   parent: unknown
   _type: ComponentType
+  // key: string
 
   remove(): void
 }
 
-export class RootNode implements ComponentBase {
+export interface ParentComponent extends ComponentBase {
+  order: string
+  subComponents: {[key: string]: AnyComponent}
+  element: Element
+}
+
+export class RootNode implements ParentComponent {
   _type = ComponentType.host as const
   parent: null
   subComponents: {[key: string]: AnyComponent} = {}
-  order: string = '1'
+  order = '1'
+  key = '1'
 
   constructor(public element: HTMLElement) {}
 
