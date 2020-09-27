@@ -6,7 +6,7 @@ import {
   Subtree,
   Tree,
 } from './base'
-import {removeChildren, renderSubtrees} from '../render'
+import {removeChildren, renderSubtree2, renderSubtrees} from '../render'
 import {time, timeEnd} from '../util/measure'
 
 export interface Rec {
@@ -20,15 +20,19 @@ export type PropsWithChildren<T> = T & StandardProps
 // P = {} to simply prop type definitions.
 export class Component<P = {}> implements ParentComponent {
   _type = ComponentType.custom as const
-  element: Element
-  subComponents: {[key: string]: AnyComponent} = {}
+  containerElement: Element
+  lastInserted: Element | Text | null = null
+  // subComponents = new Map<string, AnyComponent>()
+  subComponent: AnyComponent | null = null
   props: PropsWithChildren<P>
   order: string
+  key: string
 
-  constructor(props: P, public parent: ParentComponent, private index: number) {
-    this.order = this.parent.order + index
+  constructor(props: P, public parent: ParentComponent, public index: number) {
     this.props = props
-    this.element = parent.element
+    this.containerElement = parent.containerElement
+    this.order = this.parent.order + index
+    this.key = this.props.key ?? this.order
   }
 
   render(): Subtree {
@@ -41,7 +45,15 @@ export class Component<P = {}> implements ParentComponent {
     }
     const res = this.render()
 
-    this.subComponents = renderSubtrees([res], this.subComponents, this)
+    this.lastInserted = this.parent.lastInserted
+
+    if (res !== null) {
+      this.subComponent = renderSubtree2(res, this.subComponent, this, 0)
+    } else {
+      this.subComponent?.remove()
+    }
+    // this.subComponents = renderSubtrees([res], this.subComponents, this)
+
     if (__DEV__) {
       timeEnd(this.constructor.name)
     }
@@ -65,7 +77,8 @@ export class Component<P = {}> implements ParentComponent {
 
   remove(): void {
     // this.subComponents.forEach(s => s.remove())
-    removeChildren(this.subComponents)
+    // removeChildren(this.subComponents)
+    this.subComponent?.remove()
 
     this.componentWillUnmount()
   }
@@ -93,6 +106,10 @@ export function renderCustom<P extends StandardProps>(
   }
 
   if (prevTree._type === ComponentType.custom && prevTree instanceof cons) {
+    // if (index !== prevTree.index) {
+    //   //   console.log(index, prevTree.index)
+    // }
+
     prevTree.updateWithNewProps(props)
 
     return prevTree

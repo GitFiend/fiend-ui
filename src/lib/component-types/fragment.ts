@@ -1,9 +1,11 @@
 import {Component} from './component'
 import {time, timeEnd} from '../util/measure'
 import {renderSubtrees} from '../render'
-import {Subtree, Tree} from './base'
+import {AnyComponent, Subtree, Tree} from './base'
 
 class Fragment extends Component {
+  subComponents = new Map<string, AnyComponent>()
+
   update = () => {
     if (__DEV__) {
       time(this.constructor.name)
@@ -19,18 +21,15 @@ class Fragment extends Component {
       timeEnd(this.constructor.name)
     }
   }
+
+  remove() {
+    super.remove()
+
+    this.subComponents.forEach(c => c.remove())
+  }
 }
 
-// export const $F = makeCustomComponentConstructor(F)
 export const $F = (...args: Subtree[]): Tree => ({
   _type: Fragment as any,
   props: {children: args},
 })
-
-// export const $F2 = $$(
-//   class extends Component {
-//     render() {
-//       return this.props.children ?? null
-//     }
-//   }
-// )

@@ -3,7 +3,7 @@ import {TextComponent} from './text-component'
 import {Component, Rec, StandardProps} from './component'
 import {removeChildren} from '../render'
 
-export interface Tree<P extends StandardProps = {}> {
+export interface Tree<P extends StandardProps = StandardProps> {
   _type: keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap | typeof Component
   props: P
 }
@@ -21,30 +21,31 @@ export enum ComponentType {
 export interface ComponentBase {
   parent: unknown
   _type: ComponentType
-  // key: string
 
   remove(): void
 }
 
 export interface ParentComponent extends ComponentBase {
   order: string
-  subComponents: {[key: string]: AnyComponent}
-  element: Element
+  // subComponents: Map<string, AnyComponent>
+  containerElement: Element
+  lastInserted: Element | Text | null
+  key: string
 }
 
 export class RootNode implements ParentComponent {
   _type = ComponentType.host as const
   parent: null
-  subComponents: {[key: string]: AnyComponent} = {}
+  lastInserted = null
+  // subComponents = new Map<string, AnyComponent>()
   order = '1'
   key = '1'
 
-  constructor(public element: HTMLElement) {}
+  constructor(public containerElement: HTMLElement) {}
 
   remove(): void {
-    this.element.remove()
-    removeChildren(this.subComponents)
-    // this.subComponents.forEach(s => s.remove())
+    this.containerElement.remove()
+    // removeChildren(this.subComponents)
   }
 }
 

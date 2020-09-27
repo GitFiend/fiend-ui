@@ -2,39 +2,65 @@ import {AnyComponent, ComponentBase, ComponentType, ParentComponent} from './bas
 
 export class TextComponent implements ComponentBase {
   _type = ComponentType.text as const
-  element: Text
+  containerElement: Text
+  // firstElement: Text
 
-  constructor(public text: string, public parent: ParentComponent) {
-    this.element = document.createTextNode(text)
-    parent.element.appendChild(this.element)
+  constructor(public text: string, public parent: ParentComponent, public index: number) {
+    this.containerElement = document.createTextNode(text)
+    // this.firstElement = this.containerElement
+
+    // const siblingEl = sibling?.firstElement ?? null
+    parent.containerElement.insertBefore(this.containerElement, parent.lastInserted)
+    parent.lastInserted = this.containerElement
+
+    // if (sibling === null) {
+    //   parent.containerElement.appendChild(this.containerElement)
+    // } else {
+    //   parent.containerElement.insertBefore(
+    //     this.containerElement,
+    //     sibling.containerElement
+    //   )
+    // }
   }
 
   remove(): void {
-    this.element.remove()
+    this.containerElement.remove()
   }
 }
 
 export function renderTextComponent(
   text: string,
   prevTree: AnyComponent | null,
-  parent: ParentComponent
-  // index: number
+  parent: ParentComponent,
+  index: number
 ): TextComponent {
   if (prevTree === null) {
-    return new TextComponent(text, parent)
+    return new TextComponent(text, parent, index)
   }
 
   if (prevTree._type === ComponentType.text) {
-    if (prevTree.text === text) return prevTree
-    else {
-      prevTree.element.nodeValue = text
+    if (index !== prevTree.index) {
+      // const siblingEl = sibling?.firstElement ?? null
+      parent.containerElement.insertBefore(prevTree.containerElement, parent.lastInserted)
+      parent.lastInserted = prevTree.containerElement
+    }
+    // if (sibling === null) {
+    //   parent.containerElement.appendChild(prevTree.containerElement)
+    // } else {
+    //   parent.containerElement.insertBefore(
+    //     prevTree.containerElement,
+    //     sibling.containerElement
+    //   )
+    // }
+    if (prevTree.text === text) {
+      return prevTree
+    } else {
+      prevTree.containerElement.nodeValue = text
       prevTree.text = text
       return prevTree
     }
   }
 
-  // removeSubComponents(parent, index)
   prevTree.remove()
-
-  return new TextComponent(text, parent)
+  return new TextComponent(text, parent, index)
 }

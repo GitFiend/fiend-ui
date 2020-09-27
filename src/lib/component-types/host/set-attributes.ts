@@ -54,6 +54,7 @@ function setAttribute(
   //   ;(element as any)[attr] = value
   // }
   switch (attr) {
+    case 'key':
     case 'children':
       break
     case 'className':

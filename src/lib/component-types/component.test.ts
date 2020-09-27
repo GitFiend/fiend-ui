@@ -9,11 +9,11 @@ describe('component', () => {
 
     const t = renderTree(A.$({ok: true}), null, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div>OK</div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div>OK</div>`)
 
     renderTree(A.$({ok: false}), t, root, 0)
 
-    expect(root.element.innerHTML).toEqual(``)
+    expect(root.containerElement.innerHTML).toEqual(``)
   })
 })
 
@@ -45,3 +45,47 @@ describe('quick static test', () => {
     expect(b.n).toEqual(6)
   })
 })
+
+// describe('retrieve first element', () => {
+//   test('single child', () => {
+//     class Div extends Component {
+//       render() {
+//         return div({children: this.props.children, className: 'Div'})
+//       }
+//     }
+//
+//     const root = mkRoot()
+//     const cmp = renderTree(
+//       Div.$({children: [div({children: ['a'], className: 'a'})]}),
+//       null,
+//       null,
+//       root,
+//       0
+//     )
+//
+//     const el = cmp.firstElement as HTMLDivElement
+//
+//     expect(el.className).toEqual('Div')
+//   })
+//
+//   test('single child nested', () => {
+//     class Div extends Component {
+//       render() {
+//         return Div2.$({})
+//       }
+//     }
+//
+//     class Div2 extends Component {
+//       render() {
+//         return div({children: this.props.children, className: 'Div'})
+//       }
+//     }
+//
+//     const root = mkRoot()
+//     const cmp = renderTree(Div.$({}), null, null, root, 0)
+//
+//     const el = cmp.firstElement as HTMLDivElement
+//
+//     expect(el.className).toEqual('Div')
+//   })
+// })

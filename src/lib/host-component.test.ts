@@ -55,7 +55,7 @@ describe('div renders', () => {
 
     renderTree(A.$({}), null, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div>omg</div>`)
   })
 })
 

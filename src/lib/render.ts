@@ -5,13 +5,13 @@ import {
   Subtree,
   Tree,
 } from './component-types/base'
-import {renderHost} from './component-types/host/host-component'
+import {HostComponent, renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
-import {renderCustom} from './component-types/component'
+import {Component, renderCustom} from './component-types/component'
 
 class RenderManager {
   rootNode: RootNode | null = null
-  component: AnyComponent | null = null
+  component: HostComponent | Component | null = null
   target: HTMLElement | null = null
 
   render(tree: Tree, target: HTMLElement) {
@@ -26,9 +26,8 @@ class RenderManager {
   }
 
   clear() {
-    if (this.rootNode !== null) {
-      removeChildren(this.rootNode.subComponents)
-    }
+    this.component?.remove()
+
     // this.rootNode?.subComponents.forEach(c => c.remove())
   }
 }
@@ -38,10 +37,6 @@ const renderManager = new RenderManager()
 export function render(tree: Tree | null, target: HTMLElement): void {
   if (tree === null) renderManager.clear()
   else renderManager.render(tree, target)
-
-  // const root = new RootNode(target)
-  //
-  // renderTree(tree, null, root, 0)
 }
 
 export function renderTree(
@@ -49,7 +44,7 @@ export function renderTree(
   prevTree: AnyComponent | null,
   parent: ParentComponent,
   index: number
-): AnyComponent {
+): HostComponent | Component {
   const {_type, props} = tree
 
   if (typeof _type === 'string') {
@@ -59,43 +54,28 @@ export function renderTree(
   }
 }
 
-function renderSubtree(
-  subtree: Tree | string | number,
-  prevTree: AnyComponent | null,
-  parent: ParentComponent,
-  index: number
-): AnyComponent {
-  // if (subtree === null) {
-  //   // removeSubComponents(parent, index)
-  //   return null
-  // }
-  if (typeof subtree === 'string') {
-    return renderTextComponent(subtree, prevTree, parent)
-  } else if (typeof subtree === 'number') {
-    return renderTextComponent(subtree.toString(), prevTree, parent)
-  } else {
-    return renderTree(subtree, prevTree, parent, index)
-  }
-}
-
 export function renderSubtrees(
   children: Subtree[],
-  prevChildren: {[key: string]: AnyComponent},
+  prevChildren: Map<string, AnyComponent>,
   parent: ParentComponent
-): {[key: string]: AnyComponent} {
-  const newChildren: {[key: string]: AnyComponent} = {}
+): Map<string, AnyComponent> {
+  const newChildren = new Map<string, AnyComponent>()
 
-  for (let i = 0; i < children.length; i++) {
+  const len = children.length - 1
+
+  for (let i = len; i >= 0; i--) {
     const child = children[i]
 
     if (child !== null) {
-      const s = renderSubtree(child, prevChildren[i] ?? null, parent, i)
+      renderSubtree(child, prevChildren, newChildren, parent, i)
+
+      // const s = renderSubtree2(child, prevChildren.get(child.key) ?? null, parent, i)
 
       // if (s !== null) {
       // newChildren.push(s)
-      delete prevChildren[i]
+      // delete prevChildren[i]
 
-      newChildren[i] = s
+      // newChildren[i] = s
       // }
     }
   }
@@ -103,27 +83,61 @@ export function renderSubtrees(
   removeChildren(prevChildren)
   // if (prevChildren.length > 0) removeSubComponents(parent, newChildren.length)
 
+  // console.log(newChildren)
+
   return newChildren
 }
 
-export function removeChildren(children: {[key: string]: AnyComponent}): void {
-  for (const c in children) {
-    children[c as keyof typeof children].remove()
+// Mutates prevChildren and newChildren
+function renderSubtree(
+  subtree: Tree | string | number,
+  prevChildren: Map<string, AnyComponent>,
+  newChildren: Map<string, AnyComponent>,
+  parent: ParentComponent,
+  index: number
+): AnyComponent {
+  if (typeof subtree === 'string') {
+    const s = renderTextComponent(
+      subtree,
+      prevChildren.get(subtree) ?? null,
+      parent,
+      index
+    )
+    prevChildren.delete(subtree)
+    newChildren.set(subtree, s)
+    return s
+  }
+
+  if (typeof subtree === 'number') {
+    const text = subtree.toString()
+    const s = renderTextComponent(text, prevChildren.get(text) ?? null, parent, index)
+    prevChildren.delete(text)
+    newChildren.set(text, s)
+    return s
+  }
+
+  const key: string = subtree.props.key ?? index.toString()
+  const s = renderTree(subtree, prevChildren.get(key) ?? null, parent, index)
+  prevChildren.delete(key)
+  newChildren.set(key, s)
+  return s
+}
+
+export function renderSubtree2(
+  subtree: Tree | string | number,
+  prevTree: AnyComponent | null,
+  parent: ParentComponent,
+  index: number
+): AnyComponent {
+  if (typeof subtree === 'string') {
+    return renderTextComponent(subtree, prevTree, parent, index)
+  } else if (typeof subtree === 'number') {
+    return renderTextComponent(subtree.toString(), prevTree, parent, index)
+  } else {
+    return renderTree(subtree, prevTree, parent, index)
   }
 }
 
-// export function removeSubComponents(parent: ParentComponent, index: number): void {
-//   switch (parent._type) {
-//     case ComponentType.custom:
-//     case ComponentType.host:
-//       const siblings: AnyComponent[] = parent.subComponents
-//       const len = siblings.length
-//
-//       for (let i = index; i < len; i++) {
-//         siblings[i].remove()
-//       }
-//
-//       if (siblings.length > index) siblings.length = index
-//       break
-//   }
-// }
+export function removeChildren(children: Map<string, AnyComponent>): void {
+  for (const [, c] of children) c.remove()
+}

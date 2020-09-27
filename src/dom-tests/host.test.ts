@@ -10,7 +10,7 @@ describe('simple div', () => {
 
     renderHost('div', {}, root, null, 0)
 
-    expect(root.element.innerHTML).toEqual('<div></div>')
+    expect(root.containerElement.innerHTML).toEqual('<div></div>')
   })
 
   test('update div', () => {
@@ -18,7 +18,7 @@ describe('simple div', () => {
 
     const host = renderHost('div', {}, root, null, 0)
 
-    expect(root.element.innerHTML).toEqual('<div></div>')
+    expect(root.containerElement.innerHTML).toEqual('<div></div>')
 
     const host2 = renderHost<HostAttributes<'div'>>(
       'div',
@@ -28,11 +28,11 @@ describe('simple div', () => {
       0
     )
 
-    expect(root.element.innerHTML).toEqual(`<div class="simple"></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div class="simple"></div>`)
 
     renderHost('div', {}, root, host2, 0)
 
-    expect(root.element.innerHTML).toEqual('<div></div>')
+    expect(root.containerElement.innerHTML).toEqual('<div></div>')
   })
 
   test('remove child on next render', () => {
@@ -42,13 +42,13 @@ describe('simple div', () => {
 
     const divs = renderTree(h, null, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
     const h2 = div({children: [div('a')]})
 
     renderTree(h2, divs, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div></div>`)
   })
 
   test('remove child on next render2', () => {
@@ -56,11 +56,11 @@ describe('simple div', () => {
 
     const divs = renderTree(div({children: [div('a'), div('b')]}), null, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
     renderTree(div({children: [div('a')]}), divs, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div></div>`)
   })
 })
 

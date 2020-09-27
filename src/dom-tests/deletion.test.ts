@@ -13,19 +13,19 @@ describe('deletion of custom component', () => {
 
     const divs = renderTree(c, null, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
     const c2 = C.$({children: [div('a')]})
 
     const divs2 = renderTree(c2, divs, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div></div>`)
 
     const c3 = C.$({children: [div('a'), div('b')]})
 
     renderTree(c3, divs2, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
   })
 
   test('custom inside custom', () => {
@@ -35,19 +35,43 @@ describe('deletion of custom component', () => {
 
     let divs = renderTree(c, null, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
     c = C.$({children: [C.$({children: ['a']})]})
 
     divs = renderTree(c, divs, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div></div>`)
 
     c = C.$({children: [C.$({children: ['a']}), C.$({children: ['b']})]})
 
     renderTree(c, divs, root, 0)
 
-    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+  })
+
+  test('custom inside custom with keys', () => {
+    const root = mkRoot()
+
+    let c = C.$({
+      children: [C.$({children: ['a'], key: 'a'}), C.$({children: ['b'], key: 'b'})],
+    })
+
+    let divs = renderTree(c, null, root, 0)
+
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+
+    c = C.$({children: [C.$({children: ['a']})]})
+
+    divs = renderTree(c, divs, root, 0)
+
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div></div>`)
+
+    c = C.$({children: [C.$({children: ['a']}), C.$({children: ['b']})]})
+
+    renderTree(c, divs, root, 0)
+
+    expect(root.containerElement.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
   })
 
   // xtest('complex', () => {
