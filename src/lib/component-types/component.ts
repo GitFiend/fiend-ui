@@ -20,18 +20,23 @@ export type PropsWithChildren<T> = T & StandardProps
 // P = {} to simply prop type definitions.
 export class Component<P = {}> implements ParentComponent {
   _type = ComponentType.custom as const
-  containerElement: Element
-  lastInserted: Element | Text | null = null
+  containerElement: Element | null = null
+  // lastInserted: Element | Text | null = null
   // subComponents = new Map<string, AnyComponent>()
   subComponent: AnyComponent | null = null
   props: PropsWithChildren<P>
   order: string
   key: string
 
-  constructor(props: P, public parent: ParentComponent, public index: number) {
+  constructor(
+    props: P,
+    // public parent: ParentComponent,
+    public index: number,
+    parentOrder: string
+  ) {
     this.props = props
-    this.containerElement = parent.containerElement
-    this.order = this.parent.order + index
+    // this.containerElement = parent.containerElement
+    this.order = parentOrder + index
     this.key = this.props.key ?? this.order
   }
 
@@ -45,7 +50,7 @@ export class Component<P = {}> implements ParentComponent {
     }
     const res = this.render()
 
-    this.lastInserted = this.parent.lastInserted
+    // this.lastInserted = this.parent.lastInserted
 
     if (res !== null) {
       this.subComponent = renderSubtree2(res, this.subComponent, this, 0)
@@ -127,7 +132,7 @@ function makeCustomComponent<P extends StandardProps>(
   parent: ParentComponent,
   index: number
 ) {
-  const component = new cons<P>(props, parent, index)
+  const component = new cons<P>(props, index, parent.order)
   component.mount()
 
   return component

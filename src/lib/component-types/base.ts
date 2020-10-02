@@ -19,7 +19,7 @@ export enum ComponentType {
 }
 
 export interface ComponentBase {
-  parent: unknown
+  // parent: unknown
   _type: ComponentType
 
   remove(): void
@@ -28,8 +28,8 @@ export interface ComponentBase {
 export interface ParentComponent extends ComponentBase {
   order: string
   // subComponents: Map<string, AnyComponent>
-  containerElement: Element
-  lastInserted: Element | Text | null
+  // containerElement: Element
+  // lastInserted: Element | Text | null
   key: string
 }
 

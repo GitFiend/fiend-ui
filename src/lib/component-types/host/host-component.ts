@@ -1,8 +1,9 @@
-import {AnyComponent, ComponentType, ParentComponent} from '../base'
-import {removeChildren, renderSubtrees} from '../../render'
+import {AnyComponent, ComponentType, ParentComponent, Subtree, Tree} from '../base'
+import {removeChildren, renderSubtrees, renderTree} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {StandardProps} from '../component'
 import {ElementNameMap} from '../../host-component-types'
+import {renderTextComponent} from '../text-component'
 
 // TODO: Untested performance optimisation.
 const emptyMap = new Map<string, AnyComponent>()
@@ -18,29 +19,81 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
   constructor(
     public tag: keyof ElementNameMap,
     public props: P,
-    public parent: ParentComponent,
-    public index: number
+    // public parent: ParentComponent,
+    public index: number,
+    parentOrder: string
   ) {
-    this.order = this.parent.order + index
+    this.order = parentOrder + index
     this.key = this.props.key ?? this.order
 
     this.containerElement = document.createElement(tag) as ElementNameMap[this['tag']]
 
     setAttributesFromProps(this.containerElement, props)
 
-    // parent.element.insertAdjacentElement()
-
-    // parent.element.appendChild(this.element)
-    // const siblingEl = sibling?.firstElement ?? null
-
-    // if (siblingEl === null) {
-    //   parent.containerElement.appendChild(this.containerElement)
-    // } else {
-    parent.containerElement.insertBefore(this.containerElement, parent.lastInserted)
-    parent.lastInserted = this.containerElement
+    // parent.containerElement.insertBefore(this.containerElement, parent.lastInserted)
+    // parent.lastInserted = this.containerElement
     // }
 
     this.subComponents = renderSubtrees(props.children ?? [], emptyMap, this)
+  }
+
+  insert(component: AnyComponent) {
+    //
+    component.containerElement
+  }
+
+  renderSubtrees(
+    children: Subtree[],
+    prevChildren: Map<string, AnyComponent>
+    // parent: HostComponent
+  ): Map<string, AnyComponent> {
+    const newChildren = new Map<string, AnyComponent>()
+
+    const len = children.length - 1
+
+    for (let i = len; i >= 0; i--) {
+      const child = children[i]
+
+      if (child !== null) {
+        this.insert(this.renderSubtree(child, prevChildren, newChildren, i))
+      }
+    }
+    removeChildren(prevChildren)
+    return newChildren
+  }
+
+  renderSubtree(
+    subtree: Tree | string | number,
+    prevChildren: Map<string, AnyComponent>,
+    newChildren: Map<string, AnyComponent>,
+    // parent: ParentComponent,
+    index: number
+  ): AnyComponent {
+    if (typeof subtree === 'string') {
+      const s = renderTextComponent(
+        subtree,
+        prevChildren.get(subtree) ?? null,
+        parent,
+        index
+      )
+      prevChildren.delete(subtree)
+      newChildren.set(subtree, s)
+      return s
+    }
+
+    if (typeof subtree === 'number') {
+      const text = subtree.toString()
+      const s = renderTextComponent(text, prevChildren.get(text) ?? null, parent, index)
+      prevChildren.delete(text)
+      newChildren.set(text, s)
+      return s
+    }
+
+    const key: string = subtree.props.key ?? index.toString()
+    const s = renderTree(subtree, prevChildren.get(key) ?? null, parent, index)
+    prevChildren.delete(key)
+    newChildren.set(key, s)
+    return s
   }
 
   remove(): void {
@@ -55,31 +108,22 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
 export function renderHost<P extends StandardProps = {}>(
   tag: keyof ElementNameMap,
   props: P,
-  parent: ParentComponent,
+  // parent: ParentComponent,
   prevTree: AnyComponent | null,
-  index: number
+  index: number,
+  parentOrder: string
 ): HostComponent {
   if (prevTree === null) {
-    return new HostComponent(tag, props, parent, index)
+    return new HostComponent(tag, props, index, parentOrder)
   }
 
   if (prevTree._type === ComponentType.host && prevTree.tag === tag) {
-    if (index !== prevTree.index) {
-      // const siblingEl = sibling?.firstElement ?? null
-      parent.containerElement.insertBefore(prevTree.containerElement, parent.lastInserted)
-      parent.lastInserted = prevTree.containerElement
+    // if (index !== prevTree.index) {
+    // parent.containerElement.insertBefore(prevTree.containerElement, parent.lastInserted)
+    // parent.lastInserted = prevTree.containerElement
+    prevTree.index = index
+    // }
 
-      // if (sibling === null) {
-      //   parent.containerElement.appendChild(prevTree.containerElement)
-      // } else {
-      //   parent.containerElement.insertBefore(
-      //     prevTree.containerElement,
-      //     sibling.containerElement
-      //   )
-      // }
-      prevTree.index = index
-      // console.log(index, prevTree.index)
-    }
     updateAttributes(prevTree.containerElement, props, prevTree.props)
 
     prevTree.props = props
@@ -94,6 +138,6 @@ export function renderHost<P extends StandardProps = {}>(
     // Type has changed. Remove it.
     prevTree.remove()
     // removeSubComponents(parent, index)
-    return new HostComponent(tag, props, parent, index)
+    return new HostComponent(tag, props, index, parentOrder)
   }
 }

@@ -57,7 +57,7 @@ export function renderTree(
 export function renderSubtrees(
   children: Subtree[],
   prevChildren: Map<string, AnyComponent>,
-  parent: ParentComponent
+  parent: HostComponent
 ): Map<string, AnyComponent> {
   const newChildren = new Map<string, AnyComponent>()
 
