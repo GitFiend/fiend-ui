@@ -11,7 +11,6 @@ export class $Component<P extends {} = {}> extends Component<P>
 
   mount() {
     this.run()
-
     this.componentDidMount()
   }
 

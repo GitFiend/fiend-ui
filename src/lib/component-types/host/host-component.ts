@@ -18,7 +18,6 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
   constructor(
     public tag: keyof ElementNameMap,
     public props: P,
-    // public parent: ParentComponent,
     parentOrder: string,
     public index: number
   ) {
@@ -28,10 +27,6 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     this.element = document.createElement(tag) as ElementNameMap[this['tag']]
 
     setAttributesFromProps(this.element, props)
-
-    // parent.containerElement.insertBefore(this.containerElement, parent.lastInserted)
-    // parent.lastInserted = this.containerElement
-    // }
 
     this.subComponents = this.renderSubtrees(props.children ?? [], emptyMap, this.order)
   }
@@ -110,7 +105,6 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     this.element.remove()
 
     removeChildren(this.subComponents)
-    // for (const c of this.subComponents) c.remove()
   }
 }
 
@@ -127,11 +121,7 @@ export function renderHost<P extends StandardProps = {}>(
   }
 
   if (prevTree._type === ComponentType.host && prevTree.tag === tag) {
-    // if (index !== prevTree.index) {
-    // parent.containerElement.insertBefore(prevTree.containerElement, parent.lastInserted)
-    // parent.lastInserted = prevTree.containerElement
     prevTree.index = index
-    // }
 
     updateAttributes(prevTree.element, props, prevTree.props)
 
@@ -146,7 +136,7 @@ export function renderHost<P extends StandardProps = {}>(
   } else {
     // Type has changed. Remove it.
     prevTree.remove()
-    // removeSubComponents(parent, index)
+
     return new HostComponent(tag, props, parentOrder, index)
   }
 }

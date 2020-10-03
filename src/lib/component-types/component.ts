@@ -76,7 +76,7 @@ export class Component<P = {}> implements ParentComponent {
 
   remove(): void {
     this.subComponent?.remove()
-
+    this.subComponent = null
     this.componentWillUnmount()
   }
 
