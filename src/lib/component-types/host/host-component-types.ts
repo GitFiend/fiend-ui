@@ -1,5 +1,5 @@
-import {RefObject} from './util/ref'
-import {Subtree, Tree} from './component-types/base'
+import {RefObject} from '../../util/ref'
+import {Subtree, Tree} from '../base'
 
 type DataPropertyNames<T> = {
   [K in keyof T]: T[K] extends Function ? never : K

@@ -1,8 +1,7 @@
 import {div} from './host-components'
-import {Component} from './component-types/component'
-import {Subtree} from './component-types/base'
-import {mkRoot} from '../dom-tests/host.test'
-import {renderTree} from './render'
+import {Component} from '../component'
+import {Subtree} from '../base'
+import {mkRoot} from '../../../dom-tests/host.test'
 
 describe('div renders', () => {
   test('no args', () => {
@@ -50,12 +49,20 @@ describe('div renders', () => {
     })
   })
 
+  test('render to dom', () => {
+    const root = mkRoot()
+
+    root.render(div({children: ['omg']}))
+
+    expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
+  })
+
   test('custom component', () => {
     const root = mkRoot()
 
-    renderTree(A.$({}), null, root, 0)
+    root.render(A.$({}))
 
-    expect(root.containerElement.innerHTML).toEqual(`<div>omg</div>`)
+    expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
   })
 })
 

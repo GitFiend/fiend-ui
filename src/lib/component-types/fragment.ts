@@ -1,8 +1,9 @@
 import {Component} from './component'
 import {time, timeEnd} from '../util/measure'
 import {renderSubtrees} from '../render'
-import {AnyComponent, Subtree, Tree} from './base'
+import {AnyComponent, ComponentType, Subtree, Tree} from './base'
 
+// TODO: Maybe this shouldn't extend Component.
 class Fragment extends Component {
   subComponents = new Map<string, AnyComponent>()
 
@@ -14,12 +15,31 @@ class Fragment extends Component {
     this.subComponents = renderSubtrees(
       this.props.children ?? [],
       this.subComponents,
-      this
+      this.order
     )
 
     if (__DEV__) {
       timeEnd(this.constructor.name)
     }
+  }
+
+  // TODO: Is this returning elements in the correct order?
+  get elements(): (Element | Text)[] {
+    const elements: (Element | Text)[] = []
+
+    for (const [, c] of this.subComponents) {
+      switch (c._type) {
+        case ComponentType.host:
+        case ComponentType.text:
+          elements.push(c.element)
+          break
+        case ComponentType.custom:
+          elements.push(...c.elements)
+          break
+      }
+    }
+
+    return elements
   }
 
   remove() {

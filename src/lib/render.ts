@@ -1,17 +1,10 @@
-import {
-  AnyComponent,
-  ParentComponent,
-  RootNode,
-  Subtree,
-  Tree,
-} from './component-types/base'
+import {AnyComponent, RootNode, Subtree, Tree} from './component-types/base'
 import {HostComponent, renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {Component, renderCustom} from './component-types/component'
 
 class RenderManager {
   rootNode: RootNode | null = null
-  component: HostComponent | Component | null = null
   target: HTMLElement | null = null
 
   render(tree: Tree, target: HTMLElement) {
@@ -22,13 +15,12 @@ class RenderManager {
       this.rootNode = new RootNode(target)
     }
 
-    this.component = renderTree(tree, this.component, this.rootNode, 0)
+    this.rootNode.render(tree)
   }
 
   clear() {
-    this.component?.remove()
-
-    // this.rootNode?.subComponents.forEach(c => c.remove())
+    this.rootNode?.remove()
+    this.rootNode = null
   }
 }
 
@@ -42,22 +34,22 @@ export function render(tree: Tree | null, target: HTMLElement): void {
 export function renderTree(
   tree: Tree,
   prevTree: AnyComponent | null,
-  parent: ParentComponent,
+  parentOrder: string,
   index: number
 ): HostComponent | Component {
   const {_type, props} = tree
 
   if (typeof _type === 'string') {
-    return renderHost(_type, props, parent, prevTree, index)
+    return renderHost(_type, props, prevTree, parentOrder, index)
   } else {
-    return renderCustom(_type, props, parent, prevTree, index)
+    return renderCustom(_type, props, prevTree, parentOrder, index)
   }
 }
 
 export function renderSubtrees(
   children: Subtree[],
   prevChildren: Map<string, AnyComponent>,
-  parent: ParentComponent
+  parentOrder: string
 ): Map<string, AnyComponent> {
   const newChildren = new Map<string, AnyComponent>()
 
@@ -67,23 +59,11 @@ export function renderSubtrees(
     const child = children[i]
 
     if (child !== null) {
-      renderSubtree(child, prevChildren, newChildren, parent, i)
-
-      // const s = renderSubtree2(child, prevChildren.get(child.key) ?? null, parent, i)
-
-      // if (s !== null) {
-      // newChildren.push(s)
-      // delete prevChildren[i]
-
-      // newChildren[i] = s
-      // }
+      renderSubtree(child, prevChildren, newChildren, parentOrder, i)
     }
   }
 
   removeChildren(prevChildren)
-  // if (prevChildren.length > 0) removeSubComponents(parent, newChildren.length)
-
-  // console.log(newChildren)
 
   return newChildren
 }
@@ -93,16 +73,11 @@ function renderSubtree(
   subtree: Tree | string | number,
   prevChildren: Map<string, AnyComponent>,
   newChildren: Map<string, AnyComponent>,
-  parent: ParentComponent,
+  parentOrder: string,
   index: number
 ): AnyComponent {
   if (typeof subtree === 'string') {
-    const s = renderTextComponent(
-      subtree,
-      prevChildren.get(subtree) ?? null,
-      parent,
-      index
-    )
+    const s = renderTextComponent(subtree, prevChildren.get(subtree) ?? null, index)
     prevChildren.delete(subtree)
     newChildren.set(subtree, s)
     return s
@@ -110,14 +85,14 @@ function renderSubtree(
 
   if (typeof subtree === 'number') {
     const text = subtree.toString()
-    const s = renderTextComponent(text, prevChildren.get(text) ?? null, parent, index)
+    const s = renderTextComponent(text, prevChildren.get(text) ?? null, index)
     prevChildren.delete(text)
     newChildren.set(text, s)
     return s
   }
 
   const key: string = subtree.props.key ?? index.toString()
-  const s = renderTree(subtree, prevChildren.get(key) ?? null, parent, index)
+  const s = renderTree(subtree, prevChildren.get(key) ?? null, parentOrder, index)
   prevChildren.delete(key)
   newChildren.set(key, s)
   return s
@@ -126,15 +101,15 @@ function renderSubtree(
 export function renderSubtree2(
   subtree: Tree | string | number,
   prevTree: AnyComponent | null,
-  parent: ParentComponent,
+  parentOrder: string,
   index: number
 ): AnyComponent {
   if (typeof subtree === 'string') {
-    return renderTextComponent(subtree, prevTree, parent, index)
+    return renderTextComponent(subtree, prevTree, index)
   } else if (typeof subtree === 'number') {
-    return renderTextComponent(subtree.toString(), prevTree, parent, index)
+    return renderTextComponent(subtree.toString(), prevTree, index)
   } else {
-    return renderTree(subtree, prevTree, parent, index)
+    return renderTree(subtree, prevTree, parentOrder, index)
   }
 }
 

@@ -1,7 +1,7 @@
 import {HTMLAttributes} from 'react'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {Rec} from '../component'
-import {button} from '../../host-components'
+import {button} from './host-components'
 import {render} from '../../render'
 
 describe('setAttributesFromProps', () => {

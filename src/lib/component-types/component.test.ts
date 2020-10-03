@@ -1,19 +1,18 @@
 import {Component} from './component'
 import {mkRoot} from '../../dom-tests/host.test'
-import {renderTree} from '../render'
-import {div} from '../host-components'
+import {div} from './host/host-components'
 
 describe('component', () => {
   test('null in render should remove previous elements', () => {
     const root = mkRoot()
 
-    const t = renderTree(A.$({ok: true}), null, root, 0)
+    root.render(A.$({ok: true}))
 
-    expect(root.containerElement.innerHTML).toEqual(`<div>OK</div>`)
+    expect(root.element.innerHTML).toEqual(`<div>OK</div>`)
 
-    renderTree(A.$({ok: false}), t, root, 0)
+    root.render(A.$({ok: false}))
 
-    expect(root.containerElement.innerHTML).toEqual(``)
+    expect(root.element.innerHTML).toEqual(``)
   })
 })
 

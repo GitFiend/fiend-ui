@@ -3,7 +3,7 @@ import {render} from '../lib/render'
 import {screen} from '@testing-library/dom'
 import {$Val} from '../lib/observables/observable'
 import {$Component} from '../lib/observables/$-component'
-import {div} from '../lib/host-components'
+import {div} from '../lib/component-types/host/host-components'
 
 export function sleep(ms: number) {
   return new Promise(resolve => {

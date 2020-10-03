@@ -1,7 +1,7 @@
 import {Component} from '../lib/component-types/component'
 import {createRef} from '../lib/util/ref'
 import {render} from '../lib/render'
-import {canvas} from '../lib/host-components'
+import {canvas} from '../lib/component-types/host/host-components'
 import {s} from '../lib/util/style'
 
 interface TextCanvasProps {

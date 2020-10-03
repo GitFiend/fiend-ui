@@ -1,7 +1,7 @@
 import {HostComponent} from './host/host-component'
 import {TextComponent} from './text-component'
-import {Component, Rec, StandardProps} from './component'
-import {removeChildren} from '../render'
+import {Component, StandardProps} from './component'
+import {renderTree} from '../render'
 
 export interface Tree<P extends StandardProps = StandardProps> {
   _type: keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap | typeof Component
@@ -19,7 +19,6 @@ export enum ComponentType {
 }
 
 export interface ComponentBase {
-  parent: unknown
   _type: ComponentType
 
   remove(): void
@@ -27,40 +26,44 @@ export interface ComponentBase {
 
 export interface ParentComponent extends ComponentBase {
   order: string
-  // subComponents: Map<string, AnyComponent>
-  containerElement: Element
-  lastInserted: Element | Text | null
   key: string
 }
 
 export class RootNode implements ParentComponent {
   _type = ComponentType.host as const
-  parent: null
-  lastInserted = null
-  // subComponents = new Map<string, AnyComponent>()
+  component: AnyComponent | null = null
   order = '1'
   key = '1'
 
-  constructor(public containerElement: HTMLElement) {}
+  constructor(public element: HTMLElement) {}
+
+  render(tree: Tree) {
+    const component = renderTree(tree, this.component, this.order, 0)
+
+    this.component = component
+    let prevElement: Element | Text | null = null
+
+    switch (component._type) {
+      case ComponentType.host:
+        const {element} = component
+
+        this.element.insertBefore(element, prevElement)
+        prevElement = element
+
+        break
+      case ComponentType.custom:
+        const {elements} = component
+
+        for (const element of elements) {
+          this.element.insertBefore(element, prevElement)
+          prevElement = element
+        }
+        break
+    }
+  }
 
   remove(): void {
-    this.containerElement.remove()
-    // removeChildren(this.subComponents)
+    this.component?.remove()
+    this.component = null
   }
-}
-
-export function equalProps(a: Rec, b: Rec): boolean {
-  const aKeys = Object.keys(a)
-  const bKeys = Object.keys(b)
-
-  if (aKeys.length !== bKeys.length) return false
-
-  // We should only need to loop over aKeys since the length must be the same.
-  for (const key of aKeys) if (a[key] !== b[key]) return false
-
-  return true
-}
-
-export function last<T>(array: T[]): T | undefined {
-  return array[array.length - 1]
 }

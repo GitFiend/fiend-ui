@@ -1,4 +1,4 @@
-import {Subtree, Tree} from './component-types/base'
+import {Subtree, Tree} from '../base'
 import {
   makeHtmlElementConstructor,
   makeSvgElementConstructor,

@@ -1,4 +1,4 @@
-import {div, h1, p} from './host-components'
+import {div, h1, p} from './component-types/host/host-components'
 
 // const numLoops = 300000
 
