@@ -1,4 +1,4 @@
-import {AnyComponent, RootNode, Tree} from './component-types/base'
+import {AnyComponent, ParentComponent, RootNode, Tree} from './component-types/base'
 import {HostComponent, renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {Component, renderCustom} from './component-types/component'
@@ -34,30 +34,30 @@ export function render(tree: Tree | null, target: HTMLElement): void {
 export function renderTree(
   tree: Tree,
   prevTree: AnyComponent | null,
-  parentOrder: string,
+  parent: ParentComponent,
   index: number
 ): HostComponent | Component {
   const {_type, props} = tree
 
   if (typeof _type === 'string') {
-    return renderHost(_type, props, prevTree, parentOrder, index)
+    return renderHost(_type, props, prevTree, parent, index)
   } else {
-    return renderCustom(_type, props, prevTree, parentOrder, index)
+    return renderCustom(_type, props, prevTree, parent, index)
   }
 }
 
 export function renderSubtree2(
   subtree: Tree | string | number,
   prevTree: AnyComponent | null,
-  parentOrder: string,
+  parent: ParentComponent,
   index: number
 ): AnyComponent {
   if (typeof subtree === 'string') {
-    return renderTextComponent(subtree, prevTree, index)
+    return renderTextComponent(subtree, prevTree, parent, index)
   } else if (typeof subtree === 'number') {
-    return renderTextComponent(subtree.toString(), prevTree, index)
+    return renderTextComponent(subtree.toString(), prevTree, parent, index)
   } else {
-    return renderTree(subtree, prevTree, parentOrder, index)
+    return renderTree(subtree, prevTree, parent, index)
   }
 }
 

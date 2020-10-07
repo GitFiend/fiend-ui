@@ -1,6 +1,6 @@
 import {Component} from './component'
 import {time, timeEnd} from '../util/measure'
-import {AnyComponent, ComponentType, Subtree, Tree} from './base'
+import {AnyComponent, ComponentType, ParentComponent, Subtree, Tree} from './base'
 import {renderTextComponent} from './text-component'
 import {removeChildren, renderTree} from '../render'
 
@@ -16,12 +16,16 @@ class Fragment extends Component {
     this.subComponents = renderSubtrees(
       this.props.children ?? [],
       this.subComponents,
-      this.order
+      this.parent
     )
 
     if (__DEV__) {
       timeEnd(this.constructor.name)
     }
+  }
+
+  get element(): Element | Text | null {
+    return this.elements[0] ?? null
   }
 
   // TODO: Is this returning elements in the correct order?
@@ -53,7 +57,7 @@ class Fragment extends Component {
 function renderSubtrees(
   children: Subtree[],
   prevChildren: Map<string, AnyComponent>,
-  parentOrder: string
+  parent: ParentComponent
 ): Map<string, AnyComponent> {
   const newChildren = new Map<string, AnyComponent>()
 
@@ -63,7 +67,7 @@ function renderSubtrees(
     const child = children[i]
 
     if (child !== null) {
-      renderSubtree(child, prevChildren, newChildren, parentOrder, i)
+      renderSubtree(child, prevChildren, newChildren, parent, i)
     }
   }
 
@@ -77,11 +81,16 @@ function renderSubtree(
   subtree: Tree | string | number,
   prevChildren: Map<string, AnyComponent>,
   newChildren: Map<string, AnyComponent>,
-  parentOrder: string,
+  parent: ParentComponent,
   index: number
 ): AnyComponent {
   if (typeof subtree === 'string') {
-    const s = renderTextComponent(subtree, prevChildren.get(subtree) ?? null, index)
+    const s = renderTextComponent(
+      subtree,
+      prevChildren.get(subtree) ?? null,
+      parent,
+      index
+    )
     prevChildren.delete(subtree)
     newChildren.set(subtree, s)
     return s
@@ -89,14 +98,14 @@ function renderSubtree(
 
   if (typeof subtree === 'number') {
     const text = subtree.toString()
-    const s = renderTextComponent(text, prevChildren.get(text) ?? null, index)
+    const s = renderTextComponent(text, prevChildren.get(text) ?? null, parent, index)
     prevChildren.delete(text)
     newChildren.set(text, s)
     return s
   }
 
   const key: string = subtree.props.key ?? index.toString()
-  const s = renderTree(subtree, prevChildren.get(key) ?? null, parentOrder, index)
+  const s = renderTree(subtree, prevChildren.get(key) ?? null, parent, index)
   prevChildren.delete(key)
   newChildren.set(key, s)
   return s

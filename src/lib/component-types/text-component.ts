@@ -1,30 +1,16 @@
-import {AnyComponent, ComponentBase, ComponentType} from './base'
+import {AnyComponent, ComponentBase, ComponentType, ParentComponent} from './base'
+import {Order} from '../util/order'
 
 export class TextComponent implements ComponentBase {
   _type = ComponentType.text as const
   element: Text
-  // firstElement: Text
+  order: string
 
-  constructor(
-    public text: string,
-    // public parent: ParentComponent,
-    public index: number
-  ) {
+  constructor(public text: string, public parent: ParentComponent, public index: number) {
     this.element = document.createTextNode(text)
-    // this.firstElement = this.containerElement
+    this.order = Order.key(parent.order, index)
 
-    // const siblingEl = sibling?.firstElement ?? null
-    // parent.containerElement.insertBefore(this.containerElement, parent.lastInserted)
-    // parent.lastInserted = this.containerElement
-
-    // if (sibling === null) {
-    //   parent.containerElement.appendChild(this.containerElement)
-    // } else {
-    //   parent.containerElement.insertBefore(
-    //     this.containerElement,
-    //     sibling.containerElement
-    //   )
-    // }
+    parent.insert(this.element, this.order)
   }
 
   remove(): void {
@@ -35,19 +21,19 @@ export class TextComponent implements ComponentBase {
 export function renderTextComponent(
   text: string,
   prevTree: AnyComponent | null,
-  // parent: ParentComponent,
+  parent: ParentComponent,
   index: number
 ): TextComponent {
   if (prevTree === null) {
-    return new TextComponent(text, index)
+    return new TextComponent(text, parent, index)
   }
 
   if (prevTree._type === ComponentType.text) {
-    // if (index !== prevTree.index) {
-    // parent.containerElement.insertBefore(prevTree.containerElement, parent.lastInserted)
-    // parent.lastInserted = prevTree.containerElement
-    prevTree.index = index
-    // }
+    if (index !== prevTree.index) {
+      prevTree.index = index
+      prevTree.order = Order.key(parent.order, index)
+      parent.insert(prevTree.element, parent.order)
+    }
 
     if (prevTree.text === text) {
       return prevTree
@@ -59,5 +45,5 @@ export function renderTextComponent(
   }
 
   prevTree.remove()
-  return new TextComponent(text, index)
+  return new TextComponent(text, parent, index)
 }

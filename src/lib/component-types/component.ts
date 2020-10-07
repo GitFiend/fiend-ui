@@ -1,6 +1,14 @@
-import {AnyComponent, ComponentType, ParentComponent, Subtree, Tree} from './base'
+import {
+  AnyComponent,
+  ComponentBase,
+  ComponentType,
+  ParentComponent,
+  Subtree,
+  Tree,
+} from './base'
 import {renderSubtree2} from '../render'
 import {time, timeEnd} from '../util/measure'
+import {Order} from '../util/order'
 
 export interface Rec {
   [prop: string]: unknown
@@ -11,21 +19,30 @@ export type StandardProps = {children?: Subtree[]; key?: string}
 export type PropsWithChildren<T> = T & StandardProps
 
 // P = {} to simply prop type definitions.
-export class Component<P = {}> implements ParentComponent {
+export class Component<P = {}> implements ComponentBase {
   _type = ComponentType.custom as const
   subComponent: AnyComponent | null = null
   props: PropsWithChildren<P>
   order: string
   key: string
 
-  constructor(props: P, parentOrder: string, public index: number) {
+  constructor(props: P, public parent: ParentComponent, public index: number) {
     this.props = props
-    this.order = parentOrder + index
+    this.order = Order.key(parent.order, index)
     this.key = this.props.key ?? this.order
   }
 
   render(): Subtree {
     return null
+  }
+
+  // insert(component: AnyComponent) {
+  //   // TODO: Maybe Component isn't a parent component? Only HostComponent and Root is?
+  //   throw 'Not implemented'
+  // }
+
+  get element(): Element | Text | null {
+    return this.subComponent?.element ?? null
   }
 
   update = () => {
@@ -35,7 +52,7 @@ export class Component<P = {}> implements ParentComponent {
     const res = this.render()
 
     if (res !== null) {
-      this.subComponent = renderSubtree2(res, this.subComponent, this.order, 0)
+      this.subComponent = renderSubtree2(res, this.subComponent, this.parent, 0)
     } else {
       this.subComponent?.remove()
       this.subComponent = null
@@ -95,11 +112,11 @@ export function renderCustom<P extends StandardProps>(
   cons: typeof Component,
   props: P,
   prevTree: AnyComponent | null,
-  parentOrder: string,
+  parent: ParentComponent,
   index: number
 ) {
   if (prevTree === null) {
-    return makeCustomComponent(cons, props, parentOrder, index)
+    return makeCustomComponent(cons, props, parent, index)
   }
 
   if (prevTree._type === ComponentType.custom && prevTree instanceof cons) {
@@ -110,16 +127,16 @@ export function renderCustom<P extends StandardProps>(
 
   prevTree.remove()
 
-  return makeCustomComponent(cons, props, parentOrder, index)
+  return makeCustomComponent(cons, props, parent, index)
 }
 
 function makeCustomComponent<P extends StandardProps>(
   cons: typeof Component,
   props: P,
-  parentOrder: string,
+  parent: ParentComponent,
   index: number
 ) {
-  const component = new cons<P>(props, parentOrder, index)
+  const component = new cons<P>(props, parent, index)
   component.mount()
 
   return component
