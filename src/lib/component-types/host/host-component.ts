@@ -6,9 +6,6 @@ import {ElementNameMap} from './host-component-types'
 import {renderTextComponent} from '../text-component'
 import {InsertedOrder, Order} from '../../util/order'
 
-// TODO: Untested performance optimisation.
-// const emptyMap = new Map<string, AnyComponent>()
-
 export class HostComponent<P extends StandardProps = {}> implements ParentComponent {
   _type = ComponentType.host as const
   element: ElementNameMap[this['tag']]
@@ -22,9 +19,10 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     public tag: keyof ElementNameMap,
     public props: P,
     public parent: ParentComponent,
+    parentOrder: string,
     public index: number
   ) {
-    this.order = Order.key(parent.order, index)
+    this.order = Order.key(parentOrder, index)
     this.key = this.props.key ?? this.order
 
     this.element = document.createElement(tag) as ElementNameMap[this['tag']]
@@ -38,102 +36,28 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
   // What if our sub component has lots of elements to insert?
   insert(element: Element | Text, order: string) {
     Order.insert(this.element, this.inserted, element, order)
-
-    // const {inserted} = this
-    //
-    // const len = inserted.length
-    //
-    // for (let i = len - 1; i >= 0; i--) {
-    //   const ins = inserted[i]
-    //
-    //   if (order === ins.order) {
-    //     ins.element = element
-    //
-    //     const next = inserted[i + 1]
-    //     if (next !== undefined) {
-    //       this.element.insertBefore(element, next.element)
-    //     }
-    //
-    //     return
-    //   }
-    //   if (order > ins.order) {
-    //     this.inserted.splice(i, 0, {
-    //       order,
-    //       element,
-    //     })
-    //
-    //     const next = inserted[i + 1]
-    //     if (next !== undefined) {
-    //       this.element.insertBefore(element, next.element)
-    //     }
-    //     return
-    //   }
-    // }
-    //
-    // inserted.push({order, element})
-    // this.element.insertBefore(element, null)
-
-    // for (const [o, e] of this.inserted) {
-    //   if (order > o) {
-    //     //
-    //   }
-    // }
-    //
-    // for (const [, c] of this.subComponents) {
-    //   if (order < c.order && c.element !== null) {
-    //     this.element.insertBefore(element, c.element)
-    //     return
-    //   }
-    // }
-    // this.element.insertBefore(element, null)
   }
 
-  renderSubtrees(
-    children: Subtree[]
-    // prevChildren: Map<string, AnyComponent>
-  ) {
+  renderSubtrees(children: Subtree[]) {
     const prevChildren = this.subComponents
     this.subComponents = new Map<string, AnyComponent>()
 
     const len = children.length - 1
 
-    // let prevElement: Element | Text | null = null
-
     for (let i = len; i >= 0; i--) {
       const child = children[i]
 
       if (child !== null) {
-        this.renderSubtree(child, prevChildren, this.subComponents, this, i)
-
-        // switch (s._type) {
-        //   case ComponentType.host:
-        //   case ComponentType.text:
-        //     const {element} = s
-        //
-        //     this.element.insertBefore(element, prevElement)
-        //     prevElement = element
-        //
-        //     break
-        //   case ComponentType.custom:
-        //     const {elements} = s
-        //
-        //     for (const element of elements) {
-        //       this.element.insertBefore(element, prevElement)
-        //       prevElement = element
-        //     }
-        //     break
-        // }
+        this.renderSubtree(child, prevChildren, this.subComponents, i)
       }
     }
     removeChildren(prevChildren)
-    // return newChildren
   }
 
   renderSubtree(
     subtree: Tree | string | number,
     prevChildren: Map<string, AnyComponent>,
     newChildren: Map<string, AnyComponent>,
-    parent: ParentComponent,
     index: number
   ): AnyComponent {
     if (typeof subtree === 'string') {
@@ -141,6 +65,7 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
         subtree,
         prevChildren.get(subtree) ?? null,
         this,
+        this.order,
         index
       )
       prevChildren.delete(subtree)
@@ -150,14 +75,20 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
 
     if (typeof subtree === 'number') {
       const text = subtree.toString()
-      const s = renderTextComponent(text, prevChildren.get(text) ?? null, this, index)
+      const s = renderTextComponent(
+        text,
+        prevChildren.get(text) ?? null,
+        this,
+        this.order,
+        index
+      )
       prevChildren.delete(text)
       newChildren.set(text, s)
       return s
     }
 
     const key: string = subtree.props.key ?? index.toString()
-    const s = renderTree(subtree, prevChildren.get(key) ?? null, this, index)
+    const s = renderTree(subtree, prevChildren.get(key) ?? null, this, this.order, index)
     prevChildren.delete(key)
     newChildren.set(key, s)
     return s
@@ -165,7 +96,6 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
 
   remove(): void {
     this.element.remove()
-    // this.inserted
 
     removeChildren(this.subComponents)
   }
@@ -177,16 +107,18 @@ export function renderHost<P extends StandardProps = {}>(
   props: P,
   prevTree: AnyComponent | null,
   parent: ParentComponent,
+  parentOrder: string,
   index: number
 ): HostComponent {
   if (prevTree === null) {
-    return new HostComponent(tag, props, parent, index)
+    return new HostComponent(tag, props, parent, parentOrder, index)
   }
 
   if (prevTree._type === ComponentType.host && prevTree.tag === tag) {
     if (prevTree.index !== index) {
       prevTree.index = index
-      prevTree.order = Order.key(parent.order, index)
+      prevTree.order = Order.key(parentOrder, index)
+
       parent.insert(prevTree.element, prevTree.order)
     }
 
@@ -201,6 +133,6 @@ export function renderHost<P extends StandardProps = {}>(
     // Type has changed. Remove it.
     prevTree.remove()
 
-    return new HostComponent(tag, props, parent, index)
+    return new HostComponent(tag, props, parent, parentOrder, index)
   }
 }

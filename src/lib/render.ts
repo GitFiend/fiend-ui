@@ -35,14 +35,15 @@ export function renderTree(
   tree: Tree,
   prevTree: AnyComponent | null,
   parent: ParentComponent,
+  parentOrder: string,
   index: number
 ): HostComponent | Component {
   const {_type, props} = tree
 
   if (typeof _type === 'string') {
-    return renderHost(_type, props, prevTree, parent, index)
+    return renderHost(_type, props, prevTree, parent, parentOrder, index)
   } else {
-    return renderCustom(_type, props, prevTree, parent, index)
+    return renderCustom(_type, props, prevTree, parent, parentOrder, index)
   }
 }
 
@@ -50,14 +51,15 @@ export function renderSubtree2(
   subtree: Tree | string | number,
   prevTree: AnyComponent | null,
   parent: ParentComponent,
+  parentOrder: string,
   index: number
 ): AnyComponent {
   if (typeof subtree === 'string') {
-    return renderTextComponent(subtree, prevTree, parent, index)
+    return renderTextComponent(subtree, prevTree, parent, parentOrder, index)
   } else if (typeof subtree === 'number') {
-    return renderTextComponent(subtree.toString(), prevTree, parent, index)
+    return renderTextComponent(subtree.toString(), prevTree, parent, parentOrder, index)
   } else {
-    return renderTree(subtree, prevTree, parent, index)
+    return renderTree(subtree, prevTree, parent, parentOrder, index)
   }
 }
 

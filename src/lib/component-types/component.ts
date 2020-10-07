@@ -26,23 +26,19 @@ export class Component<P = {}> implements ComponentBase {
   order: string
   key: string
 
-  constructor(props: P, public parent: ParentComponent, public index: number) {
+  constructor(
+    props: P,
+    public parent: ParentComponent,
+    parentOrder: string,
+    public index: number
+  ) {
     this.props = props
-    this.order = Order.key(parent.order, index)
+    this.order = Order.key(parentOrder, index)
     this.key = this.props.key ?? this.order
   }
 
   render(): Subtree {
     return null
-  }
-
-  // insert(component: AnyComponent) {
-  //   // TODO: Maybe Component isn't a parent component? Only HostComponent and Root is?
-  //   throw 'Not implemented'
-  // }
-
-  get element(): Element | Text | null {
-    return this.subComponent?.element ?? null
   }
 
   update = () => {
@@ -52,7 +48,13 @@ export class Component<P = {}> implements ComponentBase {
     const res = this.render()
 
     if (res !== null) {
-      this.subComponent = renderSubtree2(res, this.subComponent, this.parent, 0)
+      this.subComponent = renderSubtree2(
+        res,
+        this.subComponent,
+        this.parent,
+        this.order,
+        0
+      )
     } else {
       this.subComponent?.remove()
       this.subComponent = null
@@ -60,18 +62,6 @@ export class Component<P = {}> implements ComponentBase {
 
     if (__DEV__) {
       timeEnd(this.constructor.name)
-    }
-  }
-
-  get elements(): (Element | Text)[] {
-    if (this.subComponent === null) return []
-
-    switch (this.subComponent._type) {
-      case ComponentType.host:
-      case ComponentType.text:
-        return [this.subComponent.element]
-      case ComponentType.custom:
-        return this.subComponent.elements
     }
   }
 
@@ -94,6 +84,7 @@ export class Component<P = {}> implements ComponentBase {
   remove(): void {
     this.subComponent?.remove()
     this.subComponent = null
+
     this.componentWillUnmount()
   }
 
@@ -113,10 +104,11 @@ export function renderCustom<P extends StandardProps>(
   props: P,
   prevTree: AnyComponent | null,
   parent: ParentComponent,
+  parentOrder: string,
   index: number
 ) {
   if (prevTree === null) {
-    return makeCustomComponent(cons, props, parent, index)
+    return makeCustomComponent(cons, props, parent, parentOrder, index)
   }
 
   if (prevTree._type === ComponentType.custom && prevTree instanceof cons) {
@@ -127,16 +119,17 @@ export function renderCustom<P extends StandardProps>(
 
   prevTree.remove()
 
-  return makeCustomComponent(cons, props, parent, index)
+  return makeCustomComponent(cons, props, parent, parentOrder, index)
 }
 
 function makeCustomComponent<P extends StandardProps>(
   cons: typeof Component,
   props: P,
   parent: ParentComponent,
+  parentOrder: string,
   index: number
 ) {
-  const component = new cons<P>(props, parent, index)
+  const component = new cons<P>(props, parent, parentOrder, index)
   component.mount()
 
   return component

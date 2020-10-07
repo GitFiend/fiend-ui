@@ -6,9 +6,14 @@ export class TextComponent implements ComponentBase {
   element: Text
   order: string
 
-  constructor(public text: string, public parent: ParentComponent, public index: number) {
+  constructor(
+    public text: string,
+    public parent: ParentComponent,
+    parentOrder: string,
+    public index: number
+  ) {
     this.element = document.createTextNode(text)
-    this.order = Order.key(parent.order, index)
+    this.order = Order.key(parentOrder, index)
 
     parent.insert(this.element, this.order)
   }
@@ -22,17 +27,19 @@ export function renderTextComponent(
   text: string,
   prevTree: AnyComponent | null,
   parent: ParentComponent,
+  parentOrder: string,
   index: number
 ): TextComponent {
   if (prevTree === null) {
-    return new TextComponent(text, parent, index)
+    return new TextComponent(text, parent, parentOrder, index)
   }
 
   if (prevTree._type === ComponentType.text) {
     if (index !== prevTree.index) {
       prevTree.index = index
-      prevTree.order = Order.key(parent.order, index)
-      parent.insert(prevTree.element, parent.order)
+      prevTree.order = Order.key(parentOrder, index)
+
+      parent.insert(prevTree.element, prevTree.order)
     }
 
     if (prevTree.text === text) {
@@ -45,5 +52,5 @@ export function renderTextComponent(
   }
 
   prevTree.remove()
-  return new TextComponent(text, parent, index)
+  return new TextComponent(text, parent, parentOrder, index)
 }
