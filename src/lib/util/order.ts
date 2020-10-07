@@ -22,33 +22,24 @@ export class Order {
       if (order === ins.order) {
         ins.element = element
 
-        const next = inserted[i + 1]
-        if (next !== undefined) {
-          parentElement.insertBefore(element, next.element)
-        }
+        parentElement.insertBefore(element, inserted[i + 1]?.element ?? null)
 
         return
       }
       if (order > ins.order) {
-        inserted.splice(i, 0, {
-          order,
-          element,
-        })
-
-        const next = inserted[i + 1]
-        if (next !== undefined) {
-          parentElement.insertBefore(element, next.element)
+        if (i < len - 1) {
+          inserted.splice(i + 1, 0, {order, element})
+        } else {
+          inserted.push({order, element})
         }
+
+        parentElement.insertBefore(element, inserted[i]?.element ?? null)
+
         return
       }
     }
 
-    // if (len > 0) {
     inserted.unshift({order, element})
     parentElement.prepend(element)
-    // } else {
-    //   inserted.push({order, element})
-    //   parentElement.insertBefore(element, null)
-    // }
   }
 }

@@ -6,6 +6,28 @@ import {$F} from '../lib/component-types/fragment'
 import {div, h1} from '../lib/component-types/host/host-components'
 
 describe('deletion of custom component', () => {
+  test('host inside host', () => {
+    const root = mkRoot()
+
+    const c = div({children: [div('a'), div('b')]})
+
+    root.render(c)
+
+    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+
+    const c2 = div({children: [div('a')]})
+
+    root.render(c2)
+
+    expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
+
+    const c3 = div({children: [div('a'), div('b')]})
+
+    root.render(c3)
+
+    expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
+  })
+
   test('host inside custom', () => {
     const root = mkRoot()
 

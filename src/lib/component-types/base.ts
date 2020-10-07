@@ -31,7 +31,8 @@ export interface ParentComponent {
   order: string
   key: string
 
-  insert: (element: Element | Text, order: string) => void
+  insert(element: Element | Text, order: string): void
+  removeChild(order: string): void
 }
 
 export class RootNode implements ParentComponent {
@@ -50,6 +51,18 @@ export class RootNode implements ParentComponent {
 
   insert(element: Element | Text, order: string) {
     Order.insert(this.element, this.inserted, element, order)
+  }
+
+  removeChild(order: string) {
+    const i = this.inserted.findIndex(i => i.order === order)
+
+    if (i >= 0) {
+      const children = this.inserted.splice(i, 1)
+
+      for (const c of children) {
+        c.element.remove()
+      }
+    }
   }
 
   remove(): void {

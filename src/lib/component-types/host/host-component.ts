@@ -26,11 +26,11 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     this.key = this.props.key ?? this.order
 
     this.element = document.createElement(tag) as ElementNameMap[this['tag']]
-    parent.insert(this.element, this.order)
-
     setAttributesFromProps(this.element, props)
 
     this.renderSubtrees(props.children ?? [])
+
+    parent.insert(this.element, this.order)
   }
 
   // What if our sub component has lots of elements to insert?
@@ -94,9 +94,23 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     return s
   }
 
-  remove(): void {
-    this.element.remove()
+  removeChild(order: string) {
+    const i = this.inserted.findIndex(i => i.order === order)
 
+    if (i >= 0) {
+      const children = this.inserted.splice(i, 1)
+
+      for (const c of children) {
+        c.element.remove()
+      }
+    }
+  }
+
+  remove(): void {
+    // this.element.remove()
+    this.parent.removeChild(this.order)
+
+    // TODO: Do we even need this? Only for componentWillUnmount?
     removeChildren(this.subComponents)
   }
 }
