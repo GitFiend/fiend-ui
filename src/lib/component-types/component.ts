@@ -112,6 +112,8 @@ export function renderCustom<P extends StandardProps>(
   }
 
   if (prevTree._type === ComponentType.custom && prevTree instanceof cons) {
+    prevTree.index = index
+    prevTree.order = Order.key(parentOrder, index)
     prevTree.updateWithNewProps(props)
 
     return prevTree

@@ -38,10 +38,12 @@ export function renderTextComponent(
 
   if (prevTree._type === ComponentType.text) {
     if (index !== prevTree.index) {
+      const prevOrder = prevTree.order
       prevTree.index = index
       prevTree.order = Order.key(parentOrder, index)
 
-      parent.insertChild(prevTree.element, prevTree.order)
+      parent.moveChild(prevTree.element, prevOrder, prevTree.order)
+      // parent.insertChild(prevTree.element, prevTree.order)
     }
 
     if (prevTree.text === text) {

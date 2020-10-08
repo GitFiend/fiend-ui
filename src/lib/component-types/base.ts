@@ -37,6 +37,8 @@ export interface ParentComponent {
 
   // Remove DOM element.
   removeChild(order: string): void
+
+  moveChild(element: Element | Text, prevOrder: string, newOrder: string): void
 }
 
 export class RootNode implements ParentComponent {
@@ -58,15 +60,11 @@ export class RootNode implements ParentComponent {
   }
 
   removeChild(order: string) {
-    const i = this.inserted.findIndex(i => i.order === order)
+    Order.remove(order, this.inserted)
+  }
 
-    if (i >= 0) {
-      const children = this.inserted.splice(i, 1)
-
-      for (const c of children) {
-        c.element.remove()
-      }
-    }
+  moveChild(element: Element | Text, prevOrder: string, newOrder: string) {
+    Order.move(this.inserted, this.element, element, prevOrder, newOrder)
   }
 
   remove(): void {

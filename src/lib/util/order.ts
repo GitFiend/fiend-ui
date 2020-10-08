@@ -13,27 +13,21 @@ export class Order {
     inserted: InsertedOrder[],
     element: Element | Text,
     order: string
-  ) {
+  ): void {
     const len = inserted.length
 
     for (let i = len - 1; i >= 0; i--) {
       const ins = inserted[i]
 
       if (order === ins.order) {
-        ins.element = element
-
         parentElement.insertBefore(element, inserted[i + 1]?.element ?? null)
-
         return
       }
       if (order > ins.order) {
-        if (i < len - 1) {
-          inserted.splice(i + 1, 0, {order, element})
-        } else {
-          inserted.push({order, element})
-        }
+        parentElement.insertBefore(element, inserted[i + 1]?.element ?? null)
 
-        parentElement.insertBefore(element, inserted[i]?.element ?? null)
+        if (i < len - 1) inserted.splice(i + 1, 0, {order, element})
+        else inserted.push({order, element})
 
         return
       }
@@ -41,5 +35,35 @@ export class Order {
 
     inserted.unshift({order, element})
     parentElement.prepend(element)
+  }
+
+  static move(
+    inserted: InsertedOrder[],
+    parentElement: Element,
+    element: Element | Text,
+    prevOrder: string,
+    newOrder: string
+  ) {
+    const i = inserted.findIndex(ins => ins.order === prevOrder)
+
+    if (i >= 0) {
+      inserted.splice(i, 1)
+    }
+
+    this.insert(parentElement, inserted, element, newOrder)
+  }
+
+  static remove(position: string, inserted: InsertedOrder[]): void {
+    const i = inserted.findIndex(i => i.order === position)
+
+    if (i >= 0) {
+      const [child] = inserted.splice(i, 1)
+
+      child.element.remove()
+
+      // for (const c of children) {
+      //   c.element.remove()
+      // }
+    }
   }
 }

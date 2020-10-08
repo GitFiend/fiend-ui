@@ -33,11 +33,6 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     parent.insertChild(this.element, this.order)
   }
 
-  // What if our sub component has lots of elements to insert?
-  insertChild(element: Element | Text, order: string) {
-    Order.insert(this.element, this.inserted, element, order)
-  }
-
   renderSubtrees(children: Subtree[]) {
     const prevChildren = this.subComponents
     this.subComponents = new Map<string, AnyComponent>()
@@ -94,16 +89,17 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     return s
   }
 
+  // What if our sub component has lots of elements to insert?
+  insertChild(element: Element | Text, order: string) {
+    Order.insert(this.element, this.inserted, element, order)
+  }
+
+  moveChild(element: Element | Text, prevOrder: string, newOrder: string) {
+    Order.move(this.inserted, this.element, element, prevOrder, newOrder)
+  }
+
   removeChild(order: string): void {
-    const i = this.inserted.findIndex(i => i.order === order)
-
-    if (i >= 0) {
-      const children = this.inserted.splice(i, 1)
-
-      for (const c of children) {
-        c.element.remove()
-      }
-    }
+    Order.remove(order, this.inserted)
   }
 
   remove(): void {
@@ -130,16 +126,17 @@ export function renderHost<P extends StandardProps = {}>(
 
   if (prevTree._type === ComponentType.host && prevTree.tag === tag) {
     if (prevTree.index !== index) {
+      const prevOrder = prevTree.order
       prevTree.index = index
       prevTree.order = Order.key(parentOrder, index)
 
-      parent.insertChild(prevTree.element, prevTree.order)
+      parent.moveChild(prevTree.element, prevOrder, prevTree.order)
+
+      // parent.insertChild(prevTree.element, prevTree.order)
     }
 
     updateAttributes(prevTree.element, props, prevTree.props)
-
     prevTree.props = props
-
     prevTree.renderSubtrees(props.children ?? [])
 
     return prevTree
