@@ -24,6 +24,7 @@ export interface ComponentBase {
   parent: unknown
   order: string
 
+  // Remove the component and run cleanup. Not necessarily related to element removal.
   remove(): void
 }
 
@@ -31,7 +32,10 @@ export interface ParentComponent {
   order: string
   key: string
 
-  insert(element: Element | Text, order: string): void
+  // Insert DOM element.
+  insertChild(element: Element | Text, order: string): void
+
+  // Remove DOM element.
   removeChild(order: string): void
 }
 
@@ -49,7 +53,7 @@ export class RootNode implements ParentComponent {
     this.component = renderTree(tree, this.component, this, this.order, 0)
   }
 
-  insert(element: Element | Text, order: string) {
+  insertChild(element: Element | Text, order: string) {
     Order.insert(this.element, this.inserted, element, order)
   }
 

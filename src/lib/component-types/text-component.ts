@@ -15,11 +15,13 @@ export class TextComponent implements ComponentBase {
     this.element = document.createTextNode(text)
     this.order = Order.key(parentOrder, index)
 
-    parent.insert(this.element, this.order)
+    parent.insertChild(this.element, this.order)
   }
 
   remove(): void {
-    this.element.remove()
+    this.parent.removeChild(this.order)
+
+    // this.element.remove()
   }
 }
 
@@ -39,7 +41,7 @@ export function renderTextComponent(
       prevTree.index = index
       prevTree.order = Order.key(parentOrder, index)
 
-      parent.insert(prevTree.element, prevTree.order)
+      parent.insertChild(prevTree.element, prevTree.order)
     }
 
     if (prevTree.text === text) {

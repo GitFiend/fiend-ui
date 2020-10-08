@@ -5,7 +5,7 @@ export interface InsertedOrder {
 
 export class Order {
   static key(parentOrder: string, index: number): string {
-    return parentOrder + String.fromCharCode(index)
+    return parentOrder + String.fromCharCode(index + 48)
   }
 
   static insert(

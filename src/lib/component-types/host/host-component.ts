@@ -30,11 +30,11 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
 
     this.renderSubtrees(props.children ?? [])
 
-    parent.insert(this.element, this.order)
+    parent.insertChild(this.element, this.order)
   }
 
   // What if our sub component has lots of elements to insert?
-  insert(element: Element | Text, order: string) {
+  insertChild(element: Element | Text, order: string) {
     Order.insert(this.element, this.inserted, element, order)
   }
 
@@ -94,7 +94,7 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     return s
   }
 
-  removeChild(order: string) {
+  removeChild(order: string): void {
     const i = this.inserted.findIndex(i => i.order === order)
 
     if (i >= 0) {
@@ -133,7 +133,7 @@ export function renderHost<P extends StandardProps = {}>(
       prevTree.index = index
       prevTree.order = Order.key(parentOrder, index)
 
-      parent.insert(prevTree.element, prevTree.order)
+      parent.insertChild(prevTree.element, prevTree.order)
     }
 
     updateAttributes(prevTree.element, props, prevTree.props)
