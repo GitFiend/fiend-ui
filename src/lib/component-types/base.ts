@@ -1,11 +1,11 @@
 import {HostComponent} from './host/host-component'
 import {TextComponent} from './text-component'
-import {Component, StandardProps} from './component'
+import {Component, CustomComponent, StandardProps} from './component'
 import {renderTree} from '../render'
 import {InsertedOrder, Order} from '../util/order'
 
 export interface Tree<P extends StandardProps = StandardProps> {
-  _type: keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap | typeof Component
+  _type: keyof HTMLElementTagNameMap | keyof SVGElementTagNameMap | CustomComponent<P>
   props: P
 }
 

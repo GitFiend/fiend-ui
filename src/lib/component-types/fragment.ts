@@ -8,6 +8,10 @@ import {removeChildren, renderTree} from '../render'
 class Fragment extends Component {
   subComponents = new Map<string, AnyComponent>()
 
+  render(): null {
+    return null
+  }
+
   update = () => {
     if (__DEV__) {
       time(this.constructor.name)
