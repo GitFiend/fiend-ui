@@ -87,14 +87,16 @@ describe('deletion of custom component', () => {
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    c = C.$({children: [C.$({children: ['a']})]})
+    c = C.$({children: [C.$({children: ['a'], key: 'a'})]})
 
     root.render(c)
     // divs = renderTree(c, divs, root.order, 0)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
 
-    c = C.$({children: [C.$({children: ['a']}), C.$({children: ['b']})]})
+    c = C.$({
+      children: [C.$({children: ['a'], key: 'a'}), C.$({children: ['b'], key: 'b'})],
+    })
 
     root.render(c)
     // renderTree(c, divs, root.order, 0)

@@ -60,10 +60,6 @@ export class Order {
       const [child] = inserted.splice(i, 1)
 
       child.element.remove()
-
-      // for (const c of children) {
-      //   c.element.remove()
-      // }
     }
   }
 }
