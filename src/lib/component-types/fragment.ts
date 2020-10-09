@@ -2,7 +2,7 @@ import {Component} from './component'
 import {time, timeEnd} from '../util/measure'
 import {AnyComponent, ParentComponent, Subtree, Tree} from './base'
 import {renderTextComponent} from './text-component'
-import {removeChildren, renderTree} from '../render'
+import {renderTree} from '../render'
 
 // TODO: Maybe this shouldn't extend Component.
 class Fragment extends Component {
@@ -54,7 +54,8 @@ function renderSubtrees(
     }
   }
 
-  removeChildren(prevChildren)
+  for (const [, c] of prevChildren) c.remove()
+  // removeChildren(prevChildren)
 
   return newChildren
 }

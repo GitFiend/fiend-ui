@@ -51,6 +51,7 @@ export class Render {
 
   static subtrees(
     parent: ParentComponent,
+    parentOrder: string,
     children: Subtree[],
     prevComponents: Map<string, AnyComponent>
   ): Map<string, AnyComponent> {
@@ -62,16 +63,18 @@ export class Render {
       const child = children[i]
 
       if (child !== null) {
-        this.subtree(parent, child, prevComponents, newComponents, i)
+        this.subtree(parent, parentOrder, child, prevComponents, newComponents, i)
       }
     }
-    this.removeChildren(prevComponents)
+    for (const [, c] of prevComponents) c.remove()
+    // this.removeChildren(prevComponents)
 
     return newComponents
   }
 
-  static subtree(
+  private static subtree(
     parent: ParentComponent,
+    parentOrder: string,
     subtree: Tree | string | number,
     prevChildren: Map<string, AnyComponent>,
     newChildren: Map<string, AnyComponent>,
@@ -82,7 +85,7 @@ export class Render {
         subtree,
         prevChildren.get(subtree) ?? null,
         parent,
-        parent.order,
+        parentOrder,
         index
       )
       prevChildren.delete(subtree)
@@ -96,7 +99,7 @@ export class Render {
         text,
         prevChildren.get(text) ?? null,
         parent,
-        parent.order,
+        parentOrder,
         index
       )
       prevChildren.delete(text)
@@ -109,7 +112,7 @@ export class Render {
       subtree,
       prevChildren.get(key) ?? null,
       parent,
-      parent.order,
+      parentOrder,
       index
     )
     prevChildren.delete(key)
@@ -117,9 +120,12 @@ export class Render {
     return s
   }
 
-  static removeChildren(children: Map<string, AnyComponent>): void {
-    for (const [, c] of children) c.remove()
-  }
+  // static removeChildren(children: Map<string, AnyComponent>): Map<string, AnyComponent> {
+  //   for (const [, c] of children) c.remove()
+  //   children.clear()
+  //
+  //   return children
+  // }
 }
 
 export function render(tree: Tree | null, target: HTMLElement): void {
@@ -159,6 +165,6 @@ export function renderSubtree2(
   }
 }
 
-export function removeChildren(children: Map<string, AnyComponent>): void {
-  for (const [, c] of children) c.remove()
-}
+// export function removeChildren(children: Map<string, AnyComponent>): void {
+//   for (const [, c] of children) c.remove()
+// }

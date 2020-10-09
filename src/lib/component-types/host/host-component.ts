@@ -1,5 +1,5 @@
-import {AnyComponent, ComponentType, ParentComponent, Subtree, Tree} from '../base'
-import {removeChildren, Render} from '../../render'
+import {AnyComponent, ComponentType, ParentComponent, Subtree} from '../base'
+import {Render} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {StandardProps} from '../component'
 import {ElementNameMap} from './host-component-types'
@@ -33,63 +33,7 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
   }
 
   renderSubtrees(children: Subtree[]) {
-    this.subComponents = Render.subtrees(this, children, this.subComponents)
-
-    // const prevChildren = this.subComponents
-    // this.subComponents = new Map<string, AnyComponent>()
-    //
-    // const len = children.length - 1
-    //
-    // for (let i = len; i >= 0; i--) {
-    //   const child = children[i]
-    //
-    //   if (child !== null) {
-    //     this.renderSubtree(child, prevChildren, this.subComponents, i)
-    //   }
-    // }
-    // removeChildren(prevChildren)
-  }
-
-  renderSubtree(
-    subtree: Tree | string | number,
-    prevChildren: Map<string, AnyComponent>,
-    newChildren: Map<string, AnyComponent>,
-    index: number
-  ): AnyComponent {
-    return Render.subtree(this, subtree, prevChildren, newChildren, index)
-
-    // if (typeof subtree === 'string') {
-    //   const s = renderTextComponent(
-    //     subtree,
-    //     prevChildren.get(subtree) ?? null,
-    //     this,
-    //     this.order,
-    //     index
-    //   )
-    //   prevChildren.delete(subtree)
-    //   newChildren.set(subtree, s)
-    //   return s
-    // }
-    //
-    // if (typeof subtree === 'number') {
-    //   const text = subtree.toString()
-    //   const s = renderTextComponent(
-    //     text,
-    //     prevChildren.get(text) ?? null,
-    //     this,
-    //     this.order,
-    //     index
-    //   )
-    //   prevChildren.delete(text)
-    //   newChildren.set(text, s)
-    //   return s
-    // }
-    //
-    // const key: string = subtree.props.key ?? index.toString()
-    // const s = renderTree(subtree, prevChildren.get(key) ?? null, this, this.order, index)
-    // prevChildren.delete(key)
-    // newChildren.set(key, s)
-    // return s
+    this.subComponents = Render.subtrees(this, this.order, children, this.subComponents)
   }
 
   // What if our sub component has lots of elements to insert?
@@ -106,11 +50,11 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
   }
 
   remove(): void {
-    // this.element.remove()
     this.parent.removeChild(this.order)
 
     // TODO: Do we even need this? Only for componentWillUnmount?
-    removeChildren(this.subComponents)
+    for (const [, c] of this.subComponents) c.remove()
+    this.subComponents.clear()
   }
 }
 
@@ -134,8 +78,6 @@ export function renderHost<P extends StandardProps = {}>(
       prevTree.order = Order.key(parentOrder, index)
 
       parent.moveChild(prevTree.element, prevOrder, prevTree.order)
-
-      // parent.insertChild(prevTree.element, prevTree.order)
     }
 
     updateAttributes(prevTree.element, props, prevTree.props)

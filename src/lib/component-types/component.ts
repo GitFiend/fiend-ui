@@ -6,7 +6,7 @@ import {
   Subtree,
   Tree,
 } from './base'
-import {renderSubtree2} from '../render'
+import {Render} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {Order} from '../util/order'
 
@@ -21,10 +21,11 @@ export type PropsWithChildren<T> = T & StandardProps
 // P = {} to simply prop type definitions.
 export abstract class Component<P = {}> implements ComponentBase {
   _type = ComponentType.custom as const
-  subComponent: AnyComponent | null = null
   props: PropsWithChildren<P>
   order: string
   key: string
+
+  subComponents = new Map<string, AnyComponent>()
 
   constructor(
     props: P,
@@ -37,7 +38,7 @@ export abstract class Component<P = {}> implements ComponentBase {
     this.key = this.props.key ?? this.order
   }
 
-  abstract render(): Subtree
+  abstract render(): Subtree | Subtree[]
 
   update = () => {
     if (__DEV__) {
@@ -45,18 +46,12 @@ export abstract class Component<P = {}> implements ComponentBase {
     }
     const res = this.render()
 
-    if (res !== null) {
-      this.subComponent = renderSubtree2(
-        res,
-        this.subComponent,
-        this.parent,
-        this.order,
-        0
-      )
-    } else {
-      this.subComponent?.remove()
-      this.subComponent = null
-    }
+    this.subComponents = Render.subtrees(
+      this.parent,
+      this.order,
+      Array.isArray(res) ? res : [res],
+      this.subComponents
+    )
 
     if (__DEV__) {
       timeEnd(this.constructor.name)
@@ -80,10 +75,10 @@ export abstract class Component<P = {}> implements ComponentBase {
   }
 
   remove(): void {
-    this.subComponent?.remove()
-    this.subComponent = null
-
     this.componentWillUnmount()
+
+    for (const [, c] of this.subComponents) c.remove()
+    this.subComponents.clear()
   }
 
   static $<T extends Component>(
