@@ -1,9 +1,8 @@
 import {AnyComponent, ComponentType, ParentComponent, Subtree, Tree} from '../base'
-import {removeChildren, renderTree} from '../../render'
+import {removeChildren, Render} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {StandardProps} from '../component'
 import {ElementNameMap} from './host-component-types'
-import {renderTextComponent} from '../text-component'
 import {InsertedOrder, Order} from '../../util/order'
 
 export class HostComponent<P extends StandardProps = {}> implements ParentComponent {
@@ -34,19 +33,21 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
   }
 
   renderSubtrees(children: Subtree[]) {
-    const prevChildren = this.subComponents
-    this.subComponents = new Map<string, AnyComponent>()
+    this.subComponents = Render.subtrees(this, children, this.subComponents)
 
-    const len = children.length - 1
-
-    for (let i = len; i >= 0; i--) {
-      const child = children[i]
-
-      if (child !== null) {
-        this.renderSubtree(child, prevChildren, this.subComponents, i)
-      }
-    }
-    removeChildren(prevChildren)
+    // const prevChildren = this.subComponents
+    // this.subComponents = new Map<string, AnyComponent>()
+    //
+    // const len = children.length - 1
+    //
+    // for (let i = len; i >= 0; i--) {
+    //   const child = children[i]
+    //
+    //   if (child !== null) {
+    //     this.renderSubtree(child, prevChildren, this.subComponents, i)
+    //   }
+    // }
+    // removeChildren(prevChildren)
   }
 
   renderSubtree(
@@ -55,38 +56,40 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
     newChildren: Map<string, AnyComponent>,
     index: number
   ): AnyComponent {
-    if (typeof subtree === 'string') {
-      const s = renderTextComponent(
-        subtree,
-        prevChildren.get(subtree) ?? null,
-        this,
-        this.order,
-        index
-      )
-      prevChildren.delete(subtree)
-      newChildren.set(subtree, s)
-      return s
-    }
+    return Render.subtree(this, subtree, prevChildren, newChildren, index)
 
-    if (typeof subtree === 'number') {
-      const text = subtree.toString()
-      const s = renderTextComponent(
-        text,
-        prevChildren.get(text) ?? null,
-        this,
-        this.order,
-        index
-      )
-      prevChildren.delete(text)
-      newChildren.set(text, s)
-      return s
-    }
-
-    const key: string = subtree.props.key ?? index.toString()
-    const s = renderTree(subtree, prevChildren.get(key) ?? null, this, this.order, index)
-    prevChildren.delete(key)
-    newChildren.set(key, s)
-    return s
+    // if (typeof subtree === 'string') {
+    //   const s = renderTextComponent(
+    //     subtree,
+    //     prevChildren.get(subtree) ?? null,
+    //     this,
+    //     this.order,
+    //     index
+    //   )
+    //   prevChildren.delete(subtree)
+    //   newChildren.set(subtree, s)
+    //   return s
+    // }
+    //
+    // if (typeof subtree === 'number') {
+    //   const text = subtree.toString()
+    //   const s = renderTextComponent(
+    //     text,
+    //     prevChildren.get(text) ?? null,
+    //     this,
+    //     this.order,
+    //     index
+    //   )
+    //   prevChildren.delete(text)
+    //   newChildren.set(text, s)
+    //   return s
+    // }
+    //
+    // const key: string = subtree.props.key ?? index.toString()
+    // const s = renderTree(subtree, prevChildren.get(key) ?? null, this, this.order, index)
+    // prevChildren.delete(key)
+    // newChildren.set(key, s)
+    // return s
   }
 
   // What if our sub component has lots of elements to insert?
