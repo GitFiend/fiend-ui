@@ -57,24 +57,24 @@ describe('fragment', () => {
   test('custom component with fragment', () => {
     @model
     class S {
-      $text = 'omg'
+      $text = 'text1'
     }
 
     class C extends $Component<{store: S}> {
       render() {
-        return div({children: [this.props.store.$text], key: 'omg'})
+        return div({children: [this.props.store.$text], key: 'container'})
       }
     }
     const root = mkRoot()
 
     const s = new S()
     root.render(C.$({store: s}))
-    expect(root.element.innerHTML).toEqual('<div>omg</div>')
+    expect(root.element.innerHTML).toEqual('<div>text1</div>')
 
-    s.$text = 'omg2'
-    expect(root.element.innerHTML).toEqual('<div>omg2</div>')
+    s.$text = 'text2'
+    expect(root.element.innerHTML).toEqual('<div>text2</div>')
 
-    s.$text = 'zzz'
-    expect(root.element.innerHTML).toEqual('<div>zzz</div>')
+    s.$text = 'text3'
+    expect(root.element.innerHTML).toEqual('<div>text3</div>')
   })
 })

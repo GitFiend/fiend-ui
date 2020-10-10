@@ -28,23 +28,10 @@ export interface ComponentBase {
   remove(): void
 }
 
-// export interface ParentComponent {
-//   order: string
-//   key: string
-//
-//   // Insert DOM element.
-//   insertChild(element: Element | Text, order: string): void
-//
-//   // Remove DOM element.
-//   removeChild(element: Element | Text, order: string): void
-//
-//   moveChild(element: Element | Text, prevOrder: string, newOrder: string): void
-// }
-
 export class RootComponent {
   component: AnyComponent | null = null
   order = '1'
-  key = '1'
+  key = 'root'
 
   inserted: (HostComponent | TextComponent)[] = []
 

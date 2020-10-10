@@ -12,7 +12,7 @@ export class Order {
     child: HostComponent | TextComponent
   ): void {
     const {inserted, element: parentElement} = parent
-    const {element, order} = child
+    const {element, order, key} = child
 
     const len = inserted.length
 
@@ -21,6 +21,11 @@ export class Order {
 
       if (order === ins.order) {
         parentElement.insertBefore(element, inserted[i + 1]?.element ?? null)
+
+        if (key !== ins.key) {
+          if (i < len - 1) inserted.splice(i + 1, 0, child)
+          else inserted.push(child)
+        }
         return
       }
       if (order > ins.order) {
