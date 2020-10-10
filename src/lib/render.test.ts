@@ -1,27 +1,37 @@
-import {$F} from './component-types/fragment'
 import {div} from './component-types/host/host-components'
 import {render} from './render'
 import {$Component} from './observables/$-component'
 import {model} from './observables/make-observable'
 import {Component} from './component-types/component'
+import {Subtree} from './component-types/base'
+
+class F extends Component {
+  render() {
+    return this.props.children ?? []
+  }
+}
+
+function frag(...children: Subtree[]) {
+  return F.$({children})
+}
 
 describe('render', () => {
   test('repeat render', () => {
     const el = document.createElement('div')
 
-    let t = $F(div('a'), div('b'), div('c'))
+    let t = frag(div('a'), div('b'), div('c'))
 
     render(t, el)
 
     expect(el.innerHTML).toEqual('<div>a</div><div>b</div><div>c</div>')
 
-    t = $F(div('a'), div('b'), div('c'), div('d'))
+    t = frag(div('a'), div('b'), div('c'), div('d'))
 
     render(t, el)
 
     expect(el.innerHTML).toEqual('<div>a</div><div>b</div><div>c</div><div>d</div>')
 
-    t = $F(div('d'), div('a'), div('b'), div('c'))
+    t = frag(div('d'), div('a'), div('b'), div('c'))
 
     render(t, el)
 

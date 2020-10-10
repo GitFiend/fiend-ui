@@ -1,7 +1,6 @@
-export interface InsertedOrder {
-  order: string
-  element: Element | Text
-}
+import {RootComponent} from '../component-types/base'
+import {HostComponent} from '../component-types/host/host-component'
+import {TextComponent} from '../component-types/text-component'
 
 export class Order {
   static key(parentOrder: string, index: number): string {
@@ -9,11 +8,12 @@ export class Order {
   }
 
   static insert(
-    parentElement: Element,
-    inserted: InsertedOrder[],
-    element: Element | Text,
-    order: string
+    parent: RootComponent | HostComponent,
+    child: HostComponent | TextComponent
   ): void {
+    const {inserted, element: parentElement} = parent
+    const {element, order} = child
+
     const len = inserted.length
 
     for (let i = len - 1; i >= 0; i--) {
@@ -26,35 +26,41 @@ export class Order {
       if (order > ins.order) {
         parentElement.insertBefore(element, inserted[i + 1]?.element ?? null)
 
-        if (i < len - 1) inserted.splice(i + 1, 0, {order, element})
-        else inserted.push({order, element})
+        if (i < len - 1) inserted.splice(i + 1, 0, child)
+        else inserted.push(child)
 
         return
       }
     }
 
-    inserted.unshift({order, element})
+    inserted.unshift(child)
     parentElement.prepend(element)
   }
 
   static move(
-    inserted: InsertedOrder[],
-    parentElement: Element,
-    element: Element | Text,
-    prevOrder: string,
-    newOrder: string
+    parent: RootComponent | HostComponent,
+    child: HostComponent | TextComponent,
+    prevOrder: string
   ) {
+    const {inserted} = parent
+
     const i = inserted.findIndex(ins => ins.order === prevOrder)
 
     if (i >= 0) {
       inserted.splice(i, 1)
     }
 
-    this.insert(parentElement, inserted, element, newOrder)
+    this.insert(parent, child)
   }
 
-  static remove(position: string, inserted: InsertedOrder[]): void {
-    const i = inserted.findIndex(i => i.order === position)
+  static remove(
+    parent: RootComponent | HostComponent,
+    child: HostComponent | TextComponent
+  ): void {
+    const {inserted} = parent
+    const {key} = child
+
+    const i = inserted.findIndex(i => i.key === key)
 
     if (i >= 0) {
       const [child] = inserted.splice(i, 1)

@@ -2,13 +2,14 @@ import {
   AnyComponent,
   ComponentBase,
   ComponentType,
-  ParentComponent,
+  RootComponent,
   Subtree,
   Tree,
 } from './base'
 import {Render} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {Order} from '../util/order'
+import {HostComponent} from './host/host-component'
 
 export interface Rec {
   [prop: string]: unknown
@@ -29,7 +30,7 @@ export abstract class Component<P = {}> implements ComponentBase {
 
   constructor(
     props: P,
-    public parent: ParentComponent,
+    public parent: HostComponent | RootComponent,
     parentOrder: string,
     public index: number
   ) {
@@ -96,7 +97,7 @@ export function renderCustom<P extends StandardProps>(
   cons: CustomComponent<P>,
   props: P,
   prevTree: AnyComponent | null,
-  parent: ParentComponent,
+  parent: HostComponent | RootComponent,
   parentOrder: string,
   index: number
 ) {
@@ -119,7 +120,7 @@ export function renderCustom<P extends StandardProps>(
 
 export type CustomComponent<P extends StandardProps> = new <P>(
   props: P,
-  parent: ParentComponent,
+  parent: HostComponent | RootComponent,
   parentOrder: string,
   index: number
 ) => Component
@@ -127,7 +128,7 @@ export type CustomComponent<P extends StandardProps> = new <P>(
 function makeCustomComponent<P extends StandardProps>(
   cons: CustomComponent<P>,
   props: P,
-  parent: ParentComponent,
+  parent: HostComponent | RootComponent,
   parentOrder: string,
   index: number
 ) {

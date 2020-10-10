@@ -62,7 +62,7 @@ describe('fragment', () => {
 
     class C extends $Component<{store: S}> {
       render() {
-        return $F(div({children: [this.props.store.$text], key: 'omg'}))
+        return div({children: [this.props.store.$text], key: 'omg'})
       }
     }
     const root = mkRoot()

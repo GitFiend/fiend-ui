@@ -1,4 +1,3 @@
-import {$F} from '../lib/component-types/fragment'
 import {render} from '../lib/render'
 import {screen} from '@testing-library/dom'
 import {$Val} from '../lib/observables/observable'
@@ -45,9 +44,9 @@ class Switcher extends $Component<SwitcherProps> {
     const {store} = this.props
 
     if (store.a()) {
-      return $F(div('a'))
+      return div('a')
     }
 
-    return $F(div('b'))
+    return div('b')
   }
 }

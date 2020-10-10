@@ -1,34 +1,36 @@
-import {AnyComponent, ComponentBase, ComponentType, ParentComponent} from './base'
+import {AnyComponent, ComponentBase, ComponentType, RootComponent} from './base'
 import {Order} from '../util/order'
+import {HostComponent} from './host/host-component'
 
 export class TextComponent implements ComponentBase {
   _type = ComponentType.text as const
   element: Text
   order: string
+  key: string
 
   constructor(
     public text: string,
-    public parent: ParentComponent,
+    public parent: HostComponent | RootComponent,
     parentOrder: string,
     public index: number
   ) {
+    this.key = text
     this.element = document.createTextNode(text)
+
     this.order = Order.key(parentOrder, index)
 
-    parent.insertChild(this.element, this.order)
+    parent.insertChild(this)
   }
 
   remove(): void {
-    this.parent.removeChild(this.order)
-
-    // this.element.remove()
+    this.parent.removeChild(this)
   }
 }
 
 export function renderTextComponent(
   text: string,
   prevTree: AnyComponent | null,
-  parent: ParentComponent,
+  parent: HostComponent | RootComponent,
   parentOrder: string,
   index: number
 ): TextComponent {
@@ -42,7 +44,7 @@ export function renderTextComponent(
       prevTree.index = index
       prevTree.order = Order.key(parentOrder, index)
 
-      parent.moveChild(prevTree.element, prevOrder, prevTree.order)
+      parent.moveChild(prevTree, prevOrder)
       // parent.insertChild(prevTree.element, prevTree.order)
     }
 

@@ -1,23 +1,24 @@
-import {AnyComponent, ComponentType, ParentComponent, Subtree} from '../base'
+import {AnyComponent, ComponentType, RootComponent, Subtree} from '../base'
 import {Render} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {StandardProps} from '../component'
 import {ElementNameMap} from './host-component-types'
-import {InsertedOrder, Order} from '../../util/order'
+import {Order} from '../../util/order'
+import {TextComponent} from '../text-component'
 
-export class HostComponent<P extends StandardProps = {}> implements ParentComponent {
+export class HostComponent<P extends StandardProps = {}> {
   _type = ComponentType.host as const
   element: ElementNameMap[this['tag']]
   order: string
   key: string
 
   subComponents = new Map<string, AnyComponent>()
-  inserted: InsertedOrder[] = []
+  inserted: (HostComponent | TextComponent)[] = []
 
   constructor(
     public tag: keyof ElementNameMap,
     public props: P,
-    public parent: ParentComponent,
+    public parent: HostComponent | RootComponent,
     parentOrder: string,
     public index: number
   ) {
@@ -29,7 +30,7 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
 
     this.renderSubtrees(props.children ?? [])
 
-    parent.insertChild(this.element, this.order)
+    parent.insertChild(this)
   }
 
   renderSubtrees(children: Subtree[]) {
@@ -37,20 +38,20 @@ export class HostComponent<P extends StandardProps = {}> implements ParentCompon
   }
 
   // What if our sub component has lots of elements to insert?
-  insertChild(element: Element | Text, order: string) {
-    Order.insert(this.element, this.inserted, element, order)
+  insertChild(child: HostComponent | TextComponent) {
+    Order.insert(this, child)
   }
 
-  moveChild(element: Element | Text, prevOrder: string, newOrder: string) {
-    Order.move(this.inserted, this.element, element, prevOrder, newOrder)
+  moveChild(child: HostComponent | TextComponent, prevOrder: string) {
+    Order.move(this, child, prevOrder)
   }
 
-  removeChild(order: string): void {
-    Order.remove(order, this.inserted)
+  removeChild(child: HostComponent | TextComponent): void {
+    Order.remove(this, child)
   }
 
   remove(): void {
-    this.parent.removeChild(this.order)
+    this.parent.removeChild(this)
 
     // TODO: Do we even need this? Only for componentWillUnmount?
     for (const [, c] of this.subComponents) c.remove()
@@ -63,7 +64,7 @@ export function renderHost<P extends StandardProps = {}>(
   tag: keyof ElementNameMap,
   props: P,
   prevTree: AnyComponent | null,
-  parent: ParentComponent,
+  parent: RootComponent | HostComponent,
   parentOrder: string,
   index: number
 ): HostComponent {
@@ -77,7 +78,7 @@ export function renderHost<P extends StandardProps = {}>(
       prevTree.index = index
       prevTree.order = Order.key(parentOrder, index)
 
-      parent.moveChild(prevTree.element, prevOrder, prevTree.order)
+      parent.moveChild(prevTree, prevOrder)
     }
 
     updateAttributes(prevTree.element, props, prevTree.props)

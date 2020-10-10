@@ -2,7 +2,6 @@ import {Component} from '../lib/component-types/component'
 import {Subtree} from '../lib/component-types/base'
 import {mkRoot} from './host.test'
 import {render} from '../lib/render'
-import {$F} from '../lib/component-types/fragment'
 import {div, h1} from '../lib/component-types/host/host-components'
 
 describe('deletion of custom component', () => {
@@ -132,8 +131,8 @@ describe('deletion of custom component', () => {
 
   test('different order', () => {
     class Outer extends Component {
-      render(): Subtree | null {
-        return $F(A.$({}), h1('Heading'))
+      render() {
+        return [A.$({}), h1('Heading')]
       }
     }
 

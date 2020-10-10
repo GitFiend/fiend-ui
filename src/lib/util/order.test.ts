@@ -1,4 +1,6 @@
-import {InsertedOrder, Order} from './order'
+import {Order} from './order'
+import {mkRoot} from '../../dom-tests/host.test'
+import {HostComponent} from '../component-types/host/host-component'
 
 describe('Order.add comparisons', () => {
   test('1.1 < 1.2', () => {
@@ -11,46 +13,22 @@ describe('Order.add comparisons', () => {
 })
 
 describe('insert', () => {
-  const inserted: InsertedOrder[] = []
-  const parentDiv = document.createElement('div')
-  const a = document.createElement('div')
-  const b = document.createElement('div')
-  const c = document.createElement('div')
-  const d = document.createElement('div')
+  const root = mkRoot()
 
-  test('insert a div', () => {
-    Order.insert(parentDiv, inserted, a, '13')
+  const parent = new HostComponent('div', {}, root, '1', 0)
+  const {inserted} = parent
 
-    expect(inserted).toEqual([{order: '13', element: a}])
-  })
+  test('try different insert indices', () => {
+    new HostComponent('div', {}, parent, parent.order, 3)
+    expect(inserted.map(i => i.order)).toEqual(['103'])
 
-  test('insert after first', () => {
-    Order.insert(parentDiv, inserted, b, '14')
+    new HostComponent('div', {}, parent, parent.order, 4)
+    expect(inserted.map(i => i.order)).toEqual(['103', '104'])
 
-    expect(inserted).toEqual([
-      {order: '13', element: a},
-      {order: '14', element: b},
-    ])
-  })
+    new HostComponent('div', {}, parent, parent.order, 1)
+    expect(inserted.map(i => i.order)).toEqual(['101', '103', '104'])
 
-  test('insert before first', () => {
-    Order.insert(parentDiv, inserted, c, '11')
-
-    expect(inserted).toEqual([
-      {order: '11', element: c},
-      {order: '13', element: a},
-      {order: '14', element: b},
-    ])
-  })
-
-  test('insert in between', () => {
-    Order.insert(parentDiv, inserted, d, '12')
-
-    expect(inserted).toEqual([
-      {order: '11', element: c},
-      {order: '12', element: d},
-      {order: '13', element: a},
-      {order: '14', element: b},
-    ])
+    new HostComponent('div', {}, parent, parent.order, 2)
+    expect(inserted.map(i => i.order)).toEqual(['101', '102', '103', '104'])
   })
 })

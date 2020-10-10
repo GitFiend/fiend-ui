@@ -1,5 +1,5 @@
 import {renderHost} from '../lib/component-types/host/host-component'
-import {RootNode} from '../lib/component-types/base'
+import {RootComponent} from '../lib/component-types/base'
 import {div} from '../lib/component-types/host/host-components'
 import {HostAttributes} from '../lib/component-types/host/host-component-types'
 
@@ -65,6 +65,6 @@ describe('simple div', () => {
   })
 })
 
-export function mkRoot(): RootNode {
-  return new RootNode(document.createElement('div'))
+export function mkRoot(): RootComponent {
+  return new RootComponent(document.createElement('div'))
 }

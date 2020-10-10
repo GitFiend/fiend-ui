@@ -1,4 +1,3 @@
-import {$F} from '../lib/component-types/fragment'
 import {render} from '../lib/render'
 import {screen} from '@testing-library/dom'
 import {$Val} from '../lib/observables/observable'
@@ -50,7 +49,7 @@ class A extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return $F(div(store.a().toString()), B.$({store}))
+    return [div(store.a().toString()), B.$({store})]
 
     // return (
     //   <F>
@@ -71,6 +70,6 @@ class C extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return $F(div(store.c().toString()))
+    return div(store.c().toString())
   }
 }
