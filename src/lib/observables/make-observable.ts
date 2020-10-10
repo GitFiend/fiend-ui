@@ -1,67 +1,12 @@
 import {Atom} from './observable'
 import {Computed} from './computed'
 
-// export function makeObservable3(object: Object, Con: Cons) {
-//   for (const p in object) {
-//     if (!p.startsWith('_')) {
-//       const innerName = `__${p}`
-//       const value: unknown = object[p as keyof object]
-//
-//       if (!(value instanceof Function)) {
-//         Object.defineProperties(object, {
-//           [innerName]: {
-//             value: new Atom(value),
-//           },
-//           [p]: {
-//             get() {
-//               return this[innerName].get()
-//             },
-//             set(value) {
-//               this[innerName].set(value)
-//             },
-//           },
-//         })
-//       }
-//     }
-//   }
-//
-//   const descriptors = Object.getOwnPropertyDescriptors(Con.prototype)
-//
-//   for (const [key, descriptor] of Object.entries(descriptors)) {
-//     if (descriptor.get !== undefined) {
-//       // Make a computed
-//       const innerName = `__${key}`
-//
-//       Object.defineProperties(object, {
-//         [innerName]: {
-//           value: new Computed(descriptor.get.bind(object)),
-//         },
-//         [key]: {
-//           get() {
-//             return this[innerName].get()
-//           },
-//         },
-//       })
-//     }
-//   }
-// }
-
 export type Constructor = {new (...args: any[]): {}}
-
-// export function fiend<T extends Cons>(constructor: T) {
-//   return class extends constructor {
-//     constructor(...args: any[]) {
-//       super(...args)
-//
-//       makeObservable3(this, constructor)
-//     }
-//   }
-// }
 
 export class Model {
   protected constructor() {}
 
-  static create<T extends typeof Model>(this: T): T['prototype'] {
+  static new<T extends typeof Model>(this: T): T['prototype'] {
     const model = new this() as T['prototype']
 
     makeObservable(model, this as any)
@@ -70,6 +15,7 @@ export class Model {
   }
 }
 
+// Decorator
 export function model<T extends Constructor>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
@@ -106,9 +52,11 @@ export function makeObservable(object: Object, Con: Constructor) {
     }
   }
 
-  const descriptors = Object.getOwnPropertyDescriptors(Con.prototype)
+  const descriptors: [string, TypedPropertyDescriptor<any>][] = Object.entries(
+    Object.getOwnPropertyDescriptors(Con.prototype)
+  )
 
-  for (const [key, descriptor] of Object.entries(descriptors)) {
+  for (const [key, descriptor] of descriptors) {
     if (key.startsWith('$') && descriptor.get !== undefined) {
       const valueName = `__${key}`
 

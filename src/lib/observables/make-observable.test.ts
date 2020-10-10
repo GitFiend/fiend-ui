@@ -56,7 +56,7 @@ function timeConstructor2(name: string, loops: number) {
     console.time(name)
     let c
     for (let i = 0; i < loops; i++) {
-      c = E.create()
+      c = E.new()
     }
     console.timeEnd(name)
   })
