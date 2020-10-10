@@ -2,7 +2,7 @@ import {$F} from './fragment'
 import {div} from './host/host-components'
 import {mkRoot} from '../../dom-tests/host.test'
 import {$Component} from '../observables/$-component'
-import {model} from '../observables/make-observable'
+import {Model, model} from '../observables/make-observable'
 
 describe('fragment', () => {
   test('one host child', () => {
@@ -55,8 +55,8 @@ describe('fragment', () => {
   })
 
   test('custom component with fragment', () => {
-    @model
-    class S {
+    // @model
+    class S extends Model {
       $text = 'text1'
     }
 
@@ -67,7 +67,8 @@ describe('fragment', () => {
     }
     const root = mkRoot()
 
-    const s = new S()
+    const s = S.create()
+
     root.render(C.$({store: s}))
     expect(root.element.innerHTML).toEqual('<div>text1</div>')
 

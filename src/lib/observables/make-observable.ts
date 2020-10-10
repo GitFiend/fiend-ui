@@ -58,6 +58,18 @@ export type Constructor = {new (...args: any[]): {}}
 //   }
 // }
 
+export class Model {
+  protected constructor() {}
+
+  static create<T extends typeof Model>(this: T): T['prototype'] {
+    const model = new this() as T['prototype']
+
+    makeObservable(model, this as any)
+
+    return model
+  }
+}
+
 export function model<T extends Constructor>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {

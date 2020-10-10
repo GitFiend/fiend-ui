@@ -1,4 +1,4 @@
-import {model} from './make-observable'
+import {Model, model} from './make-observable'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {observable} from 'mobx'
@@ -22,12 +22,18 @@ class D {
   b = 6
 }
 
+class E extends Model {
+  $a = 5
+  $b = 6
+}
+
 describe('new zeact class construction speed', () => {
   const loops = 10_000
 
   timeConstructor(B, 'plain', loops)
   timeConstructor(A, 'decorator', loops)
   timeConstructor(D, 'mobx', loops)
+  timeConstructor2('static', loops)
 })
 
 function timeConstructor<T extends {new (...args: any[]): {}}>(
@@ -40,6 +46,17 @@ function timeConstructor<T extends {new (...args: any[]): {}}>(
     let c
     for (let i = 0; i < loops; i++) {
       c = new C()
+    }
+    console.timeEnd(name)
+  })
+}
+
+function timeConstructor2(name: string, loops: number) {
+  test(name, () => {
+    console.time(name)
+    let c
+    for (let i = 0; i < loops; i++) {
+      c = E.create()
     }
     console.timeEnd(name)
   })
