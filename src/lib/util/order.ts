@@ -44,12 +44,12 @@ export class Order {
 
   static move(
     parent: RootComponent | HostComponent,
-    child: HostComponent | TextComponent,
-    prevOrder: string
+    child: HostComponent | TextComponent
   ) {
     const {inserted} = parent
+    const {key} = child
 
-    const i = inserted.findIndex(ins => ins.order === prevOrder)
+    const i = inserted.findIndex(ins => ins.key === key)
 
     if (i >= 0) {
       inserted.splice(i, 1)

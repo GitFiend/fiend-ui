@@ -42,8 +42,8 @@ export class HostComponent<P extends StandardProps = {}> {
     Order.insert(this, child)
   }
 
-  moveChild(child: HostComponent | TextComponent, prevOrder: string) {
-    Order.move(this, child, prevOrder)
+  moveChild(child: HostComponent | TextComponent) {
+    Order.move(this, child)
   }
 
   removeChild(child: HostComponent | TextComponent): void {
@@ -73,12 +73,14 @@ export function renderHost<P extends StandardProps = {}>(
   }
 
   if (prevTree._type === ComponentType.host && prevTree.tag === tag) {
-    if (prevTree.index !== index) {
-      const prevOrder = prevTree.order
-      prevTree.index = index
-      prevTree.order = Order.key(parentOrder, index)
+    const newOrder = Order.key(parentOrder, index)
+    const prevOrder = prevTree.order
 
-      parent.moveChild(prevTree, prevOrder)
+    if (prevOrder !== newOrder) {
+      prevTree.index = index
+      prevTree.order = newOrder
+
+      parent.moveChild(prevTree)
     }
 
     updateAttributes(prevTree.element, props, prevTree.props)

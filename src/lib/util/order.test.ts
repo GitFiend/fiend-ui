@@ -7,8 +7,8 @@ describe('Order.add comparisons', () => {
     expect(Order.key('1', 1) < Order.key('1', 2)).toBe(true)
   })
 
-  test('1.2 < 1.20', () => {
-    expect(Order.key('1', 1) < Order.key('1', 20)).toBe(true)
+  test('1 3 < 1 20', () => {
+    expect(Order.key('1', 3) < Order.key('1', 20)).toBe(true)
   })
 })
 

@@ -39,13 +39,14 @@ export function renderTextComponent(
   }
 
   if (prevTree._type === ComponentType.text) {
-    if (index !== prevTree.index) {
-      const prevOrder = prevTree.order
-      prevTree.index = index
-      prevTree.order = Order.key(parentOrder, index)
+    const prevOrder = prevTree.order
+    const newOrder = Order.key(parentOrder, index)
 
-      parent.moveChild(prevTree, prevOrder)
-      // parent.insertChild(prevTree.element, prevTree.order)
+    if (prevOrder !== newOrder) {
+      prevTree.index = index
+      prevTree.order = newOrder
+
+      parent.moveChild(prevTree)
     }
 
     if (prevTree.text === text) {

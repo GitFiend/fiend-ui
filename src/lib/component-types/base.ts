@@ -49,8 +49,8 @@ export class RootComponent {
     Order.remove(this, child)
   }
 
-  moveChild(child: HostComponent | TextComponent, prevOrder: string) {
-    Order.move(this, child, prevOrder)
+  moveChild(child: HostComponent | TextComponent) {
+    Order.move(this, child)
   }
 
   remove(): void {
