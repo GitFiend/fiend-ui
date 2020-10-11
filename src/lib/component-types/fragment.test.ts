@@ -67,7 +67,7 @@ describe('fragment', () => {
     }
     const root = mkRoot()
 
-    const s = S.new()
+    const s = S.$()
 
     root.render(C.$({store: s}))
     expect(root.element.innerHTML).toEqual('<div>text1</div>')

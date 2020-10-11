@@ -1,9 +1,20 @@
 import {Component} from './component'
 import {mkRoot} from '../../dom-tests/host.test'
 import {div} from './host/host-components'
+import {$Component} from '../observables/$-component'
+import {Model} from '../observables/make-observable'
 
 describe('component', () => {
   test('null in render should remove previous elements', () => {
+    class A extends Component<{ok: boolean}> {
+      render() {
+        const {ok} = this.props
+
+        if (!ok) return null
+        return div('OK')
+      }
+    }
+
     const root = mkRoot()
 
     root.render(A.$({ok: true}))
@@ -16,75 +27,83 @@ describe('component', () => {
   })
 })
 
-class A extends Component<{ok: boolean}> {
-  render() {
-    const {ok} = this.props
-
-    if (!ok) return null
-    return div('OK')
+describe('switch between custom and host component', () => {
+  class M extends Model {
+    $custom = false
   }
-}
 
-class Base {
-  n = 5
-
-  static new() {
-    return new this()
+  class Div extends Component {
+    render() {
+      return div('custom')
+    }
   }
-}
 
-class B extends Base {
-  n = 6
-}
+  test('switch to custom from host', () => {
+    class A extends $Component<{model: M}> {
+      render() {
+        const {model} = this.props
 
-describe('quick static test', () => {
-  test('it', () => {
-    const b = B.new()
+        if (model.$custom) {
+          return Div.$({})
+        }
+        return div('host')
+      }
+    }
 
-    expect(b.n).toEqual(6)
+    const root = mkRoot()
+    const model = M.$()
+
+    root.render(A.$({model}))
+    expect(root.element.innerHTML).toEqual('<div>host</div>')
+
+    model.$custom = true
+    expect(root.element.innerHTML).toEqual('<div>custom</div>')
+
+    model.$custom = false
+    expect(root.element.innerHTML).toEqual('<div>host</div>')
+  })
+
+  test('switch one inside array', () => {
+    class A extends $Component<{model: M}> {
+      render() {
+        const {model} = this.props
+
+        return [div('a'), model.$custom ? Div.$({}) : div('host')]
+      }
+    }
+
+    const root = mkRoot()
+    const model = M.$()
+
+    root.render(A.$({model}))
+    expect(root.element.innerHTML).toEqual('<div>a</div><div>host</div>')
+
+    model.$custom = true
+    expect(root.element.innerHTML).toEqual('<div>a</div><div>custom</div>')
+
+    model.$custom = false
+    expect(root.element.innerHTML).toEqual('<div>a</div><div>host</div>')
+  })
+
+  test('switch one to null', () => {
+    class A extends $Component<{model: M}> {
+      render() {
+        const {model} = this.props
+
+        return [model.$custom ? Div.$({}) : null, div('a')]
+      }
+    }
+
+    const root = mkRoot()
+    const model = M.$()
+
+    root.render(A.$({model}))
+    expect(root.element.innerHTML).toEqual('<div>a</div>')
+
+    model.$custom = true
+    expect(root.element.innerHTML).toEqual('<div>custom</div><div>a</div>')
+
+    model.$custom = false
+    expect(root.element.innerHTML).toEqual('<div>a</div>')
   })
 })
-
-// describe('retrieve first element', () => {
-//   test('single child', () => {
-//     class Div extends Component {
-//       render() {
-//         return div({children: this.props.children, className: 'Div'})
-//       }
-//     }
-//
-//     const root = mkRoot()
-//     const cmp = renderTree(
-//       Div.$({children: [div({children: ['a'], className: 'a'})]}),
-//       null,
-//       null,
-//       root,
-//       0
-//     )
-//
-//     const el = cmp.firstElement as HTMLDivElement
-//
-//     expect(el.className).toEqual('Div')
-//   })
-//
-//   test('single child nested', () => {
-//     class Div extends Component {
-//       render() {
-//         return Div2.$({})
-//       }
-//     }
-//
-//     class Div2 extends Component {
-//       render() {
-//         return div({children: this.props.children, className: 'Div'})
-//       }
-//     }
-//
-//     const root = mkRoot()
-//     const cmp = renderTree(Div.$({}), null, null, root, 0)
-//
-//     const el = cmp.firstElement as HTMLDivElement
-//
-//     expect(el.className).toEqual('Div')
-//   })
-// })

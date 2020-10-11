@@ -2,13 +2,12 @@ import {$Component} from './$-component'
 import {Subtree} from '../component-types/base'
 import {mkRoot} from '../../dom-tests/host.test'
 import {div} from '../component-types/host/host-components'
-import {model} from './make-observable'
+import {Model} from './make-observable'
 import {Component} from '../component-types/component'
 
 describe('$Component', () => {
   test('order 1', () => {
-    @model
-    class Store {
+    class Store extends Model {
       $num = 5
     }
 
@@ -30,7 +29,7 @@ describe('$Component', () => {
     }
 
     const root = mkRoot()
-    const store = new Store()
+    const store = Store.$()
 
     root.render(A.$({store, depth: 3}))
 
