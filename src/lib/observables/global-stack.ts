@@ -60,10 +60,10 @@ export class GlobalStack {
     return this.responderStack.some(r => r.responderType !== ResponderType.computed)
   }
 
-  insideAction(): boolean {
-    // return this.actionStack.length > 0
-    return this.actionStack !== null
-  }
+  // insideAction(): boolean {
+  //   // return this.actionStack.length > 0
+  //   return this.actionStack !== null
+  // }
 
   /*
   We don't wait till the end of an action before running a computed if accessed as

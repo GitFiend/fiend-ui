@@ -1,6 +1,7 @@
 import {globalStack} from './global-stack'
 import {UnorderedResponder} from './responder'
 import {$Component} from './$-component'
+import {RunStack} from './run-stack'
 
 /*
 A Notifier is something with observable-like behaviour.
@@ -33,19 +34,22 @@ export function notify(notifier: Notifier) {
       notifier.orderedResponders = new Map()
       notifier.unorderedResponders = new Set()
 
-      runResponders(unorderedResponders, orderedResponders)
+      RunStack.runResponders(unorderedResponders, orderedResponders)
+      // runResponders(unorderedResponders, orderedResponders)
     }
   }
 }
 
-export function runResponders(
-  unorderedResponders: Set<UnorderedResponder>,
-  orderedResponders: Map<string, $Component>
-) {
-  for (const s of unorderedResponders) s.run()
-
-  const keys = Array.from(orderedResponders.keys())
-  keys.sort()
-
-  for (const key of keys) orderedResponders.get(key)?.run()
-}
+// export function runResponders(
+//   unorderedResponders: Set<UnorderedResponder>,
+//   orderedResponders: Map<string, $Component>
+// ) {
+//   RunStack.runResponders(unorderedResponders, orderedResponders)
+//
+//   // for (const s of unorderedResponders) s.run()
+//   //
+//   // const keys = Array.from(orderedResponders.keys())
+//   // keys.sort()
+//   //
+//   // for (const key of keys) orderedResponders.get(key)?.run()
+// }

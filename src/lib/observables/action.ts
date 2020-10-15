@@ -1,7 +1,8 @@
 import {globalStack} from './global-stack'
 import {Responder, UnorderedResponder} from './responder'
-import {Notifier, runResponders} from './notifier'
+import {Notifier} from './notifier'
 import {$Component} from './$-component'
+import {RunStack} from './run-stack'
 
 //
 export function $RunInAction(f: () => void) {
@@ -71,7 +72,8 @@ export class ActionState {
     //   runResponders(unorderedResponders, orderedResponders)
     // }
 
-    runResponders(this.unorderedResponders, this.orderedResponders)
+    RunStack.runResponders(this.unorderedResponders, this.orderedResponders)
+    // runResponders(this.unorderedResponders, this.orderedResponders)
   }
 }
 
