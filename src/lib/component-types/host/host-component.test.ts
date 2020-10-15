@@ -1,5 +1,5 @@
 import {div} from './host-components'
-import {Component} from '../component'
+import {PureComponent} from '../pure-component'
 import {Subtree} from '../base'
 import {mkRoot} from '../../../dom-tests/host.test'
 
@@ -66,7 +66,7 @@ describe('div renders', () => {
   })
 })
 
-class A extends Component {
+class A extends PureComponent {
   render(): Subtree {
     return div('omg')
   }

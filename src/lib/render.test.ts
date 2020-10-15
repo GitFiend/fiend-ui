@@ -2,10 +2,10 @@ import {div} from './component-types/host/host-components'
 import {render} from './render'
 import {$Component} from './observables/$-component'
 import {model} from './observables/make-observable'
-import {Component} from './component-types/component'
+import {PureComponent} from './component-types/pure-component'
 import {Subtree} from './component-types/base'
 
-class F extends Component {
+class F extends PureComponent {
   render() {
     return this.props.children ?? []
   }
@@ -44,12 +44,12 @@ describe('render', () => {
       $a = true
     }
 
-    class A extends Component {
+    class A extends PureComponent {
       render() {
         return div('a')
       }
     }
-    class B extends Component {
+    class B extends PureComponent {
       render() {
         return div('b')
       }

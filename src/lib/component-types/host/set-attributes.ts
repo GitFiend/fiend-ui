@@ -1,4 +1,4 @@
-import {Rec} from '../component'
+import {Rec} from '../pure-component'
 import {RefObject} from '../../util/ref'
 
 //

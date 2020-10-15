@@ -1,8 +1,9 @@
-import {Component} from '../component-types/component'
+import {PureComponent} from '../component-types/pure-component'
 import {globalStack} from './global-stack'
 import {F0, OrderedResponder, ResponderType} from './responder'
+import {makeObservable} from './make-observable'
 
-export abstract class $Component<P extends {} = {}> extends Component<P>
+export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   implements OrderedResponder {
   responderType = ResponderType.component as const
 
@@ -12,6 +13,8 @@ export abstract class $Component<P extends {} = {}> extends Component<P>
   private _removed = false
 
   mount() {
+    makeObservable(this, this.constructor as any)
+
     this.run()
     this.componentDidMount()
   }

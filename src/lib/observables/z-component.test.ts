@@ -3,7 +3,7 @@ import {Subtree} from '../component-types/base'
 import {mkRoot} from '../../dom-tests/host.test'
 import {div} from '../component-types/host/host-components'
 import {Model} from './make-observable'
-import {Component} from '../component-types/component'
+import {PureComponent} from '../component-types/pure-component'
 
 describe('$Component', () => {
   test('order 1', () => {
@@ -63,7 +63,7 @@ describe('$Component', () => {
   test('order, no keys, custom component', () => {
     const root = mkRoot()
 
-    class Div extends Component {
+    class Div extends PureComponent {
       render(): Subtree {
         return div({children: this.props.children})
       }

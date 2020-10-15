@@ -1,6 +1,6 @@
 import {HostComponent} from './host/host-component'
 import {TextComponent} from './text-component'
-import {Component, CustomComponent, StandardProps} from './component'
+import {PureComponent, CustomComponent, StandardProps} from './pure-component'
 import {Render} from '../render'
 import {Order} from '../util/order'
 
@@ -11,7 +11,7 @@ export interface Tree<P extends StandardProps = StandardProps> {
 
 export type Subtree = Tree | string | number | null
 
-export type AnyComponent = HostComponent | TextComponent | Component
+export type AnyComponent = HostComponent | TextComponent | PureComponent
 
 export enum ComponentType {
   host,

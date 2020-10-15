@@ -1,5 +1,5 @@
 import {Subtree, Tree} from './component-types/base'
-import {Component} from './component-types/component'
+import {PureComponent} from './component-types/pure-component'
 
 declare global {
   namespace JSX {
@@ -7,12 +7,12 @@ declare global {
     type Element = any
 
     // @ts-ignore
-    interface ElementClass extends Component<any> {}
+    interface ElementClass extends PureComponent<any> {}
   }
 }
 
 export function createElement(
-  type: keyof HTMLElementTagNameMap | typeof Component,
+  type: keyof HTMLElementTagNameMap | typeof PureComponent,
   props: Record<string, unknown> | null,
   ...children: Subtree[]
 ): Tree {

@@ -1,4 +1,4 @@
-import {Component} from '../lib/component-types/component'
+import {PureComponent} from '../lib/component-types/pure-component'
 import {createRef} from '../lib/util/ref'
 import {render} from '../lib/render'
 import {canvas} from '../lib/component-types/host/host-components'
@@ -11,7 +11,7 @@ interface TextCanvasProps {
 
 const boxHeight = 30
 
-export class TextCanvas extends Component<TextCanvasProps> {
+export class TextCanvas extends PureComponent<TextCanvasProps> {
   ref = createRef<HTMLCanvasElement>()
 
   render() {

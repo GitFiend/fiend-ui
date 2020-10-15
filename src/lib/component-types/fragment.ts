@@ -1,7 +1,7 @@
-import {Component} from './component'
+import {PureComponent} from './pure-component'
 import {Subtree} from './base'
 
-class Fragment extends Component {
+class Fragment extends PureComponent {
   render() {
     return this.props.children ?? []
   }

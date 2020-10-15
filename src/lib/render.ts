@@ -1,7 +1,7 @@
 import {AnyComponent, RootComponent, Subtree, Tree} from './component-types/base'
 import {HostComponent, renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
-import {Component, renderCustom} from './component-types/component'
+import {PureComponent, renderCustom} from './component-types/pure-component'
 
 class RenderManager {
   rootNode: RootComponent | null = null
@@ -33,7 +33,7 @@ export class Render {
     parent: HostComponent | RootComponent,
     parentOrder: string,
     index: number
-  ): HostComponent | Component {
+  ): HostComponent | PureComponent {
     const {_type, props} = tree
 
     if (typeof _type === 'string') {

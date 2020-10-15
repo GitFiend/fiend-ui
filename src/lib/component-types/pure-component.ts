@@ -20,7 +20,7 @@ export type StandardProps = {children?: Subtree[]; key?: string}
 export type PropsWithChildren<T> = T & StandardProps
 
 // P = {} to simply prop type definitions.
-export abstract class Component<P = {}> implements ComponentBase {
+export abstract class PureComponent<P = {}> implements ComponentBase {
   _type = ComponentType.custom as const
   props: PropsWithChildren<P>
   order: string
@@ -82,7 +82,7 @@ export abstract class Component<P = {}> implements ComponentBase {
     this.subComponents.clear()
   }
 
-  static $<T extends Component>(
+  static $<T extends PureComponent>(
     this: new (...args: never[]) => T,
     props: T['props']
   ): Tree {
@@ -123,7 +123,7 @@ export type CustomComponent<P extends StandardProps> = new <P>(
   parent: HostComponent | RootComponent,
   parentOrder: string,
   index: number
-) => Component
+) => PureComponent
 
 function makeCustomComponent<P extends StandardProps>(
   cons: CustomComponent<P>,

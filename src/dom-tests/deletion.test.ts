@@ -1,4 +1,4 @@
-import {Component} from '../lib/component-types/component'
+import {PureComponent} from '../lib/component-types/pure-component'
 import {Subtree} from '../lib/component-types/base'
 import {mkRoot} from './host.test'
 import {render} from '../lib/render'
@@ -130,7 +130,7 @@ describe('deletion of custom component', () => {
   // })
 
   test('different order', () => {
-    class Outer extends Component {
+    class Outer extends PureComponent {
       render() {
         return [A.$({}), h1('Heading')]
       }
@@ -143,7 +143,7 @@ describe('deletion of custom component', () => {
   })
 })
 
-class C extends Component {
+class C extends PureComponent {
   render(): Subtree {
     const {children = []} = this.props
 
@@ -151,7 +151,7 @@ class C extends Component {
   }
 }
 
-class A extends Component {
+class A extends PureComponent {
   render(): Subtree | null {
     return div('A')
   }

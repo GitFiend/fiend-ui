@@ -1,4 +1,4 @@
-import {Component} from '../lib/component-types/component'
+import {PureComponent} from '../lib/component-types/pure-component'
 import {render} from '../lib/render'
 import {Tree} from '../lib/component-types/base'
 import {div} from '../lib/component-types/host/host-components'
@@ -11,7 +11,7 @@ interface BoxesProps {
   height: number
 }
 
-export class Boxes extends Component<BoxesProps> {
+export class Boxes extends PureComponent<BoxesProps> {
   render() {
     const t = ((Date.now() - this.tick) / 20) % boxHeight
 

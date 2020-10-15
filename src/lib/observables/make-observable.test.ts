@@ -34,6 +34,10 @@ describe('new zeact class construction speed', () => {
   timeConstructor(A, 'decorator', loops)
   timeConstructor(D, 'mobx', loops)
   timeConstructor2('static', loops)
+
+  console.time('cold construction')
+  const e = E.$()
+  console.timeEnd('cold construction')
 })
 
 function timeConstructor<T extends {new (...args: any[]): {}}>(
@@ -54,10 +58,15 @@ function timeConstructor<T extends {new (...args: any[]): {}}>(
 function timeConstructor2(name: string, loops: number) {
   test(name, () => {
     console.time(name)
+    const t = Date.now()
+
     let c
     for (let i = 0; i < loops; i++) {
       c = E.$()
     }
+
+    const duration = Date.now() - t
+    console.log(`${name} took ${duration}ms, ${duration / loops}ms each`)
     console.timeEnd(name)
   })
 }

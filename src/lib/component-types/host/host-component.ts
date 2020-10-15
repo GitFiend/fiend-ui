@@ -1,7 +1,7 @@
 import {AnyComponent, ComponentType, RootComponent, Subtree} from '../base'
 import {Render} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
-import {StandardProps} from '../component'
+import {StandardProps} from '../pure-component'
 import {ElementNameMap} from './host-component-types'
 import {Order} from '../../util/order'
 import {TextComponent} from '../text-component'
