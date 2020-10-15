@@ -57,7 +57,7 @@ export class GlobalStack {
 
   // "Inside reactive context"
   insideNonComputedResponder(): boolean {
-    return this.responderStack.some(r => r.type !== ResponderType.computed)
+    return this.responderStack.some(r => r.responderType !== ResponderType.computed)
   }
 
   insideAction(): boolean {

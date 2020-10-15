@@ -1,6 +1,7 @@
-import {Notifier, notify, addCurrentResponderToOurList} from './notifier'
+import {addCurrentResponderToOurList, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
-import {OrderedResponder, ResponderType, UnorderedResponder} from './responder'
+import {ResponderType, UnorderedResponder} from './responder'
+import {$Component} from './$-component'
 
 /*
 Notes:
@@ -29,10 +30,10 @@ If get is called on the computed, then we need to recalculate and remove it from
  */
 
 export class Computed<T> implements UnorderedResponder, Notifier {
-  type = ResponderType.computed as const
+  responderType = ResponderType.computed as const
   ordered = false as const
 
-  orderedResponders = new Map<string, OrderedResponder>()
+  orderedResponders = new Map<string, $Component>()
   unorderedResponders = new Set<UnorderedResponder>()
 
   value: T | any

@@ -4,7 +4,7 @@ import {F0, OrderedResponder, ResponderType} from './responder'
 
 export abstract class $Component<P extends {} = {}> extends Component<P>
   implements OrderedResponder {
-  type = ResponderType.component as const
+  responderType = ResponderType.component as const
 
   ordered = true as const
   disposers: F0[] = []

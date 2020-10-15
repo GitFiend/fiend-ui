@@ -1,4 +1,5 @@
 import {globalStack} from './global-stack'
+import {$Component} from './$-component'
 
 /*
 A Responder is an object that listens accesses to notifiers (observables). When these
@@ -15,17 +16,17 @@ export enum ResponderType {
   component,
 }
 
-export type Responder = OrderedResponder | UnorderedResponder
+export type Responder = $Component | UnorderedResponder
 
 export interface OrderedResponder {
-  type: ResponderType
+  responderType: ResponderType
   ordered: true
   order: string
   run(): void
 }
 
 export interface UnorderedResponder {
-  type: ResponderType
+  responderType: ResponderType
   ordered: false
   run(): void
 }
@@ -33,7 +34,7 @@ export interface UnorderedResponder {
 export type F0 = () => void
 
 class AutoRun implements UnorderedResponder {
-  type = ResponderType.autoRun as const
+  responderType = ResponderType.autoRun as const
   ordered = false as const
   active = true
 
@@ -61,7 +62,7 @@ export function $AutoRun(f: () => void): F0 {
 }
 
 class Reaction<T> implements UnorderedResponder {
-  type = ResponderType.reaction
+  responderType = ResponderType.reaction
   ordered = false as const
   value: T
 

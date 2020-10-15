@@ -1,6 +1,7 @@
 import {globalStack} from './global-stack'
-import {OrderedResponder, Responder, UnorderedResponder} from './responder'
+import {Responder, UnorderedResponder} from './responder'
 import {Notifier, runResponders} from './notifier'
+import {$Component} from './$-component'
 
 //
 export function $RunInAction(f: () => void) {
@@ -45,7 +46,7 @@ An Action lets us batch our notifiers.
  */
 export class ActionState {
   unorderedResponders = new Set<UnorderedResponder>()
-  orderedResponders = new Map<string, OrderedResponder>()
+  orderedResponders = new Map<string, $Component>()
 
   constructor(public runningResponder: Responder | null) {}
 

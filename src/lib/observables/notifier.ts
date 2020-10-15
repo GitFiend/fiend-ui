@@ -1,5 +1,6 @@
 import {globalStack} from './global-stack'
-import {OrderedResponder, UnorderedResponder} from './responder'
+import {UnorderedResponder} from './responder'
+import {$Component} from './$-component'
 
 /*
 A Notifier is something with observable-like behaviour.
@@ -9,7 +10,7 @@ Could be a plain observable or a computed (Computeds are both Notifiers and Resp
  */
 export interface Notifier {
   unorderedResponders: Set<UnorderedResponder>
-  orderedResponders: Map<string, OrderedResponder>
+  orderedResponders: Map<string, $Component>
 }
 
 export function addCurrentResponderToOurList(notifier: Notifier) {
@@ -39,7 +40,7 @@ export function notify(notifier: Notifier) {
 
 export function runResponders(
   unorderedResponders: Set<UnorderedResponder>,
-  orderedResponders: Map<string, OrderedResponder>
+  orderedResponders: Map<string, $Component>
 ) {
   for (const s of unorderedResponders) s.run()
 
