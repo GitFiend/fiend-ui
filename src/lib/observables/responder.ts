@@ -1,5 +1,5 @@
 import {globalStack} from './global-stack'
-import {$Component} from './$-component'
+import {$Component} from './$component'
 
 /*
 A Responder is an object that listens accesses to notifiers (observables). When these

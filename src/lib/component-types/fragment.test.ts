@@ -1,8 +1,8 @@
 import {$F} from './fragment'
 import {div} from './host/host-components'
 import {mkRoot} from '../../dom-tests/host.test'
-import {$Component} from '../observables/$-component'
-import {Model, model} from '../observables/make-observable'
+import {$Component} from '../observables/$component'
+import {$Model, model} from '../observables/$model'
 
 describe('fragment', () => {
   test('one host child', () => {
@@ -56,7 +56,7 @@ describe('fragment', () => {
 
   test('custom component with fragment', () => {
     // @model
-    class S extends Model {
+    class S extends $Model {
       $text = 'text1'
     }
 

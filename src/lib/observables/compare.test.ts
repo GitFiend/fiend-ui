@@ -2,7 +2,7 @@ import {autorun, computed, IReactionDisposer, observable, runInAction} from 'mob
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {$Calc} from './computed'
-import {model} from './make-observable'
+import {model} from './$model'
 
 xdescribe('compare mbox computeds with zeact', () => {
   const loops = 1000

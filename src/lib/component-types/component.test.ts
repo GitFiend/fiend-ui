@@ -1,8 +1,8 @@
 import {PureComponent} from './pure-component'
 import {mkRoot} from '../../dom-tests/host.test'
 import {div} from './host/host-components'
-import {$Component} from '../observables/$-component'
-import {Model} from '../observables/make-observable'
+import {$Component} from '../observables/$component'
+import {$Model} from '../observables/$model'
 
 describe('component', () => {
   test('null in render should remove previous elements', () => {
@@ -28,7 +28,7 @@ describe('component', () => {
 })
 
 describe('switch between custom and host component', () => {
-  class M extends Model {
+  class M extends $Model {
     $custom = false
   }
 

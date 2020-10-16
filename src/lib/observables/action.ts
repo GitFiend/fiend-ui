@@ -1,7 +1,7 @@
 import {globalStack} from './global-stack'
 import {Responder, UnorderedResponder} from './responder'
 import {Notifier} from './notifier'
-import {$Component} from './$-component'
+import {$Component} from './$component'
 import {RunStack} from './run-stack'
 
 //
@@ -101,11 +101,11 @@ RefVirtualPositions.$firstVisible <-  8
 RefVirtualPositions.$lastVisible <-  10
 RefVirtualPositions.$current <-  (2000)[…]
 
-$-component.ts?49e1:20 run CommitCardList
+$component.ts?49e1:20 run CommitCardList
 commit-card-list.ts?2833:84 CommitCardList render
 commit-card-list.ts?2833:34 CommitCardListInner render 1000
-$-component.ts?49e1:20 run CommitCardBackground
-$-component.ts?49e1:20 run CommitCardListInner
+$component.ts?49e1:20 run CommitCardBackground
+$component.ts?49e1:20 run CommitCardListInner
 commit-card-list.ts?2833:34 CommitCardListInner render 1000
 
 Explanation:

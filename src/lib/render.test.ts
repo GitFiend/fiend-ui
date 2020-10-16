@@ -1,7 +1,7 @@
 import {div} from './component-types/host/host-components'
 import {render} from './render'
-import {$Component} from './observables/$-component'
-import {model} from './observables/make-observable'
+import {$Component} from './observables/$component'
+import {model} from './observables/$model'
 import {PureComponent} from './component-types/pure-component'
 import {Subtree} from './component-types/base'
 

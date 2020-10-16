@@ -1,6 +1,6 @@
 import {globalStack} from './global-stack'
 import {UnorderedResponder} from './responder'
-import {$Component} from './$-component'
+import {$Component} from './$component'
 import {RunStack} from './run-stack'
 
 /*

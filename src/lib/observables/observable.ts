@@ -1,6 +1,6 @@
 import {UnorderedResponder} from './responder'
 import {addCurrentResponderToOurList, Notifier, notify} from './notifier'
-import {$Component} from './$-component'
+import {$Component} from './$component'
 
 export interface Observable<T> {
   (): Readonly<T>

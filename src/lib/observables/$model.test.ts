@@ -1,4 +1,4 @@
-import {Model, model} from './make-observable'
+import {$Model, model} from './$model'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {observable} from 'mobx'
@@ -22,7 +22,7 @@ class D {
   b = 6
 }
 
-class E extends Model {
+class E extends $Model {
   $a = 5
   $b = 6
 }

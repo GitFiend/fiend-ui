@@ -3,10 +3,10 @@ import {Computed} from './computed'
 
 export type Constructor = {new (...args: any[]): {}}
 
-export class Model {
+export class $Model {
   protected constructor() {}
 
-  static $<T extends typeof Model>(this: T): T['prototype'] {
+  static $<T extends typeof $Model>(this: T): T['prototype'] {
     const model = new this() as T['prototype']
 
     makeObservable(model, this as any)

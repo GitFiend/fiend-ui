@@ -1,7 +1,7 @@
 import {addCurrentResponderToOurList, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
 import {ResponderType, UnorderedResponder} from './responder'
-import {$Component} from './$-component'
+import {$Component} from './$component'
 
 /*
 Notes:

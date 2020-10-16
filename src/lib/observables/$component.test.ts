@@ -1,13 +1,13 @@
-import {$Component} from './$-component'
+import {$Component} from './$component'
 import {Subtree} from '../component-types/base'
 import {mkRoot} from '../../dom-tests/host.test'
 import {div} from '../component-types/host/host-components'
-import {Model} from './make-observable'
+import {$Model} from './$model'
 import {PureComponent} from '../component-types/pure-component'
 
 describe('$Component', () => {
   test('order 1', () => {
-    class Store extends Model {
+    class Store extends $Model {
       $num = 5
     }
 

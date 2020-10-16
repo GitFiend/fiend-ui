@@ -1,5 +1,5 @@
 import {UnorderedResponder} from './responder'
-import {$Component} from './$-component'
+import {$Component} from './$component'
 import {OArray} from '../util/o-array'
 
 export class RunStack {

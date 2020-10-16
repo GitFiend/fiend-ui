@@ -1,7 +1,7 @@
 import {PureComponent} from '../component-types/pure-component'
 import {globalStack} from './global-stack'
 import {F0, OrderedResponder, ResponderType} from './responder'
-import {makeObservable} from './make-observable'
+import {makeObservable} from './$model'
 
 export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   implements OrderedResponder {
