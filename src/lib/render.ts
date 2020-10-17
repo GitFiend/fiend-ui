@@ -3,7 +3,7 @@ import {HostComponent, renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {PureComponent, renderCustom} from './component-types/pure-component'
 import {RootComponent} from './component-types/root-component'
-import {FiendNode, FiendElement} from './util/element'
+import {ElementType, FiendElement, FiendNode, HostElement} from './util/element'
 
 class RenderManager {
   rootNode: RootComponent | null = null
@@ -36,12 +36,10 @@ export class Render {
     parentOrder: string,
     index: number
   ): HostComponent | PureComponent {
-    const {_type, props} = tree
-
-    if (typeof _type === 'string') {
-      return renderHost(_type, props, prevTree, parent, parentOrder, index)
+    if (tree.elementType === ElementType.host) {
+      return renderHost(tree, prevTree, parent, parentOrder, index)
     } else {
-      return renderCustom(_type, props, prevTree, parent, parentOrder, index)
+      return renderCustom(tree, prevTree, parent, parentOrder, index)
     }
   }
 

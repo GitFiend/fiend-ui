@@ -1,10 +1,4 @@
-import {
-  makeHtmlElementConstructor,
-  makeSvgElementConstructor,
-  PolyLineAttributes,
-  SvgAttributes,
-} from './host-component-types'
-import {FiendNode, FiendElement} from '../../..'
+import {makeHtmlElementConstructor} from './host-component-types'
 
 export const h1 = makeHtmlElementConstructor('h1')
 export const h2 = makeHtmlElementConstructor('h2')
@@ -27,11 +21,3 @@ export const canvas = makeHtmlElementConstructor('canvas')
 export const form = makeHtmlElementConstructor('form')
 export const input = makeHtmlElementConstructor('input')
 export const label = makeHtmlElementConstructor('label')
-
-export const svg = makeSvgElementConstructor('svg') as (
-  ...args: [SvgAttributes, ...FiendNode[]] | FiendNode[]
-) => FiendElement
-
-export const polyline = makeSvgElementConstructor('polyline') as (
-  ...args: [PolyLineAttributes, ...FiendNode[]] | FiendNode[]
-) => FiendElement

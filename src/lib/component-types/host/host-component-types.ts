@@ -1,5 +1,6 @@
 import {RefObject} from '../../util/ref'
-import {FiendNode, FiendElement} from '../../..'
+import {FiendNode} from '../../..'
+import {ElementNamespace, ElementType, HostElement} from '../../util/element'
 
 type DataPropertyNames<T> = {
   [K in keyof T]: T[K] extends Function ? never : K
@@ -38,43 +39,31 @@ export type SvgElementAttributes<N extends keyof SVGElementTagNameMap> = Omit<
 
 export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap>(
   tagName: N
-): (props?: HostAttributes<N> | string) => FiendElement {
+): (props?: HostAttributes<N> | string) => HostElement {
   return props => {
     if (props === undefined)
       return {
+        elementType: ElementType.host,
         _type: tagName,
+        namespace: ElementNamespace.html,
         props: {},
       }
+
     if (typeof props === 'string')
       return {
+        elementType: ElementType.host,
         _type: tagName,
+        namespace: ElementNamespace.html,
         props: {
           children: [props],
         },
       }
 
     return {
+      elementType: ElementType.host,
       _type: tagName,
+      namespace: ElementNamespace.html,
       props,
     }
   }
-}
-
-export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
-  tagName: N
-): (props: SvgElementAttributes<N>) => FiendElement {
-  return props => {
-    return {
-      _type: tagName,
-      props,
-    }
-  }
-}
-
-export type SvgAttributes = Omit<SvgElementAttributes<'svg'>, 'width' | 'height'> & {
-  width?: number
-  height?: number
-}
-export type PolyLineAttributes = Omit<SvgElementAttributes<'polyline'>, 'points'> & {
-  points?: string
 }

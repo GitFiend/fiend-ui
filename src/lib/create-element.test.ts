@@ -1,4 +1,5 @@
 import {div, h1, p} from './component-types/host/host-components'
+import {ElementNamespace, ElementType} from './util/element'
 
 // const numLoops = 300000
 
@@ -14,6 +15,8 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'h1',
+      elementType: ElementType.host,
+      namespace: ElementNamespace.html,
       props: {children: ['Heading']},
     })
   })
@@ -23,16 +26,22 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'div',
+      elementType: ElementType.host,
+      namespace: ElementNamespace.html,
       props: {
         children: [
           {
             _type: 'h1',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['Heading'],
             },
           },
           {
             _type: 'p',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['paragraph'],
             },
@@ -47,22 +56,30 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'div',
+      elementType: ElementType.host,
+      namespace: ElementNamespace.html,
       props: {
         children: [
           {
             _type: 'div',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['1'],
             },
           },
           {
             _type: 'div',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['2'],
             },
           },
           {
             _type: 'div',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['3'],
             },
@@ -77,28 +94,38 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'div',
+      elementType: ElementType.host,
+      namespace: ElementNamespace.html,
       props: {
         children: [
           {
             _type: 'h1',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['Heading'],
             },
           },
           {
             _type: 'div',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['1'],
             },
           },
           {
             _type: 'div',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['2'],
             },
           },
           {
             _type: 'div',
+            elementType: ElementType.host,
+            namespace: ElementNamespace.html,
             props: {
               children: ['3'],
             },

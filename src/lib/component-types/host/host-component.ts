@@ -6,7 +6,12 @@ import {Order} from '../../util/order'
 import {TextComponent} from '../text-component'
 import {RootComponent} from '../root-component'
 import {FiendNode} from '../../..'
-import {StandardProps} from '../../util/element'
+import {
+  ElementNamespace,
+  HostElement,
+  StandardProps,
+  SvgElement,
+} from '../../util/element'
 
 export class HostComponent<P extends StandardProps = {}> {
   _type = ComponentType.host as const
@@ -19,6 +24,7 @@ export class HostComponent<P extends StandardProps = {}> {
 
   constructor(
     public tag: keyof ElementNameMap,
+    public namespace: ElementNamespace,
     public props: P,
     public parent: HostComponent | RootComponent,
     parentOrder: string,
@@ -27,8 +33,16 @@ export class HostComponent<P extends StandardProps = {}> {
     this.order = Order.key(parentOrder, index)
     this.key = this.props.key ?? this.order
 
-    this.element = document.createElement(tag) as ElementNameMap[this['tag']]
-    setAttributesFromProps(this.element, props)
+    if (namespace === ElementNamespace.svg) {
+      this.element = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        tag
+      ) as ElementNameMap[this['tag']]
+    } else {
+      this.element = document.createElement(tag) as ElementNameMap[this['tag']]
+    }
+
+    setAttributesFromProps(this.element, namespace, props)
 
     this.renderSubtrees(props.children ?? [])
 
@@ -63,18 +77,22 @@ export class HostComponent<P extends StandardProps = {}> {
 
 // TODO: prevTree.children? parent.children? Seems there might be a bug here.
 export function renderHost<P extends StandardProps = {}>(
-  tag: keyof ElementNameMap,
-  props: P,
+  tree: HostElement | SvgElement,
+  // tag: keyof ElementNameMap,
+  // namespace: ElementNamespace,
+  // props: P,
   prevTree: AnyComponent | null,
   parent: RootComponent | HostComponent,
   parentOrder: string,
   index: number
 ): HostComponent {
+  const {_type, namespace, props} = tree
+
   if (prevTree === null) {
-    return new HostComponent(tag, props, parent, parentOrder, index)
+    return new HostComponent(_type, namespace, props, parent, parentOrder, index)
   }
 
-  if (prevTree._type === ComponentType.host && prevTree.tag === tag) {
+  if (prevTree._type === ComponentType.host && prevTree.tag === _type) {
     const newOrder = Order.key(parentOrder, index)
     const prevOrder = prevTree.order
 
@@ -85,7 +103,7 @@ export function renderHost<P extends StandardProps = {}>(
       parent.moveChild(prevTree)
     }
 
-    updateAttributes(prevTree.element, props, prevTree.props)
+    updateAttributes(prevTree.element, namespace, props, prevTree.props)
     prevTree.props = props
     prevTree.renderSubtrees(props.children ?? [])
 
@@ -94,6 +112,6 @@ export function renderHost<P extends StandardProps = {}>(
     // Type has changed. Remove it.
     prevTree.remove()
 
-    return new HostComponent(tag, props, parent, parentOrder, index)
+    return new HostComponent(_type, namespace, props, parent, parentOrder, index)
   }
 }

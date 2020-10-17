@@ -19,10 +19,8 @@ export {
   li,
   ol,
   p,
-  polyline,
   source,
   span,
-  svg,
   ul,
   video,
   form,
@@ -35,3 +33,5 @@ export {$Model} from './lib/observables/$model'
 export {$AutoRun, $Reaction} from './lib/observables/responder'
 export {c, s} from './lib/util/style'
 export {FiendNode, FiendElement} from './lib/util/element'
+export {polyline} from './lib/component-types/host/svg-components'
+export {svg} from './lib/component-types/host/svg-components'

@@ -3,6 +3,7 @@ import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {Rec} from '../pure-component'
 import {button} from './host-components'
 import {render} from '../../render'
+import {ElementNamespace} from '../../util/element'
 
 describe('setAttributesFromProps', () => {
   test('add class', () => {
@@ -15,7 +16,7 @@ describe('setAttributesFromProps', () => {
       className: 'simple',
     }
 
-    setAttributesFromProps(div, props as Rec)
+    setAttributesFromProps(div, ElementNamespace.html, props as Rec)
 
     expect(parent.innerHTML).toEqual('<div class="simple"></div>')
   })
@@ -32,7 +33,7 @@ describe('updateAttributes', () => {
       className: 'simple',
     }
 
-    setAttributesFromProps(div, props as Rec)
+    setAttributesFromProps(div, ElementNamespace.html, props as Rec)
 
     expect(parent.innerHTML).toEqual('<div class="simple"></div>')
 
@@ -40,7 +41,7 @@ describe('updateAttributes', () => {
       id: 'simple',
     }
 
-    updateAttributes(div, newProps as Rec, props as Rec)
+    updateAttributes(div, ElementNamespace.html, newProps as Rec, props as Rec)
 
     expect(parent.innerHTML).toEqual('<div id="simple"></div>')
   })

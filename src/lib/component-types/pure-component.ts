@@ -1,4 +1,5 @@
-import type {FiendElement, FiendNode, StandardProps} from '../util/element'
+import type {CustomElement, FiendNode, StandardProps} from '../util/element'
+import {ElementType} from '../util/element'
 import {AnyComponent, ComponentBase, ComponentType} from './base-component'
 import {Render} from '../render'
 import {time, timeEnd} from '../util/measure'
@@ -78,27 +79,29 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
   static $<T extends PureComponent>(
     this: new (...args: never[]) => T,
     props: T['props']
-  ): FiendElement {
+  ): CustomElement {
     return {
       _type: this as any,
+      elementType: ElementType.custom,
       props,
     }
   }
 }
 
 export function renderCustom<P extends StandardProps>(
-  cons: CustomComponent<P>,
-  props: P,
+  element: CustomElement,
   prevTree: AnyComponent | null,
   parent: HostComponent | RootComponent,
   parentOrder: string,
   index: number
 ) {
+  const {_type, props} = element
+
   if (prevTree === null) {
-    return makeCustomComponent(cons, props, parent, parentOrder, index)
+    return makeCustomComponent(_type, props, parent, parentOrder, index)
   }
 
-  if (prevTree._type === ComponentType.custom && prevTree instanceof cons) {
+  if (prevTree._type === ComponentType.custom && prevTree instanceof _type) {
     prevTree.index = index
     prevTree.order = Order.key(parentOrder, index)
     prevTree.updateWithNewProps(props)
@@ -108,7 +111,7 @@ export function renderCustom<P extends StandardProps>(
 
   prevTree.remove()
 
-  return makeCustomComponent(cons, props, parent, parentOrder, index)
+  return makeCustomComponent(_type, props, parent, parentOrder, index)
 }
 
 export type CustomComponent<P extends StandardProps> = new <P>(
