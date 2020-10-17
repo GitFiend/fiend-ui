@@ -1,5 +1,5 @@
 import {RefObject} from '../../util/ref'
-import {FiendNode, FiendElement} from '../../util/element'
+import {FiendNode, FiendElement} from '../../..'
 
 type DataPropertyNames<T> = {
   [K in keyof T]: T[K] extends Function ? never : K
@@ -68,30 +68,6 @@ export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
       _type: tagName,
       props,
     }
-
-    // const [a1, ...children] = args
-    //
-    // if (args.length === 0) {
-    //   return {
-    //     _type: tagName,
-    //     props: null,
-    //     children: [],
-    //   }
-    // } else {
-    //   if (isPropsObject(a1)) {
-    //     return {
-    //       _type: tagName,
-    //       props: a1 as any,
-    //       children: children as Subtree[],
-    //     }
-    //   } else {
-    //     return {
-    //       _type: tagName,
-    //       props: null,
-    //       children: args as any[],
-    //     }
-    //   }
-    // }
   }
 }
 
