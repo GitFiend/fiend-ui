@@ -1,13 +1,15 @@
-import {AnyComponent, RootComponent, Subtree, Tree} from './component-types/base'
+import {AnyComponent} from './component-types/base-component'
 import {HostComponent, renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {PureComponent, renderCustom} from './component-types/pure-component'
+import {RootComponent} from './component-types/root-component'
+import {FiendNode, FiendElement} from './util/element'
 
 class RenderManager {
   rootNode: RootComponent | null = null
   target: HTMLElement | null = null
 
-  render(tree: Tree, target: HTMLElement) {
+  render(tree: FiendElement, target: HTMLElement) {
     if (this.target !== target) {
       this.clear()
       this.rootNode = new RootComponent(target)
@@ -28,7 +30,7 @@ const renderManager = new RenderManager()
 
 export class Render {
   static tree(
-    tree: Tree,
+    tree: FiendElement,
     prevTree: AnyComponent | null,
     parent: HostComponent | RootComponent,
     parentOrder: string,
@@ -46,7 +48,7 @@ export class Render {
   static subtrees(
     parent: HostComponent | RootComponent,
     parentOrder: string,
-    children: Subtree[],
+    children: FiendNode[],
     prevComponents: Map<string, AnyComponent>
   ): Map<string, AnyComponent> {
     const newComponents = new Map<string, AnyComponent>()
@@ -68,7 +70,7 @@ export class Render {
   private static subtree(
     parent: HostComponent | RootComponent,
     parentOrder: string,
-    subtree: Tree | string | number,
+    subtree: FiendElement | string | number,
     prevChildren: Map<string, AnyComponent>,
     newChildren: Map<string, AnyComponent>,
     index: number
@@ -114,7 +116,7 @@ export class Render {
   }
 }
 
-export function render(tree: Tree | null, target: HTMLElement): void {
+export function render(tree: FiendElement | null, target: HTMLElement): void {
   if (tree === null) renderManager.clear()
   else renderManager.render(tree, target)
 }

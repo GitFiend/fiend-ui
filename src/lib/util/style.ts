@@ -16,6 +16,9 @@ export function c(names: TemplateStringsArray, ...flags: boolean[]): string {
   return classes.trim()
 }
 
+/**
+ @deprecated
+ */
 export function mc(initialClass: string, mapping: Record<string, boolean>): string {
   let classes = ''
 

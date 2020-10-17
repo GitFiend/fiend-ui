@@ -3,7 +3,7 @@ import {render} from './render'
 import {$Component} from './observables/$component'
 import {model} from './observables/$model'
 import {PureComponent} from './component-types/pure-component'
-import {Subtree} from './component-types/base'
+import {FiendNode} from './util/element'
 
 class F extends PureComponent {
   render() {
@@ -11,7 +11,7 @@ class F extends PureComponent {
   }
 }
 
-function frag(...children: Subtree[]) {
+function frag(...children: FiendNode[]) {
   return F.$({children})
 }
 

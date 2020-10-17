@@ -9,10 +9,14 @@ export class $Model {
   static $<T extends typeof $Model>(this: T): T['prototype'] {
     const model = new this() as T['prototype']
 
-    makeObservable(model, this as any)
+    makeObservable(model)
 
     return model
   }
+}
+
+export function makeObservable(object: Object) {
+  makeObservableInner(object, object.constructor as Constructor)
 }
 
 // Decorator
@@ -21,12 +25,12 @@ export function model<T extends Constructor>(constructor: T) {
     constructor(...args: any[]) {
       super(...args)
 
-      makeObservable(this, constructor)
+      makeObservableInner(this, constructor)
     }
   }
 }
 
-export function makeObservable(object: Object, Con: Constructor) {
+export function makeObservableInner(object: Object, Con: Constructor) {
   for (const key in object) {
     if (key.startsWith('$')) {
       const valueName = `__${key}`

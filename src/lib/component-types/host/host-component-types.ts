@@ -1,5 +1,5 @@
 import {RefObject} from '../../util/ref'
-import {Subtree, Tree} from '../base'
+import {FiendNode, FiendElement} from '../../util/element'
 
 type DataPropertyNames<T> = {
   [K in keyof T]: T[K] extends Function ? never : K
@@ -19,9 +19,11 @@ export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Omit<
   ref?: RefObject<HTMLElementTagNameMap[N]>
   ariaLabel?: string
   ariaSelected?: boolean
+  ariaLabelledby?: string
+  ariaDescribedby?: string
   ariaModal?: boolean
-  role?: 'tab'
-  children?: Subtree[]
+  role?: 'tab' | 'dialog'
+  children?: FiendNode[]
 }
 
 export type SvgElementAttributes<N extends keyof SVGElementTagNameMap> = Omit<
@@ -31,13 +33,18 @@ export type SvgElementAttributes<N extends keyof SVGElementTagNameMap> = Omit<
   key?: string
   style?: string
   ref?: RefObject<SVGElementTagNameMap[N]>
-  children?: Subtree[]
+  children?: FiendNode[]
 }
 
 export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap>(
   tagName: N
-): (props: HostAttributes<N> | string) => Tree {
+): (props?: HostAttributes<N> | string) => FiendElement {
   return props => {
+    if (props === undefined)
+      return {
+        _type: tagName,
+        props: {},
+      }
     if (typeof props === 'string')
       return {
         _type: tagName,
@@ -55,7 +62,7 @@ export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap
 
 export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
   tagName: N
-): (props: SvgElementAttributes<N>) => Tree {
+): (props: SvgElementAttributes<N>) => FiendElement {
   return props => {
     return {
       _type: tagName,

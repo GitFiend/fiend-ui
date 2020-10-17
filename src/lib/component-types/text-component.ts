@@ -1,6 +1,7 @@
-import {AnyComponent, ComponentBase, ComponentType, RootComponent} from './base'
+import {AnyComponent, ComponentBase, ComponentType} from './base-component'
 import {Order} from '../util/order'
 import {HostComponent} from './host/host-component'
+import {RootComponent} from './root-component'
 
 export class TextComponent implements ComponentBase {
   _type = ComponentType.text as const

@@ -1,8 +1,8 @@
-import {PureComponent} from '../lib/component-types/pure-component'
-import {Subtree} from '../lib/component-types/base'
+import {PureComponent} from '..'
 import {mkRoot} from './host.test'
-import {render} from '../lib/render'
-import {div, h1} from '../lib/component-types/host/host-components'
+import {render} from '..'
+import {div, h1} from '..'
+import {FiendNode} from '..'
 
 describe('deletion of custom component', () => {
   test('host inside host', () => {
@@ -144,7 +144,7 @@ describe('deletion of custom component', () => {
 })
 
 class C extends PureComponent {
-  render(): Subtree {
+  render(): FiendNode {
     const {children = []} = this.props
 
     return div({children})
@@ -152,7 +152,7 @@ class C extends PureComponent {
 }
 
 class A extends PureComponent {
-  render(): Subtree | null {
+  render(): FiendNode | null {
     return div('A')
   }
 }

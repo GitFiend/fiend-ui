@@ -1,6 +1,6 @@
-import {RootComponent} from '../component-types/base'
 import {HostComponent} from '../component-types/host/host-component'
 import {TextComponent} from '../component-types/text-component'
+import {RootComponent} from '../component-types/root-component'
 
 export class Order {
   static key(parentOrder: string, index: number): string {

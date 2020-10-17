@@ -1,21 +1,14 @@
-import {
-  AnyComponent,
-  ComponentBase,
-  ComponentType,
-  RootComponent,
-  Subtree,
-  Tree,
-} from './base'
+import type {FiendElement, FiendNode, StandardProps} from '../util/element'
+import {AnyComponent, ComponentBase, ComponentType} from './base-component'
 import {Render} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {Order} from '../util/order'
 import {HostComponent} from './host/host-component'
+import {RootComponent} from './root-component'
 
 export interface Rec {
   [prop: string]: unknown
 }
-
-export type StandardProps = {children?: Subtree[]; key?: string}
 
 export type PropsWithChildren<T> = T & StandardProps
 
@@ -39,7 +32,7 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     this.key = this.props.key ?? this.order
   }
 
-  abstract render(): Subtree | Subtree[]
+  abstract render(): FiendNode | FiendNode[]
 
   update = () => {
     if (__DEV__) {
@@ -85,7 +78,7 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
   static $<T extends PureComponent>(
     this: new (...args: never[]) => T,
     props: T['props']
-  ): Tree {
+  ): FiendElement {
     return {
       _type: this as any,
       props,

@@ -1,8 +1,8 @@
 import {PureComponent} from '../lib/component-types/pure-component'
 import {render} from '../lib/render'
-import {Tree} from '../lib/component-types/base'
 import {div} from '../lib/component-types/host/host-components'
 import {s} from '../lib/util/style'
+import {FiendElement} from '../lib/util/element'
 
 const boxHeight = 14
 
@@ -25,7 +25,7 @@ export class Boxes extends PureComponent<BoxesProps> {
     const left = width * 0.2
     const boxWidth = width * 0.6
 
-    const boxes: Tree[] = Array(numBoxes)
+    const boxes: FiendElement[] = Array(numBoxes)
 
     for (let i = 0; i < numBoxes; i++) {
       boxes[i] = this.drawBox(left, top + i * boxHeight, boxWidth, boxHeight)
@@ -34,7 +34,7 @@ export class Boxes extends PureComponent<BoxesProps> {
     return boxes
   }
 
-  drawBox(x: number, y: number, w: number, h: number): Tree {
+  drawBox(x: number, y: number, w: number, h: number): FiendElement {
     return div({
       style: s`
           position: absolute;

@@ -1,8 +1,8 @@
 import {PureComponent} from './pure-component'
 import {mkRoot} from '../../dom-tests/host.test'
 import {div} from './host/host-components'
-import {$Component} from '../observables/$component'
-import {$Model} from '../observables/$model'
+import {$Component} from '../..'
+import {$Model} from '../..'
 
 describe('component', () => {
   test('null in render should remove previous elements', () => {

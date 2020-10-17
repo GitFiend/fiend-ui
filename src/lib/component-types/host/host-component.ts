@@ -1,10 +1,12 @@
-import {AnyComponent, ComponentType, RootComponent, Subtree} from '../base'
+import {AnyComponent, ComponentType} from '../base-component'
 import {Render} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
-import {StandardProps} from '../pure-component'
 import {ElementNameMap} from './host-component-types'
 import {Order} from '../../util/order'
 import {TextComponent} from '../text-component'
+import {RootComponent} from '../root-component'
+import {FiendNode} from '../../..'
+import {StandardProps} from '../../util/element'
 
 export class HostComponent<P extends StandardProps = {}> {
   _type = ComponentType.host as const
@@ -33,7 +35,7 @@ export class HostComponent<P extends StandardProps = {}> {
     parent.insertChild(this)
   }
 
-  renderSubtrees(children: Subtree[]) {
+  renderSubtrees(children: FiendNode[]) {
     this.subComponents = Render.subtrees(this, this.order, children, this.subComponents)
   }
 

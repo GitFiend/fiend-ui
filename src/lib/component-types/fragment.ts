@@ -1,5 +1,5 @@
 import {PureComponent} from './pure-component'
-import {Subtree} from './base'
+import {FiendNode} from '../util/element'
 
 class Fragment extends PureComponent {
   render() {
@@ -7,6 +7,6 @@ class Fragment extends PureComponent {
   }
 }
 
-export function $F(...children: Subtree[]) {
+export function $F(...children: FiendNode[]) {
   return Fragment.$({children})
 }

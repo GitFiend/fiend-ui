@@ -1,7 +1,7 @@
 import {div} from './host-components'
 import {PureComponent} from '../pure-component'
-import {Subtree} from '../base'
 import {mkRoot} from '../../../dom-tests/host.test'
+import {FiendNode} from '../../..'
 
 describe('div renders', () => {
   test('no args', () => {
@@ -67,7 +67,7 @@ describe('div renders', () => {
 })
 
 class A extends PureComponent {
-  render(): Subtree {
+  render(): FiendNode {
     return div('omg')
   }
 }

@@ -1,9 +1,9 @@
 import {$Component} from './$component'
-import {Subtree} from '../component-types/base'
+import {FiendNode} from '../..'
 import {mkRoot} from '../../dom-tests/host.test'
-import {div} from '../component-types/host/host-components'
+import {div} from '../..'
 import {$Model} from './$model'
-import {PureComponent} from '../component-types/pure-component'
+import {PureComponent} from '../..'
 
 describe('$Component', () => {
   test('order 1', () => {
@@ -17,7 +17,7 @@ describe('$Component', () => {
     }
 
     class A extends $Component<Props> {
-      render(): Subtree | null {
+      render(): FiendNode | null {
         const {store, depth} = this.props
 
         if (depth <= 0) return null
@@ -64,7 +64,7 @@ describe('$Component', () => {
     const root = mkRoot()
 
     class Div extends PureComponent {
-      render(): Subtree {
+      render(): FiendNode {
         return div({children: this.props.children})
       }
     }
