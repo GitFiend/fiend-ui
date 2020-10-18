@@ -29,7 +29,7 @@ export function notify(notifier: Notifier) {
   const orderedResponders = notifier.orderedResponders
   const unorderedResponders = notifier.unorderedResponders
 
-  if (orderedResponders.size + unorderedResponders.size > 0) {
+  if (orderedResponders.size > 0 || unorderedResponders.size > 0) {
     if (!globalStack.queueNotifierIfInAction(notifier)) {
       notifier.orderedResponders = new Map()
       notifier.unorderedResponders = new Set()
