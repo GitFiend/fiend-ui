@@ -1,4 +1,4 @@
-import {addCurrentResponderToOurList, Notifier, notify} from './notifier'
+import {addCallingResponderToOurList, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
 import {ResponderType, UnorderedResponder} from './responder'
 import {$Component} from './$component'
@@ -72,9 +72,11 @@ export class Computed<T> implements UnorderedResponder, Notifier {
       globalStack.runComputedNowIfDirty(this)
     }
 
-    addCurrentResponderToOurList(this)
+    addCallingResponderToOurList(this)
 
-    this.active = globalStack.insideNonComputedResponder()
+    // this.active = globalStack.insideNonComputedResponder()
+    // TODO: Not sure whether there's a computed/memory leak here or not.
+    this.active = true
 
     return this.value
   }

@@ -14,7 +14,7 @@ export interface Notifier {
   orderedResponders: Map<string, $Component>
 }
 
-export function addCurrentResponderToOurList(notifier: Notifier) {
+export function addCallingResponderToOurList(notifier: Notifier) {
   const responder = globalStack.getCurrentResponder()
 
   if (responder !== null) {

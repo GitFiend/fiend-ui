@@ -94,7 +94,6 @@ function setAttribute(
 }
 
 function setSvgAttribute(element: Element, attr: string, value: any) {
-  console.log(attr, value)
   switch (attr) {
     case 'strokeWidth':
       element.setAttribute('stroke-width', value)

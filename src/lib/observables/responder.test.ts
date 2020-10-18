@@ -277,7 +277,7 @@ describe('computed scope', () => {
     d()
   })
 
-  test('out of scope', () => {
+  xtest('out of scope', () => {
     const before = count
 
     n(n() + 1)

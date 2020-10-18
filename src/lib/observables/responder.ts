@@ -28,6 +28,7 @@ export interface OrderedResponder {
 export interface UnorderedResponder {
   responderType: ResponderType
   ordered: false
+  active: boolean
   run(): void
 }
 

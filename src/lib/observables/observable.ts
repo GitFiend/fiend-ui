@@ -1,5 +1,5 @@
 import {UnorderedResponder} from './responder'
-import {addCurrentResponderToOurList, Notifier, notify} from './notifier'
+import {addCallingResponderToOurList, Notifier, notify} from './notifier'
 import {$Component} from './$component'
 
 export interface Observable<T> {
@@ -79,7 +79,7 @@ export class Atom<T> implements Notifier {
   constructor(public value: T) {}
 
   get(): T {
-    addCurrentResponderToOurList(this)
+    addCallingResponderToOurList(this)
 
     return this.value
   }
