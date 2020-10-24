@@ -64,6 +64,8 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 
   componentWillUnmount(): void {}
 
+  forceUpdate = this.update
+
   mount() {
     this.update()
     this.componentDidMount()

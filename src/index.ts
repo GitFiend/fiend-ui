@@ -29,7 +29,7 @@ export {
 } from './lib/component-types/host/host-components'
 export {PureComponent} from './lib/component-types/pure-component'
 export {$Component} from './lib/observables/$component'
-export {$Model} from './lib/observables/$model'
+export {makeObservable} from './lib/observables/$model'
 export {$AutoRun, $Reaction} from './lib/observables/responder'
 export {c, s} from './lib/util/style'
 export {FiendNode, FiendElement} from './lib/util/element'
