@@ -1,8 +1,8 @@
 import {PureComponent} from './pure-component'
 import {mkRoot} from '../../dom-tests/host.test'
 import {div} from './host/host-components'
-import {$Component} from '../..'
-import {$Model} from '../..'
+import {$Component, makeObservable} from '../..'
+// import {$Model} from '../..'
 
 describe('component', () => {
   test('null in render should remove previous elements', () => {
@@ -28,7 +28,10 @@ describe('component', () => {
 })
 
 describe('switch between custom and host component', () => {
-  class M extends $Model {
+  class M {
+    constructor() {
+      makeObservable(this)
+    }
     $custom = false
   }
 
@@ -51,7 +54,7 @@ describe('switch between custom and host component', () => {
     }
 
     const root = mkRoot()
-    const model = M.$()
+    const model = new M()
 
     root.render(A.$({model}))
     expect(root.element.innerHTML).toEqual('<div>host</div>')
@@ -73,7 +76,7 @@ describe('switch between custom and host component', () => {
     }
 
     const root = mkRoot()
-    const model = M.$()
+    const model = new M()
 
     root.render(A.$({model}))
     expect(root.element.innerHTML).toEqual('<div>a</div><div>host</div>')
@@ -95,7 +98,7 @@ describe('switch between custom and host component', () => {
     }
 
     const root = mkRoot()
-    const model = M.$()
+    const model = new M()
 
     root.render(A.$({model}))
     expect(root.element.innerHTML).toEqual('<div>a</div>')

@@ -4,8 +4,10 @@ import {Notifier} from './notifier'
 import {$Component} from './$component'
 import {RunStack} from './run-stack'
 
-//
-export function $RunInAction(f: () => void) {
+type FunctionWithoutPromise<T> = T extends () => Promise<void> ? never : T
+
+// Passed function needs to be synchronise otherwise it won't really be run inside action.
+export function $RunInAction(f: FunctionWithoutPromise<() => void | undefined>): void {
   globalStack.startAction()
   f()
   globalStack.endAction()
