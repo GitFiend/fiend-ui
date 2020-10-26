@@ -45,7 +45,8 @@ function updateAttrInner(
       setAttribute(element, namespace, key, n)
     } //
     else if (o !== n) {
-      deleteAttribute(element, key, o)
+      if (key.startsWith('on')) deleteAttribute(element, key, o)
+
       setAttribute(element, namespace, key, n)
     }
   }
