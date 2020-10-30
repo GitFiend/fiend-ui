@@ -13,8 +13,8 @@ describe('test re-rendering keyed lists', () => {
 
         const elements: FiendNode[] = []
 
-        for (let i = n; i < num; i++) {
-          const s = `${i}`
+        for (let i = 0; i < num; i++) {
+          const s = `${n + i}`
 
           elements.push(
             div({
@@ -31,8 +31,8 @@ describe('test re-rendering keyed lists', () => {
     const result = (n: number): string => {
       let r = ''
 
-      for (let i = n; i < num; i++) {
-        r += `<div>${i}</div>`
+      for (let i = 0; i < num; i++) {
+        r += `<div>${n + i}</div>`
       }
       return r
     }
@@ -53,7 +53,7 @@ describe('test re-rendering keyed lists', () => {
   })
 
   test('divs without keys', () => {
-    const num = 3
+    const num = 4
 
     class Scroller extends PureComponent<{n: number}> {
       render() {
@@ -61,12 +61,13 @@ describe('test re-rendering keyed lists', () => {
 
         const elements: FiendNode[] = []
 
-        for (let i = n; i < num; i++) {
-          const s = `${i}`
+        for (let i = 0; i < num; i++) {
+          const s = `${n + i}`
 
           elements.push(
             div({
               children: [s],
+              key: s,
             })
           )
         }
@@ -78,8 +79,8 @@ describe('test re-rendering keyed lists', () => {
     const result = (n: number): string => {
       let r = ''
 
-      for (let i = n; i < num; i++) {
-        r += `<div>${i}</div>`
+      for (let i = 0; i < num; i++) {
+        r += `<div>${n + i}</div>`
       }
       return r
     }
@@ -91,24 +92,34 @@ describe('test re-rendering keyed lists', () => {
     expect(root.html).toEqual(result(n))
 
     // Scroll forward
-    n = 2
+    n = 6
     root.render(Scroller.$({n}))
     expect(root.html).toEqual(result(n))
 
     console.log(result(n))
 
     // Scroll backward
-    n = 1
+    n = 5
+    root.render(Scroller.$({n}))
+    expect(root.html).toEqual(result(n))
+
+    // Scroll backward
+    n = 4
+    root.render(Scroller.$({n}))
+    expect(root.html).toEqual(result(n))
+
+    // Scroll backward
+    n = 3
     root.render(Scroller.$({n}))
     expect(root.html).toEqual(result(n))
   })
 
   test('wrapped divs', () => {
-    const num = 20
+    const num = 3
 
     class Div extends PureComponent<{text: string}> {
       render() {
-        return div(this.props.text)
+        return div({children: [this.props.text]})
       }
     }
 
@@ -118,12 +129,13 @@ describe('test re-rendering keyed lists', () => {
 
         const elements: FiendNode[] = []
 
-        for (let i = n; i < num; i++) {
-          const s = `${i}`
+        for (let i = 0; i < num; i++) {
+          const s = `${n + i}`
 
           elements.push(
             Div.$({
               text: s,
+              key: s,
             })
           )
         }
@@ -135,8 +147,8 @@ describe('test re-rendering keyed lists', () => {
     const result = (n: number): string => {
       let r = ''
 
-      for (let i = n; i < num; i++) {
-        r += `<div>${i}</div>`
+      for (let i = 0; i < num; i++) {
+        r += `<div>${n + i}</div>`
       }
       return r
     }
@@ -147,7 +159,19 @@ describe('test re-rendering keyed lists', () => {
     root.render(Scroller.$({n}))
     expect(root.html).toEqual(result(n))
 
-    n = 10
+    n = 9
+    root.render(Scroller.$({n}))
+    expect(root.html).toEqual(result(n))
+
+    n = 8
+    root.render(Scroller.$({n}))
+    expect(root.html).toEqual(result(n))
+
+    n = 7
+    root.render(Scroller.$({n}))
+    expect(root.html).toEqual(result(n))
+
+    n = 6
     root.render(Scroller.$({n}))
     expect(root.html).toEqual(result(n))
 
