@@ -1,4 +1,4 @@
-import {AnyComponent, ComponentType} from '../base-component'
+import {AnyComponent, ComponentType, ParentComponent} from '../base-component'
 import {Render} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {ElementNameMap} from './host-component-types'
@@ -26,11 +26,11 @@ export class HostComponent<P extends StandardProps = {}> {
     public tag: keyof ElementNameMap,
     public namespace: ElementNamespace,
     public props: P,
-    public parent: HostComponent | RootComponent,
-    parentOrder: string,
+    public parentHost: HostComponent | RootComponent,
+    directParent: ParentComponent,
     public index: number
   ) {
-    this.order = Order.key(parentOrder, index)
+    this.order = Order.key(directParent.order, index)
     this.key = this.props.key ?? this.order
 
     if (namespace === ElementNamespace.svg) {
@@ -46,11 +46,11 @@ export class HostComponent<P extends StandardProps = {}> {
 
     this.renderSubtrees(props.children ?? [])
 
-    parent.insertChild(this)
+    parentHost.insertChild(this)
   }
 
   renderSubtrees(children: FiendNode[]) {
-    this.subComponents = Render.subtrees(this, this.order, children, this.subComponents)
+    this.subComponents = Render.subtrees(this, this, children, this.subComponents)
   }
 
   // What if our sub component has lots of elements to insert?
@@ -67,7 +67,7 @@ export class HostComponent<P extends StandardProps = {}> {
   }
 
   remove(): void {
-    this.parent.removeChild(this)
+    this.parentHost.removeChild(this)
 
     // TODO: Do we even need this? Only for componentWillUnmount?
     for (const [, c] of this.subComponents) c.remove()
@@ -78,29 +78,26 @@ export class HostComponent<P extends StandardProps = {}> {
 // TODO: prevTree.children? parent.children? Seems there might be a bug here.
 export function renderHost<P extends StandardProps = {}>(
   tree: HostElement | SvgElement,
-  // tag: keyof ElementNameMap,
-  // namespace: ElementNamespace,
-  // props: P,
   prevTree: AnyComponent | null,
-  parent: RootComponent | HostComponent,
-  parentOrder: string,
+  parentHost: RootComponent | HostComponent,
+  directParent: ParentComponent,
   index: number
 ): HostComponent {
   const {_type, namespace, props} = tree
 
   if (prevTree === null) {
-    return new HostComponent(_type, namespace, props, parent, parentOrder, index)
+    return new HostComponent(_type, namespace, props, parentHost, directParent, index)
   }
 
   if (prevTree._type === ComponentType.host && prevTree.tag === _type) {
-    const newOrder = Order.key(parentOrder, index)
+    const newOrder = Order.key(directParent.order, index)
     const prevOrder = prevTree.order
 
     if (prevOrder !== newOrder) {
       prevTree.index = index
       prevTree.order = newOrder
 
-      parent.moveChild(prevTree)
+      parentHost.moveChild(prevTree)
     }
 
     updateAttributes(prevTree.element, namespace, props, prevTree.props)
@@ -112,6 +109,6 @@ export function renderHost<P extends StandardProps = {}>(
     // Type has changed. Remove it.
     prevTree.remove()
 
-    return new HostComponent(_type, namespace, props, parent, parentOrder, index)
+    return new HostComponent(_type, namespace, props, parentHost, directParent, index)
   }
 }

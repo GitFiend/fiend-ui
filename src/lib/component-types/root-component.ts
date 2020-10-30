@@ -15,7 +15,7 @@ export class RootComponent {
   constructor(public element: HTMLElement) {}
 
   render(tree: FiendElement) {
-    this.component = Render.tree(tree, this.component, this, this.order, 0)
+    this.component = Render.tree(tree, this.component, this, this, 0)
   }
 
   insertChild(child: HostComponent | TextComponent) {

@@ -1,6 +1,11 @@
 import type {CustomElement, FiendNode, StandardProps} from '../util/element'
 import {ElementType} from '../util/element'
-import {AnyComponent, ComponentBase, ComponentType} from './base-component'
+import {
+  AnyComponent,
+  ComponentBase,
+  ComponentType,
+  ParentComponent,
+} from './base-component'
 import {Render} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {Order} from '../util/order'
@@ -24,12 +29,12 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 
   constructor(
     props: P,
-    public parent: HostComponent | RootComponent,
-    parentOrder: string,
+    public parentHost: HostComponent | RootComponent,
+    directParent: ParentComponent,
     public index: number
   ) {
     this.props = props
-    this.order = Order.key(parentOrder, index)
+    this.order = Order.key(directParent.order, index)
     this.key = this.props.key ?? this.order
   }
 
@@ -42,8 +47,8 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     const res = this.render()
 
     this.subComponents = Render.subtrees(
-      this.parent,
-      this.order,
+      this.parentHost,
+      this,
       Array.isArray(res) ? res : [res],
       this.subComponents
     )
@@ -96,19 +101,19 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 export function renderCustom<P extends StandardProps>(
   element: CustomElement,
   prevTree: AnyComponent | null,
-  parent: HostComponent | RootComponent,
-  parentOrder: string,
+  parentHost: HostComponent | RootComponent,
+  directParent: ParentComponent,
   index: number
 ) {
   const {_type, props} = element
 
   if (prevTree === null) {
-    return makeCustomComponent(_type, props, parent, parentOrder, index)
+    return makeCustomComponent(_type, props, parentHost, directParent, index)
   }
 
   if (prevTree._type === ComponentType.custom && prevTree instanceof _type) {
     prevTree.index = index
-    prevTree.order = Order.key(parentOrder, index)
+    prevTree.order = Order.key(directParent.order, index)
     prevTree.updateWithNewProps(props)
 
     return prevTree
@@ -116,24 +121,24 @@ export function renderCustom<P extends StandardProps>(
 
   prevTree.remove()
 
-  return makeCustomComponent(_type, props, parent, parentOrder, index)
+  return makeCustomComponent(_type, props, parentHost, directParent, index)
 }
 
 export type CustomComponent<P extends StandardProps> = new <P>(
   props: P,
-  parent: HostComponent | RootComponent,
-  parentOrder: string,
+  parentHost: HostComponent | RootComponent,
+  directParent: ParentComponent,
   index: number
 ) => PureComponent
 
 function makeCustomComponent<P extends StandardProps>(
   cons: CustomComponent<P>,
   props: P,
-  parent: HostComponent | RootComponent,
-  parentOrder: string,
+  parentHost: HostComponent | RootComponent,
+  directParent: ParentComponent,
   index: number
 ) {
-  const component = new cons<P>(props, parent, parentOrder, index)
+  const component = new cons<P>(props, parentHost, directParent, index)
   component.mount()
 
   return component

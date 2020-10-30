@@ -1,6 +1,7 @@
 import type {CustomComponent} from '../component-types/pure-component'
 
 export type StandardProps = {children?: FiendNode[]; key?: string}
+export type ChildProps = {children?: FiendNode[]; key: string}
 
 export enum ElementNamespace {
   html,
@@ -18,7 +19,10 @@ export enum ElementType {
   custom,
 }
 
-export type FiendElement = HostElement | SvgElement | CustomElement
+export type FiendElement<P = StandardProps> =
+  | HostElement<P>
+  | SvgElement<P>
+  | CustomElement<P>
 
 export interface HostElement<P extends StandardProps = StandardProps> {
   elementType: ElementType.host
@@ -39,3 +43,4 @@ export interface CustomElement<P extends StandardProps = StandardProps> {
 }
 
 export type FiendNode = FiendElement | string | null
+export type FiendNodeArray = (FiendElement<ChildProps> | string | null)[]

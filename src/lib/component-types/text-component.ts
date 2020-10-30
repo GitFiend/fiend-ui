@@ -1,4 +1,9 @@
-import {AnyComponent, ComponentBase, ComponentType} from './base-component'
+import {
+  AnyComponent,
+  ComponentBase,
+  ComponentType,
+  ParentComponent,
+} from './base-component'
 import {Order} from '../util/order'
 import {HostComponent} from './host/host-component'
 import {RootComponent} from './root-component'
@@ -11,44 +16,44 @@ export class TextComponent implements ComponentBase {
 
   constructor(
     public text: string,
-    public parent: HostComponent | RootComponent,
-    parentOrder: string,
+    public parentHost: HostComponent | RootComponent,
+    directParent: ParentComponent,
     public index: number
   ) {
-    const order = Order.key(parentOrder, index)
+    const order = Order.key(directParent.order, index)
 
     this.key = order
     this.order = order
     this.element = document.createTextNode(text)
 
-    parent.insertChild(this)
+    parentHost.insertChild(this)
   }
 
   remove(): void {
-    this.parent.removeChild(this)
+    this.parentHost.removeChild(this)
   }
 }
 
 export function renderTextComponent(
   text: string,
   prevTree: AnyComponent | null,
-  parent: HostComponent | RootComponent,
-  parentOrder: string,
+  parentHost: HostComponent | RootComponent,
+  directParent: ParentComponent,
   index: number
 ): TextComponent {
   if (prevTree === null) {
-    return new TextComponent(text, parent, parentOrder, index)
+    return new TextComponent(text, parentHost, directParent, index)
   }
 
   if (prevTree._type === ComponentType.text) {
     const prevOrder = prevTree.order
-    const newOrder = Order.key(parentOrder, index)
+    const newOrder = Order.key(directParent.order, index)
 
     if (prevOrder !== newOrder) {
       prevTree.index = index
       prevTree.order = newOrder
 
-      parent.moveChild(prevTree)
+      parentHost.moveChild(prevTree)
     }
 
     if (prevTree.text === text) {
@@ -61,5 +66,5 @@ export function renderTextComponent(
   }
 
   prevTree.remove()
-  return new TextComponent(text, parent, parentOrder, index)
+  return new TextComponent(text, parentHost, directParent, index)
 }

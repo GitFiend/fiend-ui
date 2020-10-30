@@ -28,28 +28,22 @@ describe('test re-rendering keyed lists', () => {
       }
     }
 
-    const result = (n: number): string => {
-      let r = ''
-
-      for (let i = 0; i < num; i++) {
-        r += `<div>${n + i}</div>`
-      }
-      return r
-    }
-
     const root = mkRoot()
 
     let n = 0
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
 
     n = 10
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
 
     n = 5
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
   })
 
   test('divs without keys', () => {
@@ -67,7 +61,6 @@ describe('test re-rendering keyed lists', () => {
           elements.push(
             div({
               children: [s],
-              key: s,
             })
           )
         }
@@ -76,42 +69,38 @@ describe('test re-rendering keyed lists', () => {
       }
     }
 
-    const result = (n: number): string => {
-      let r = ''
-
-      for (let i = 0; i < num; i++) {
-        r += `<div>${n + i}</div>`
-      }
-      return r
-    }
-
     const root = mkRoot()
 
     let n = 0
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
 
     // Scroll forward
     n = 6
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
 
-    console.log(result(n))
+    console.log(result(n, num))
 
     // Scroll backward
     n = 5
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
 
     // Scroll backward
     n = 4
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
 
     // Scroll backward
     n = 3
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
   })
 
   test('wrapped divs', () => {
@@ -144,39 +133,30 @@ describe('test re-rendering keyed lists', () => {
       }
     }
 
-    const result = (n: number): string => {
-      let r = ''
-
-      for (let i = 0; i < num; i++) {
-        r += `<div>${n + i}</div>`
-      }
-      return r
-    }
-
     const root = mkRoot()
 
     let n = 0
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
 
     n = 9
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
 
     n = 8
     root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
-
-    n = 7
-    root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
-
-    n = 6
-    root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
-
-    n = 5
-    root.render(Scroller.$({n}))
-    expect(root.html).toEqual(result(n))
+    expect(root.inserted.length).toEqual(num)
+    expect(root.html).toEqual(result(n, num))
   })
 })
+
+const result = (index: number, numDivs: number): string => {
+  let r = ''
+
+  for (let i = 0; i < numDivs; i++) {
+    r += `<div>${index + i}</div>`
+  }
+  return r
+}

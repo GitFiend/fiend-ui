@@ -1,4 +1,4 @@
-import {AnyComponent} from './component-types/base-component'
+import {AnyComponent, ParentComponent} from './component-types/base-component'
 import {HostComponent, renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {PureComponent, renderCustom} from './component-types/pure-component'
@@ -32,20 +32,20 @@ export class Render {
   static tree(
     tree: FiendElement,
     prevTree: AnyComponent | null,
-    parent: HostComponent | RootComponent,
-    parentOrder: string,
+    parentHost: HostComponent | RootComponent,
+    directParent: ParentComponent,
     index: number
   ): HostComponent | PureComponent {
     if (tree.elementType === ElementType.host) {
-      return renderHost(tree, prevTree, parent, parentOrder, index)
+      return renderHost(tree, prevTree, parentHost, directParent, index)
     } else {
-      return renderCustom(tree, prevTree, parent, parentOrder, index)
+      return renderCustom(tree, prevTree, parentHost, directParent, index)
     }
   }
 
   static subtrees(
-    parent: HostComponent | RootComponent,
-    parentOrder: string,
+    parentHost: HostComponent | RootComponent,
+    directParent: ParentComponent,
     children: FiendNode[],
     prevComponents: Map<string, AnyComponent>
   ): Map<string, AnyComponent> {
@@ -57,7 +57,7 @@ export class Render {
       const child = children[i]
 
       if (child !== null) {
-        this.subtree(parent, parentOrder, child, prevComponents, newComponents, i)
+        this.subtree(parentHost, directParent, child, prevComponents, newComponents, i)
       }
     }
     for (const [, c] of prevComponents) c.remove()
@@ -66,8 +66,8 @@ export class Render {
   }
 
   private static subtree(
-    parent: HostComponent | RootComponent,
-    parentOrder: string,
+    parentHost: HostComponent | RootComponent,
+    directParent: ParentComponent,
     subtree: FiendElement | string,
     prevChildren: Map<string, AnyComponent>,
     newChildren: Map<string, AnyComponent>,
@@ -79,8 +79,8 @@ export class Render {
       const s = renderTextComponent(
         subtree,
         prevChildren.get(key) ?? null,
-        parent,
-        parentOrder,
+        parentHost,
+        directParent,
         index
       )
       prevChildren.delete(key)
@@ -88,27 +88,12 @@ export class Render {
       return s
     }
 
-    // if (typeof subtree === 'number') {
-    //   const key = subtree.toString()
-    //
-    //   const s = renderTextComponent(
-    //     subtree.toString(),
-    //     prevChildren.get(key) ?? null,
-    //     parent,
-    //     parentOrder,
-    //     index
-    //   )
-    //   prevChildren.delete(key)
-    //   newChildren.set(key, s)
-    //   return s
-    // }
-
     const key: string = subtree.props.key ?? index.toString()
     const s = this.tree(
       subtree,
       prevChildren.get(key) ?? null,
-      parent,
-      parentOrder,
+      parentHost,
+      directParent,
       index
     )
     prevChildren.delete(key)

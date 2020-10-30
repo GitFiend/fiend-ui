@@ -16,20 +16,20 @@ describe('Order.add comparisons', () => {
 describe('insert', () => {
   const root = mkRoot()
 
-  const parent = new HostComponent('div', ElementNamespace.html, {}, root, '1', 0)
+  const parent = new HostComponent('div', ElementNamespace.html, {}, root, root, 0)
   const {inserted} = parent
 
   test('try different insert indices', () => {
-    new HostComponent('div', ElementNamespace.html, {}, parent, parent.order, 3)
+    new HostComponent('div', ElementNamespace.html, {}, parent, parent, 3)
     expect(inserted.map(i => i.order)).toEqual(['103'])
 
-    new HostComponent('div', ElementNamespace.html, {}, parent, parent.order, 4)
+    new HostComponent('div', ElementNamespace.html, {}, parent, parent, 4)
     expect(inserted.map(i => i.order)).toEqual(['103', '104'])
 
-    new HostComponent('div', ElementNamespace.html, {}, parent, parent.order, 1)
+    new HostComponent('div', ElementNamespace.html, {}, parent, parent, 1)
     expect(inserted.map(i => i.order)).toEqual(['101', '103', '104'])
 
-    new HostComponent('div', ElementNamespace.html, {}, parent, parent.order, 2)
+    new HostComponent('div', ElementNamespace.html, {}, parent, parent, 2)
     expect(inserted.map(i => i.order)).toEqual(['101', '102', '103', '104'])
   })
 })
