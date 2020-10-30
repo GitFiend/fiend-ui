@@ -68,7 +68,7 @@ export class Render {
   private static subtree(
     parent: HostComponent | RootComponent,
     parentOrder: string,
-    subtree: FiendElement | string | number,
+    subtree: FiendElement | string,
     prevChildren: Map<string, AnyComponent>,
     newChildren: Map<string, AnyComponent>,
     index: number
@@ -88,20 +88,20 @@ export class Render {
       return s
     }
 
-    if (typeof subtree === 'number') {
-      const key = subtree.toString()
-
-      const s = renderTextComponent(
-        subtree.toString(),
-        prevChildren.get(key) ?? null,
-        parent,
-        parentOrder,
-        index
-      )
-      prevChildren.delete(key)
-      newChildren.set(key, s)
-      return s
-    }
+    // if (typeof subtree === 'number') {
+    //   const key = subtree.toString()
+    //
+    //   const s = renderTextComponent(
+    //     subtree.toString(),
+    //     prevChildren.get(key) ?? null,
+    //     parent,
+    //     parentOrder,
+    //     index
+    //   )
+    //   prevChildren.delete(key)
+    //   newChildren.set(key, s)
+    //   return s
+    // }
 
     const key: string = subtree.props.key ?? index.toString()
     const s = this.tree(

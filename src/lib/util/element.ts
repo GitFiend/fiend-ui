@@ -38,4 +38,4 @@ export interface CustomElement<P extends StandardProps = StandardProps> {
   props: P
 }
 
-export type FiendNode = FiendElement | string | number | null
+export type FiendNode = FiendElement | string | null
