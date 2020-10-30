@@ -31,7 +31,7 @@ export class HostComponent<P extends StandardProps = {}> {
     public index: number
   ) {
     this.order = Order.key(directParent.order, index)
-    this.key = this.props.key ?? this.order
+    this.key = this.props.key ?? directParent.key + index
 
     if (namespace === ElementNamespace.svg) {
       this.element = document.createElementNS(

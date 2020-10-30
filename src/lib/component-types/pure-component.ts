@@ -35,7 +35,7 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
   ) {
     this.props = props
     this.order = Order.key(directParent.order, index)
-    this.key = this.props.key ?? this.order
+    this.key = this.props.key ?? directParent.key + index
   }
 
   abstract render(): FiendNode | FiendNode[]

@@ -22,7 +22,7 @@ export class TextComponent implements ComponentBase {
   ) {
     const order = Order.key(directParent.order, index)
 
-    this.key = order
+    this.key = directParent.key + index
     this.order = order
     this.element = document.createTextNode(text)
 
