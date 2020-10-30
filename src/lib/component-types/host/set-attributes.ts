@@ -67,6 +67,8 @@ function setAttribute(
 ): void {
   switch (attr) {
     case 'key':
+      // element.setAttribute('key', value)
+      break
     case 'children':
       break
     case 'className':

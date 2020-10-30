@@ -34,4 +34,8 @@ export class RootComponent {
     this.component?.remove()
     this.component = null
   }
+
+  get html(): string {
+    return this.element.innerHTML
+  }
 }

@@ -58,9 +58,12 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
       this.props = props
       this.update()
     }
+    this.componentDidUpdate()
   }
 
   componentDidMount(): void {}
+
+  componentDidUpdate(): void {}
 
   componentWillUnmount(): void {}
 

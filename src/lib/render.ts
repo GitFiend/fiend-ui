@@ -74,29 +74,32 @@ export class Render {
     index: number
   ): AnyComponent {
     if (typeof subtree === 'string') {
+      const key = index.toString()
+
       const s = renderTextComponent(
         subtree,
-        prevChildren.get(subtree) ?? null,
+        prevChildren.get(key) ?? null,
         parent,
         parentOrder,
         index
       )
-      prevChildren.delete(subtree)
-      newChildren.set(subtree, s)
+      prevChildren.delete(key)
+      newChildren.set(key, s)
       return s
     }
 
     if (typeof subtree === 'number') {
-      const text = subtree.toString()
+      const key = subtree.toString()
+
       const s = renderTextComponent(
-        text,
-        prevChildren.get(text) ?? null,
+        subtree.toString(),
+        prevChildren.get(key) ?? null,
         parent,
         parentOrder,
         index
       )
-      prevChildren.delete(text)
-      newChildren.set(text, s)
+      prevChildren.delete(key)
+      newChildren.set(key, s)
       return s
     }
 

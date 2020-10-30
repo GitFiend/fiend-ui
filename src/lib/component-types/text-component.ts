@@ -15,10 +15,11 @@ export class TextComponent implements ComponentBase {
     parentOrder: string,
     public index: number
   ) {
-    this.key = text
-    this.element = document.createTextNode(text)
+    const order = Order.key(parentOrder, index)
 
-    this.order = Order.key(parentOrder, index)
+    this.key = order
+    this.order = order
+    this.element = document.createTextNode(text)
 
     parent.insertChild(this)
   }

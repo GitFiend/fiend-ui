@@ -109,4 +109,29 @@ describe('switch between custom and host component', () => {
     model.$custom = false
     expect(root.element.innerHTML).toEqual('<div>a</div>')
   })
+
+  // test('scrolling', () => {
+  //   class Scroller extends PureComponent<{n: number}> {
+  //     render() {
+  //       const {n} = this.props
+  //
+  //       return [
+  //         div({children: [n], key: `${n}`}),
+  //         div({children: [n + 1], key: `${n + 1}`}),
+  //         div({children: [n + 2], key: `${n + 2}`}),
+  //       ]
+  //     }
+  //   }
+  //
+  //   const root = mkRoot()
+  //
+  //   root.render(Scroller.$({n: 0}))
+  //   expect(root.element.innerHTML).toEqual('<div>0</div><div>1</div><div>2</div>')
+  //
+  //   root.render(Scroller.$({n: 1}))
+  //   expect(root.element.innerHTML).toEqual('<div>1</div><div>2</div><div>3</div>')
+  //
+  //   root.render(Scroller.$({n: 2}))
+  //   expect(root.element.innerHTML).toEqual('<div>2</div><div>3</div><div>4</div>')
+  // })
 })
