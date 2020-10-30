@@ -3,7 +3,7 @@ import {HostComponent, renderHost} from './component-types/host/host-component'
 import {renderTextComponent} from './component-types/text-component'
 import {PureComponent, renderCustom} from './component-types/pure-component'
 import {RootComponent} from './component-types/root-component'
-import {ElementType, FiendElement, FiendNode, HostElement} from './util/element'
+import {ElementType, FiendElement, FiendNode} from './util/element'
 
 class RenderManager {
   rootNode: RootComponent | null = null

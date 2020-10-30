@@ -1,6 +1,4 @@
-import {renderHost} from '../lib/component-types/host/host-component'
-import {div} from '../lib/component-types/host/host-components'
-import {HostAttributes} from '../lib/component-types/host/host-component-types'
+import {div} from '..'
 import {RootComponent} from '../lib/component-types/root-component'
 
 describe('simple div', () => {
