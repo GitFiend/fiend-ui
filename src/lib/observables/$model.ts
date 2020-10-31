@@ -3,23 +3,23 @@ import {Computed} from './computed'
 
 export type Constructor = {new (...args: any[]): {}}
 
-export class $Model {
-  protected constructor() {}
-
-  static $<T extends typeof $Model>(this: T): T['prototype'] {
-    const model = new this() as T['prototype']
-
-    makeObservable(model)
-
-    return model
-  }
-}
+// export class $Model {
+//   protected constructor() {}
+//
+//   static $<T extends typeof $Model>(this: T): T['prototype'] {
+//     const model = new this() as T['prototype']
+//
+//     makeObservable(model)
+//
+//     return model
+//   }
+// }
 
 export function makeObservable(object: Object) {
   makeObservableInner(object, object.constructor as Constructor)
 }
 
-// Decorator
+/** @deprecated decorator */
 export function model<T extends Constructor>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {

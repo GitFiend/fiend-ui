@@ -1,14 +1,15 @@
 import {$Component} from './$component'
-import {FiendNode} from '../..'
+import {div, FiendNode, makeObservable, PureComponent} from '../..'
 import {mkRoot} from '../../dom-tests/host.test'
-import {div} from '../..'
-import {$Model} from './$model'
-import {PureComponent} from '../..'
 
 describe('$Component', () => {
   test('order 1', () => {
-    class Store extends $Model {
+    class Store {
       $num = 5
+
+      constructor() {
+        makeObservable(this)
+      }
     }
 
     interface Props {
@@ -29,7 +30,7 @@ describe('$Component', () => {
     }
 
     const root = mkRoot()
-    const store = Store.$()
+    const store = new Store()
 
     root.render(A.$({store, depth: 3}))
 

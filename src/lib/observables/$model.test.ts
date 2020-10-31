@@ -1,12 +1,15 @@
-import {$Model, model} from './$model'
+import {makeObservable} from './$model'
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {observable} from 'mobx'
 
-@model
 class A {
   $a = 5
   $b = 6
+
+  constructor() {
+    makeObservable(this)
+  }
 }
 
 class B {
@@ -22,9 +25,13 @@ class D {
   b = 6
 }
 
-class E extends $Model {
+class E {
   $a = 5
   $b = 6
+
+  constructor() {
+    makeObservable(this)
+  }
 }
 
 describe('new zeact class construction speed', () => {
@@ -36,7 +43,7 @@ describe('new zeact class construction speed', () => {
   timeConstructor2('static', loops)
 
   console.time('cold construction')
-  const e = E.$()
+  const e = new E()
   console.timeEnd('cold construction')
 })
 
@@ -62,7 +69,7 @@ function timeConstructor2(name: string, loops: number) {
 
     let c
     for (let i = 0; i < loops; i++) {
-      c = E.$()
+      c = new E()
     }
 
     const duration = Date.now() - t
@@ -107,11 +114,14 @@ describe('access and set observable speed', () => {
 })
 
 describe('makeObservable Alternative', () => {
-  @model
   class Test {
     $a = 4
     $b = 3
     c = 'omg'
+
+    constructor() {
+      makeObservable(this)
+    }
 
     get $n(): number {
       return this.$a * this.$b
@@ -139,7 +149,6 @@ describe('makeObservable Alternative', () => {
 describe('check that only correct fields are modified', () => {
   let computedRuns = 0
 
-  @model
   class Test2 {
     $a = 2
 
@@ -148,6 +157,10 @@ describe('check that only correct fields are modified', () => {
     }
 
     e = 9
+
+    constructor() {
+      makeObservable(this)
+    }
 
     get $c(): number {
       computedRuns++

@@ -74,6 +74,7 @@ function setAttribute(
     case 'className':
       element.setAttribute('class', value)
       break
+    case 'value':
     case 'style':
       ;(element as any)[attr] = value
       break

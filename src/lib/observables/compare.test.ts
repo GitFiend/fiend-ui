@@ -2,7 +2,7 @@ import {autorun, computed, IReactionDisposer, observable, runInAction} from 'mob
 import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {$Calc} from './computed'
-import {model} from './$model'
+import {makeObservable} from './$model'
 
 xdescribe('compare mbox computeds with zeact', () => {
   const loops = 1000
@@ -114,7 +114,6 @@ xdescribe('compare mbox computeds with zeact', () => {
   })
 
   test('fiend', () => {
-    @model
     class E {
       $a = 5
 
@@ -123,6 +122,10 @@ xdescribe('compare mbox computeds with zeact', () => {
       $c = 5
 
       $d = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+      constructor() {
+        makeObservable(this)
+      }
     }
 
     class Run {
