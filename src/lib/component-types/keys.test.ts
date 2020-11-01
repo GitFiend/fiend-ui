@@ -103,7 +103,7 @@ describe('test re-rendering keyed lists', () => {
     expect(root.html).toEqual(result(n, num))
   })
 
-  xtest('wrapped divs', () => {
+  test('wrapped divs', () => {
     const num = 3
 
     class Div extends PureComponent<{text: string}> {

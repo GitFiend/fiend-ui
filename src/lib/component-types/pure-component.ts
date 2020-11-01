@@ -58,7 +58,7 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     }
   }
 
-  updateWithNewProps(props: PropsWithChildren<P>): void {
+  updateWithNewProps(props: PropsWithChildren<P>, orderChanged: boolean): void {
     if (!equalProps(this.props, props)) {
       this.props = props
       this.update()
@@ -99,22 +99,39 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 }
 
 export function renderCustom<P extends StandardProps>(
-  element: CustomElement,
+  tree: CustomElement,
   prevTree: AnyComponent | null,
   parentHost: HostComponent | RootComponent,
   directParent: ParentComponent,
   index: number
 ) {
-  const {_type, props} = element
+  const {_type, props} = tree
 
   if (prevTree === null) {
     return makeCustomComponent(_type, props, parentHost, directParent, index)
   }
 
   if (prevTree._type === ComponentType.custom && prevTree instanceof _type) {
-    prevTree.index = index
-    prevTree.order = Order.key(directParent.order, index)
-    prevTree.updateWithNewProps(props)
+    const newOrder = Order.key(directParent.order, index)
+    const prevOrder = prevTree.order
+
+    if (newOrder !== prevOrder) {
+      prevTree.index = index
+      prevTree.order = newOrder
+
+      prevTree.subComponents.forEach(c => {
+        if (c._type === ComponentType.host) {
+          const no = Order.key(prevTree.order, c.index)
+
+          if (c.order !== no) {
+            c.order = no
+            parentHost.moveChild(c)
+          }
+        }
+      })
+    }
+
+    prevTree.updateWithNewProps(props, prevOrder !== newOrder)
 
     return prevTree
   }
