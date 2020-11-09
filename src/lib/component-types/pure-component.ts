@@ -8,7 +8,7 @@ import {
 } from './base-component'
 import {Render} from '../render'
 import {time, timeEnd} from '../util/measure'
-import {Order} from '../util/order'
+import {insertsCount, Order, resetInsertsCount} from '../util/order'
 import {HostComponent} from './host/host-component'
 import {RootComponent} from './root-component'
 
@@ -46,12 +46,20 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     }
     const res = this.render()
 
+    // insertsCount[this.key] = 0
+    resetInsertsCount()
+
+    if (this.key === 'CommitCardListInner') console.log('CommitCardListInner start')
+
     this.subComponents = Render.subtrees(
       this.parentHost,
       this,
       Array.isArray(res) ? res : [res],
       this.subComponents
     )
+    if (this.key === 'CommitCardListInner')
+      console.log('CommitCardListInner end: ', insertsCount)
+    // console.log('inserts: ', insertsCount[this.key])
 
     if (__DEV__) {
       timeEnd(this.constructor.name)

@@ -1,4 +1,9 @@
-import {AnyComponent, ComponentType, ParentComponent} from '../base-component'
+import {
+  AnyComponent,
+  ComponentType,
+  ElementComponent,
+  ParentComponent,
+} from '../base-component'
 import {Render} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {ElementNameMap} from './host-component-types'
@@ -20,7 +25,8 @@ export class HostComponent<P extends StandardProps = {}> {
   key: string
 
   subComponents = new Map<string, AnyComponent>()
-  inserted: (HostComponent | TextComponent)[] = []
+  inserted: ElementComponent[] = []
+  prevElement: ElementComponent | null = null
 
   constructor(
     public tag: keyof ElementNameMap,
@@ -70,7 +76,7 @@ export class HostComponent<P extends StandardProps = {}> {
     this.parentHost.removeChild(this)
 
     // TODO: Do we even need this? Only for componentWillUnmount?
-    for (const [, c] of this.subComponents) c.remove()
+    // for (const [, c] of this.subComponents) c.remove()
     this.subComponents.clear()
   }
 }

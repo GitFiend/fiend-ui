@@ -17,7 +17,7 @@ export class TextCanvas extends PureComponent<TextCanvasProps> {
   render() {
     const {width, height} = this.props
 
-    return canvas({ref: this.ref, style: s`width: ${width}px; height: ${height}px`})
+    return canvas({ref: this.ref, style: s`width: ${width}px; height: ${height}px;`})
   }
 
   componentDidMount(): void {

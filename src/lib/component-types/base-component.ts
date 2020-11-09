@@ -5,6 +5,7 @@ import {RootComponent} from './root-component'
 
 export type AnyComponent = HostComponent | TextComponent | PureComponent
 export type ParentComponent = PureComponent | RootComponent | HostComponent
+export type ElementComponent = HostComponent | TextComponent
 
 export enum ComponentType {
   host,

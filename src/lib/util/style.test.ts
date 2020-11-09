@@ -1,8 +1,8 @@
 import {c, mc, s} from './style'
 
 describe('s - tagged style string template function', () => {
-  const text = 'width: 50px; height: 2px'
-  const style = s`width: 50px; height: 2px`
+  const text = 'width: 50px; height: 2px;'
+  const style = s`width: 50px; height: 2px;`
 
   test(text, () => {
     expect(style).toEqual(text)
