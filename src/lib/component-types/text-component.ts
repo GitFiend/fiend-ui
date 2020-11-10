@@ -2,7 +2,6 @@ import {
   AnyComponent,
   ComponentBase,
   ComponentType,
-  ElementComponent,
   ParentComponent,
 } from './base-component'
 import {Order} from '../util/order'
@@ -14,7 +13,6 @@ export class TextComponent implements ComponentBase {
   element: Text
   order: string
   key: string
-  prevElement: ElementComponent | null = null
 
   constructor(
     public text: string,

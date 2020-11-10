@@ -8,7 +8,7 @@ import {
 } from './base-component'
 import {Render} from '../render'
 import {time, timeEnd} from '../util/measure'
-import {insertsCount, Order, resetInsertsCount} from '../util/order'
+import {Order} from '../util/order'
 import {HostComponent} from './host/host-component'
 import {RootComponent} from './root-component'
 
@@ -46,27 +46,19 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     }
     const res = this.render()
 
-    // insertsCount[this.key] = 0
-    resetInsertsCount()
-
-    if (this.key === 'CommitCardListInner') console.log('CommitCardListInner start')
-
     this.subComponents = Render.subtrees(
       this.parentHost,
       this,
       Array.isArray(res) ? res : [res],
       this.subComponents
     )
-    if (this.key === 'CommitCardListInner')
-      console.log('CommitCardListInner end: ', insertsCount)
-    // console.log('inserts: ', insertsCount[this.key])
 
     if (__DEV__) {
       timeEnd(this.constructor.name)
     }
   }
 
-  updateWithNewProps(props: PropsWithChildren<P>, orderChanged: boolean): void {
+  updateWithNewProps(props: PropsWithChildren<P>): void {
     if (!equalProps(this.props, props)) {
       this.props = props
       this.update()
@@ -127,7 +119,7 @@ export function renderCustom<P extends StandardProps>(
       prevTree.index = index
       prevTree.order = newOrder
 
-      prevTree.subComponents.forEach(c => {
+      for (const [, c] of prevTree.subComponents) {
         if (c._type === ComponentType.host) {
           const no = Order.key(prevTree.order, c.index)
 
@@ -136,10 +128,10 @@ export function renderCustom<P extends StandardProps>(
             parentHost.moveChild(c)
           }
         }
-      })
+      }
     }
 
-    prevTree.updateWithNewProps(props, prevOrder !== newOrder)
+    prevTree.updateWithNewProps(props)
 
     return prevTree
   }

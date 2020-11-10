@@ -4,6 +4,7 @@ import {Render} from '../render'
 import {Order} from '../util/order'
 import {AnyComponent} from './base-component'
 import {FiendElement} from '../..'
+import {RunStack} from '../observables/run-stack'
 
 export class RootComponent {
   component: AnyComponent | null = null
@@ -12,10 +13,14 @@ export class RootComponent {
 
   inserted: (HostComponent | TextComponent)[] = []
 
+  // key is an element, value is the previous element
+  siblings = new WeakMap<Element | Text, Element | Text | null>()
+
   constructor(public element: HTMLElement) {}
 
   render(tree: FiendElement) {
     this.component = Render.tree(tree, this.component, this, this, 0)
+    RunStack.runInsertions()
   }
 
   insertChild(child: HostComponent | TextComponent) {

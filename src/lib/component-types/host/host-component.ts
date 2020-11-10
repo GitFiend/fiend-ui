@@ -26,7 +26,9 @@ export class HostComponent<P extends StandardProps = {}> {
 
   subComponents = new Map<string, AnyComponent>()
   inserted: ElementComponent[] = []
-  prevElement: ElementComponent | null = null
+
+  // key is an element, value is the previous element
+  siblings = new WeakMap<Element | Text, Element | Text | null>()
 
   constructor(
     public tag: keyof ElementNameMap,
