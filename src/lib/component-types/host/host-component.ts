@@ -78,8 +78,13 @@ export class HostComponent<P extends StandardProps = {}> {
     this.parentHost.removeChild(this)
 
     // TODO: Do we even need this? Only for componentWillUnmount?
-    // for (const [, c] of this.subComponents) c.remove()
-    this.subComponents.clear()
+
+    if (this.subComponents.size > 0) {
+      for (const [, c] of this.subComponents) c.remove()
+      this.subComponents.clear()
+    }
+
+    if (this.inserted.length > 0) this.inserted = []
   }
 }
 
