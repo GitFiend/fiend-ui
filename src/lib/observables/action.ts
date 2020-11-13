@@ -48,17 +48,21 @@ An Action lets us batch our notifiers.
 
  */
 export class ActionState {
-  unorderedResponders = new Set<UnorderedResponder>()
-  orderedResponders = new Map<string, $Component>()
+  computeds = new Set<UnorderedResponder>()
+  reactions = new Set<UnorderedResponder>()
+  components = new Map<string, $Component>()
 
   constructor(public runningResponder: Responder | null) {}
 
   add(notifier: Notifier) {
-    for (const r of notifier.unorderedResponders) {
-      if (r !== this.runningResponder) this.unorderedResponders.add(r)
+    for (const r of notifier.computeds) {
+      if (r !== this.runningResponder) this.computeds.add(r)
     }
-    for (const [key, r] of notifier.orderedResponders) {
-      if (r !== this.runningResponder) this.orderedResponders.set(key, r)
+    for (const r of notifier.reactions) {
+      if (r !== this.runningResponder) this.reactions.add(r)
+    }
+    for (const [key, r] of notifier.components) {
+      if (r !== this.runningResponder) this.components.set(key, r)
     }
   }
 
@@ -74,7 +78,7 @@ export class ActionState {
     //   runResponders(unorderedResponders, orderedResponders)
     // }
 
-    RunStack.runResponders(this.unorderedResponders, this.orderedResponders)
+    RunStack.runResponders(this.computeds, this.reactions, this.components)
     // runResponders(this.unorderedResponders, this.orderedResponders)
   }
 }

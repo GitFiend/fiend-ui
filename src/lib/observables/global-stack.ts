@@ -48,7 +48,7 @@ export class GlobalStack {
   computeds need to always return the correct value.
    */
   runComputedNowIfDirty(computed: Computed<unknown>) {
-    if (this.actionStack?.unorderedResponders.delete(computed) === true) {
+    if (this.actionStack?.computeds.delete(computed) === true) {
       computed.run()
     }
   }

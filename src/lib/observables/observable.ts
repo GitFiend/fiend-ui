@@ -73,8 +73,9 @@ export function $Array<T>(...items: T[]): ObservableArray<T> {
 }
 
 export class Atom<T> implements Notifier {
-  orderedResponders = new Map<string, $Component>()
-  unorderedResponders = new Set<UnorderedResponder>()
+  computeds = new Set<UnorderedResponder>()
+  reactions = new Set<UnorderedResponder>()
+  components = new Map<string, $Component>()
 
   constructor(public value: T) {}
 

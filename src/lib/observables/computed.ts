@@ -33,8 +33,9 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   responderType = ResponderType.computed as const
   ordered = false as const
 
-  orderedResponders = new Map<string, $Component>()
-  unorderedResponders = new Set<UnorderedResponder>()
+  computeds = new Set<UnorderedResponder>()
+  reactions = new Set<UnorderedResponder>()
+  components = new Map<string, $Component>()
 
   value: T | any
   firstRun = true
@@ -45,8 +46,9 @@ export class Computed<T> implements UnorderedResponder, Notifier {
 
   run(): void {
     if (!this.active) {
-      this.orderedResponders.clear()
-      this.unorderedResponders.clear()
+      this.computeds.clear()
+      this.reactions.clear()
+      this.components.clear()
       return
     }
 

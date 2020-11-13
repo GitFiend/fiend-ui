@@ -1,5 +1,5 @@
 import {globalStack} from './global-stack'
-import {UnorderedResponder} from './responder'
+import {ResponderType, UnorderedResponder} from './responder'
 import {$Component} from './$component'
 import {RunStack} from './run-stack'
 
@@ -10,8 +10,9 @@ Could be a plain observable or a computed (Computeds are both Notifiers and Resp
 
  */
 export interface Notifier {
-  unorderedResponders: Set<UnorderedResponder>
-  orderedResponders: Map<string, $Component>
+  computeds: Set<UnorderedResponder>
+  reactions: Set<UnorderedResponder>
+  components: Map<string, $Component>
 }
 
 export function addCallingResponderToOurList(notifier: Notifier) {
@@ -20,21 +21,39 @@ export function addCallingResponderToOurList(notifier: Notifier) {
   if (responder !== null) {
     // TODO: Do we need to make sure we aren't adding ourselves to ourself?
     // (In the case of a computed)
-    if (responder.ordered) notifier.orderedResponders.set(responder.order, responder)
-    else notifier.unorderedResponders.add(responder)
+
+    switch (responder.responderType) {
+      case ResponderType.computed:
+        notifier.computeds.add(responder)
+        break
+      case ResponderType.autoRun:
+      case ResponderType.reaction:
+        notifier.reactions.add(responder)
+        break
+      case ResponderType.component:
+        // TODO: Improve types.
+        const r = responder as $Component
+        notifier.components.set(r.order, r)
+        break
+    }
+
+    // if (responder.ordered) notifier.components.set(responder.order, responder)
+    // else notifier.reactions.add(responder)
   }
 }
 
 export function notify(notifier: Notifier) {
-  const orderedResponders = notifier.orderedResponders
-  const unorderedResponders = notifier.unorderedResponders
+  // const components = notifier.components
+  // const reactions = notifier.reactions
+  const {computeds, reactions, components} = notifier
 
-  if (orderedResponders.size > 0 || unorderedResponders.size > 0) {
+  if (computeds.size > 0 || reactions.size > 0 || components.size > 0) {
     if (!globalStack.queueNotifierIfInAction(notifier)) {
-      notifier.orderedResponders = new Map()
-      notifier.unorderedResponders = new Set()
+      notifier.computeds = new Set()
+      notifier.reactions = new Set()
+      notifier.components = new Map()
 
-      RunStack.runResponders(unorderedResponders, orderedResponders)
+      RunStack.runResponders(computeds, reactions, components)
       // runResponders(unorderedResponders, orderedResponders)
     }
   }

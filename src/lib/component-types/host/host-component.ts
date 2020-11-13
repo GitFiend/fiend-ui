@@ -77,9 +77,8 @@ export class HostComponent<P extends StandardProps = {}> {
   remove(): void {
     this.parentHost.removeChild(this)
 
-    // TODO: Do we even need this? Only for componentWillUnmount?
-
     if (this.subComponents.size > 0) {
+      // This is required so that observer components don't keep updating.
       for (const [, c] of this.subComponents) c.remove()
       this.subComponents.clear()
     }
