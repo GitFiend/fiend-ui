@@ -1,4 +1,4 @@
-import {addCallingResponderToOurList, Notifier, notify} from './notifier'
+import {addCallingResponderToOurList, clearNotifier, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
 import {ResponderType, UnorderedResponder} from './responder'
 import {$Component} from './$component'
@@ -38,49 +38,128 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   components = new Map<string, $Component>()
 
   value: T | any
-  firstRun = true
+  // firstRun = true
+
+  // numResponders = 0
 
   active = false
+
+  // hasResponders = false
 
   constructor(public f: () => T) {}
 
   run(): void {
-    if (!this.active) {
-      this.computeds.clear()
-      this.reactions.clear()
-      this.components.clear()
-      return
+    // console.log(
+    //   'num responders in computed: ',
+    //   this.computeds.size + this.reactions.size + this.components.size
+    // )
+    // this.hasResponders = this.numResponders() > 0
+
+    if (this.hasActiveResponders()) {
+      globalStack.pushResponder(this)
+      const result = this.f()
+      this.active = this.hasActiveResponders()
+
+      globalStack.popResponder()
+
+      if (result !== this.value) {
+        this.value = result
+
+        notify(this)
+      }
     }
 
-    globalStack.pushResponder(this)
-    const result = this.f()
-    globalStack.popResponder()
-
-    if (result !== this.value) {
-      this.value = result
-
-      // TODO: Check if we have any responders first here or somewhere else
-      notify(this)
-    }
+    // if (!this.active) {
+    //   this.computeds.clear()
+    //   this.reactions.clear()
+    //   this.components.clear()
+    //   return
+    // }
+    //
+    // globalStack.pushResponder(this)
+    // const result = this.f()
+    // globalStack.popResponder()
+    //
+    // if (result !== this.value) {
+    //   this.value = result
+    //
+    //   notify(this)
+    // }
   }
 
   get(): T {
-    if (this.firstRun || !this.active) {
+    if (!this.active) {
       globalStack.pushResponder(this)
       this.value = this.f()
+      this.active = this.hasActiveResponders()
+
       globalStack.popResponder()
-      this.firstRun = false
+      // this.hasResponders = this.numResponders() > 0
     } else {
       globalStack.runComputedNowIfDirty(this)
     }
+
+    // if (this.firstRun || !this.active) {
+    //   globalStack.pushResponder(this)
+    //   this.value = this.f()
+    //   globalStack.popResponder()
+    //   this.firstRun = false
+    // } else {
+    //   globalStack.runComputedNowIfDirty(this)
+    // }
 
     addCallingResponderToOurList(this)
 
     // this.active = globalStack.insideNonComputedResponder()
     // TODO: Not sure whether there's a computed/memory leak here or not.
-    this.active = true
+    // this.active = true
 
     return this.value
+  }
+
+  hasActiveResponders(): boolean {
+    // TODO: Optimise this before committing.
+    for (const c of this.computeds) {
+      if (!c.active) {
+        this.computeds.delete(c)
+      }
+    }
+    for (const c of this.reactions) {
+      if (!c.active) {
+        this.reactions.delete(c)
+      }
+    }
+    for (const [key, c] of this.components) {
+      if (c._removed) {
+        this.components.delete(key)
+      }
+    }
+
+    for (const c of this.computeds) {
+      if (c.active) return true
+    }
+
+    for (const r of this.reactions) {
+      if (r.active) return true
+    }
+
+    // if (this.components.size > 0) {
+    //   console.log('just component')
+    for (const [, c] of this.components) {
+      if (!c._removed) {
+        // console.log('REMOVED WTF!')
+        return true
+      }
+    }
+    // return true
+    // }
+
+    clearNotifier(this)
+
+    // if (this.computeds.size + this.reactions.size + this.components.size > 0) {
+    //   console.log('OMGOMGOMGOMG')
+    // }
+    return false
   }
 }
 

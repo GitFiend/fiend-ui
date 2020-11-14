@@ -10,7 +10,11 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   ordered = true as const
   disposers: F0[] = []
 
-  private _removed = false
+  _removed = false
+
+  ref = {
+    current: this,
+  }
 
   mount() {
     makeObservable(this)
@@ -20,7 +24,10 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   }
 
   run() {
-    if (this._removed) return
+    if (this._removed) {
+      console.log('run removed', this.constructor.name)
+      return
+    }
 
     if (__FIEND_DEV__) {
       console.debug('run', this.constructor.name)

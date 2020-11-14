@@ -42,7 +42,7 @@ export function addCallingResponderToOurList(notifier: Notifier) {
   }
 }
 
-export function notify(notifier: Notifier) {
+export function notify(notifier: Notifier): void {
   // const components = notifier.components
   // const reactions = notifier.reactions
   const {computeds, reactions, components} = notifier
@@ -59,6 +59,18 @@ export function notify(notifier: Notifier) {
   }
 }
 
+export function clearNotifier(notifier: Notifier): void {
+  if (notifier.computeds.size > 0) {
+    notifier.computeds.clear()
+  }
+  if (notifier.reactions.size > 0) {
+    notifier.reactions.clear()
+  }
+  if (notifier.components.size > 0) {
+    notifier.components.clear()
+  }
+}
+
 // export function runResponders(
 //   unorderedResponders: Set<UnorderedResponder>,
 //   orderedResponders: Map<string, $Component>
@@ -71,4 +83,28 @@ export function notify(notifier: Notifier) {
 //   // keys.sort()
 //   //
 //   // for (const key of keys) orderedResponders.get(key)?.run()
+// }
+//
+// interface Pointer {
+//   element: A | null
+// }
+//
+// class A {
+//   constructor(public pointer: Pointer) {}
+// }
+//
+// const c: Pointer = {
+//   element: new A(c),
+// }
+//
+// class Pointer2<T> {
+//   element: T | null
+//
+//   constructor(e: T) {
+//     this.element = e
+//   }
+//
+//   delete() {
+//     this.element = null
+//   }
 // }

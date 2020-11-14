@@ -1,7 +1,7 @@
 import {$Val} from './observable'
 import {$Calc} from './computed'
 import {$AutoRun, $Reaction} from './responder'
-import {model} from './$model'
+import {makeObservable} from './$model'
 import {autorun, computed, observable} from 'mobx'
 
 describe('reaction tests', () => {
@@ -251,15 +251,14 @@ describe('computed scope', () => {
   it's called via a get().
    */
 
-  @model
   class A {
+    constructor() {
+      makeObservable(this)
+    }
+
     get $num(): number {
       count++
       return n() * n()
-    }
-
-    get $num2(): number {
-      return this.$num
     }
   }
 
@@ -267,8 +266,10 @@ describe('computed scope', () => {
     const a = new A()
 
     const d = $AutoRun(() => {
-      a.$num2
+      a.$num
     })
+
+    // a.$num
 
     expect(count).toEqual(1)
     n(n() + 1)
@@ -277,7 +278,7 @@ describe('computed scope', () => {
     d()
   })
 
-  xtest('out of scope', () => {
+  test('out of scope', () => {
     const before = count
 
     n(n() + 1)
