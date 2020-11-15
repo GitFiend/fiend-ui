@@ -65,6 +65,16 @@ export class ActionState {
     for (const [key, r] of notifier.components) {
       if (r.current !== this.runningResponder) this.components.set(key, r)
     }
+
+    if (notifier.computeds.size > 0) {
+      notifier.computeds.clear()
+    }
+    if (notifier.reactions.size > 0) {
+      notifier.reactions.clear()
+    }
+    if (notifier.components.size > 0) {
+      notifier.components.clear()
+    }
   }
 
   // This whole object gets deleted after running, so I don't think cleanup is required.

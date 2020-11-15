@@ -51,3 +51,11 @@ export function notify(notifier: Notifier): void {
     }
   }
 }
+
+export function clearNotifier(notifier: Notifier) {
+  const {computeds, reactions, components} = notifier
+
+  computeds.clear()
+  reactions.clear()
+  components.clear()
+}

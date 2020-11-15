@@ -1,4 +1,4 @@
-import {addCallingResponderToOurList, Notifier, notify} from './notifier'
+import {addCallingResponderToOurList, clearNotifier, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
 import {ResponderType, UnorderedResponder} from './responder'
 import {$Component} from './$component'
@@ -100,6 +100,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
         return true
       }
     }
+    clearNotifier(this)
     return false
   }
 }
