@@ -1,7 +1,8 @@
-import {addCallingResponderToOurList, clearNotifier, Notifier, notify} from './notifier'
+import {addCallingResponderToOurList, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
 import {ResponderType, UnorderedResponder} from './responder'
 import {$Component} from './$component'
+import {RefObject} from '../util/ref'
 
 /*
 Notes:
@@ -33,34 +34,35 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   responderType = ResponderType.computed as const
   ordered = false as const
 
-  computeds = new Set<UnorderedResponder>()
-  reactions = new Set<UnorderedResponder>()
-  components = new Map<string, $Component>()
+  // Things we call when this computed updates.
+  computeds = new Set<RefObject<UnorderedResponder>>()
+  reactions = new Set<RefObject<UnorderedResponder>>()
+  components = new Map<string, RefObject<$Component>>()
+
+  // Things that call this computed when they update.
+  // notifiers = new Set<RefObject<Notifier>>()
 
   value: T | any
+
+  _ref: RefObject<this> = {
+    current: this,
+  }
+
   // firstRun = true
-
-  // numResponders = 0
-
-  active = false
-
-  // hasResponders = false
+  dirty = true
 
   constructor(public f: () => T) {}
 
   run(): void {
-    // console.log(
-    //   'num responders in computed: ',
-    //   this.computeds.size + this.reactions.size + this.components.size
-    // )
-    // this.hasResponders = this.numResponders() > 0
+    this.dirty = true
 
     if (this.hasActiveResponders()) {
       globalStack.pushResponder(this)
       const result = this.f()
-      this.active = this.hasActiveResponders()
-
+      this.dirty = false
       globalStack.popResponder()
+
+      this._ref.current = this.hasActiveResponders() ? this : null
 
       if (result !== this.value) {
         this.value = result
@@ -68,97 +70,36 @@ export class Computed<T> implements UnorderedResponder, Notifier {
         notify(this)
       }
     }
-
-    // if (!this.active) {
-    //   this.computeds.clear()
-    //   this.reactions.clear()
-    //   this.components.clear()
-    //   return
-    // }
-    //
-    // globalStack.pushResponder(this)
-    // const result = this.f()
-    // globalStack.popResponder()
-    //
-    // if (result !== this.value) {
-    //   this.value = result
-    //
-    //   notify(this)
-    // }
   }
 
   get(): T {
-    if (!this.active) {
+    if (this._ref.current === null || this.dirty) {
       globalStack.pushResponder(this)
       this.value = this.f()
-      this.active = this.hasActiveResponders()
-
+      this.dirty = false
       globalStack.popResponder()
-      // this.hasResponders = this.numResponders() > 0
     } else {
-      globalStack.runComputedNowIfDirty(this)
+      globalStack.runComputedNowIfDirty(this._ref)
     }
 
-    // if (this.firstRun || !this.active) {
-    //   globalStack.pushResponder(this)
-    //   this.value = this.f()
-    //   globalStack.popResponder()
-    //   this.firstRun = false
-    // } else {
-    //   globalStack.runComputedNowIfDirty(this)
-    // }
-
     addCallingResponderToOurList(this)
-
-    // this.active = globalStack.insideNonComputedResponder()
-    // TODO: Not sure whether there's a computed/memory leak here or not.
-    // this.active = true
+    this._ref.current = this.hasActiveResponders() ? this : null
 
     return this.value
   }
 
   hasActiveResponders(): boolean {
-    // TODO: Optimise this before committing.
     for (const c of this.computeds) {
-      if (!c.active) {
-        this.computeds.delete(c)
-      }
+      if (c.current !== null) return true
     }
-    for (const c of this.reactions) {
-      if (!c.active) {
-        this.reactions.delete(c)
-      }
-    }
-    for (const [key, c] of this.components) {
-      if (c._removed) {
-        this.components.delete(key)
-      }
-    }
-
-    for (const c of this.computeds) {
-      if (c.active) return true
-    }
-
     for (const r of this.reactions) {
-      if (r.active) return true
+      if (r.current !== null) return true
     }
-
-    // if (this.components.size > 0) {
-    //   console.log('just component')
     for (const [, c] of this.components) {
-      if (!c._removed) {
-        // console.log('REMOVED WTF!')
+      if (c.current !== null) {
         return true
       }
     }
-    // return true
-    // }
-
-    clearNotifier(this)
-
-    // if (this.computeds.size + this.reactions.size + this.components.size > 0) {
-    //   console.log('OMGOMGOMGOMG')
-    // }
     return false
   }
 }

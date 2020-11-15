@@ -4,14 +4,14 @@ import {OArray} from '../util/o-array'
 import {RootComponent} from '../component-types/root-component'
 import {HostComponent} from '../component-types/host/host-component'
 import {applyInserts} from '../util/order'
+import {RefObject} from '../util/ref'
 
 export class RunStack {
-  static computeds = new Set<UnorderedResponder>()
-  static reactions = new Set<UnorderedResponder>()
+  static computeds = new Set<RefObject<UnorderedResponder>>()
+  static reactions = new Set<RefObject<UnorderedResponder>>()
   static components: $Component[] = []
 
   private static running = false
-  private static count = 0
 
   static insertsStack = new Set<RootComponent | HostComponent>()
   static removeStack = new Set<Element | Text>()
@@ -19,45 +19,42 @@ export class RunStack {
   // static depth = 0
 
   static runResponders(
-    computeds: Set<UnorderedResponder>,
-    reactions: Set<UnorderedResponder>,
-    components: Map<string, $Component>
+    computeds: Set<RefObject<UnorderedResponder>>,
+    reactions: Set<RefObject<UnorderedResponder>>,
+    components: Map<string, RefObject<$Component>>
   ) {
     // this.depth++
     // console.log('depth: ', this.depth)
 
     for (const [, c] of components) {
-      if (!c._removed) OArray.insert(this.components, c)
+      if (c.current !== null) OArray.insert(this.components, c.current)
     }
     for (const o of computeds) {
-      // if (o.active)
-      this.computeds.add(o)
+      if (o.current !== null) this.computeds.add(o)
     }
     for (const o of reactions) {
-      if (o.active) this.reactions.add(o)
+      if (o.current !== null) this.reactions.add(o)
     }
 
     if (!this.running) {
       this.running = true
-      this.count = 0
 
-      console.log(this.computeds.size, this.reactions.size, this.components.length)
+      // console.log(this.computeds.size, this.reactions.size, this.components.length)
 
       while (this.computeds.size > 0 || this.reactions.size > 0) {
         while (this.computeds.size > 0) {
-          this.count++
-          const computed = this.computeds.values().next().value as UnorderedResponder
+          const computed = this.computeds.values().next().value as RefObject<
+            UnorderedResponder
+          >
           this.computeds.delete(computed)
-          // if (computed.active) {
-          //   console.log('NOT ACTIVE WTF!!!')
-          // }
-          computed.run()
+          computed.current?.run()
         }
         while (this.reactions.size > 0) {
-          this.count++
-          const reaction = this.reactions.values().next().value as UnorderedResponder
+          const reaction = this.reactions.values().next().value as RefObject<
+            UnorderedResponder
+          >
           this.reactions.delete(reaction)
-          reaction.run()
+          reaction.current?.run()
         }
       }
 
@@ -69,7 +66,6 @@ export class RunStack {
       this.runInsertions()
 
       this.running = false
-      // console.log(this.count)
     }
     // this.depth--
   }

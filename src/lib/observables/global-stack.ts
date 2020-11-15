@@ -2,6 +2,7 @@ import {Responder, ResponderType} from './responder'
 import {Notifier} from './notifier'
 import {ActionState} from './action'
 import {Computed} from './computed'
+import {RefObject} from '../util/ref'
 
 export class GlobalStack {
   private responderStack: Responder[] = []
@@ -47,10 +48,12 @@ export class GlobalStack {
   We don't wait till the end of an action before running a computed if accessed as
   computeds need to always return the correct value.
    */
-  runComputedNowIfDirty(computed: Computed<unknown>) {
+  runComputedNowIfDirty(computed: RefObject<Computed<unknown>>): boolean {
     if (this.actionStack?.computeds.delete(computed) === true) {
-      computed.run()
+      computed.current?.run()
+      return true
     }
+    return false
   }
 
   startAction(): void {

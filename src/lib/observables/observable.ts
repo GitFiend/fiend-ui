@@ -1,6 +1,7 @@
 import {UnorderedResponder} from './responder'
 import {addCallingResponderToOurList, Notifier, notify} from './notifier'
 import {$Component} from './$component'
+import {RefObject} from '../util/ref'
 
 export interface Observable<T> {
   (): Readonly<T>
@@ -73,9 +74,9 @@ export function $Array<T>(...items: T[]): ObservableArray<T> {
 }
 
 export class Atom<T> implements Notifier {
-  computeds = new Set<UnorderedResponder>()
-  reactions = new Set<UnorderedResponder>()
-  components = new Map<string, $Component>()
+  computeds = new Set<RefObject<UnorderedResponder>>()
+  reactions = new Set<RefObject<UnorderedResponder>>()
+  components = new Map<string, RefObject<$Component>>()
 
   constructor(public value: T) {}
 

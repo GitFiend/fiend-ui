@@ -3,6 +3,7 @@ import {Responder, UnorderedResponder} from './responder'
 import {Notifier} from './notifier'
 import {$Component} from './$component'
 import {RunStack} from './run-stack'
+import {RefObject} from '../util/ref'
 
 type FunctionWithoutPromise<T> = T extends () => Promise<void> ? never : T
 
@@ -48,38 +49,27 @@ An Action lets us batch our notifiers.
 
  */
 export class ActionState {
-  computeds = new Set<UnorderedResponder>()
-  reactions = new Set<UnorderedResponder>()
-  components = new Map<string, $Component>()
+  computeds = new Set<RefObject<UnorderedResponder>>()
+  reactions = new Set<RefObject<UnorderedResponder>>()
+  components = new Map<string, RefObject<$Component>>()
 
   constructor(public runningResponder: Responder | null) {}
 
   add(notifier: Notifier) {
     for (const r of notifier.computeds) {
-      if (r !== this.runningResponder) this.computeds.add(r)
+      if (r.current !== this.runningResponder) this.computeds.add(r)
     }
     for (const r of notifier.reactions) {
-      if (r !== this.runningResponder) this.reactions.add(r)
+      if (r.current !== this.runningResponder) this.reactions.add(r)
     }
     for (const [key, r] of notifier.components) {
-      if (r !== this.runningResponder) this.components.set(key, r)
+      if (r.current !== this.runningResponder) this.components.set(key, r)
     }
   }
 
   // This whole object gets deleted after running, so I don't think cleanup is required.
   run() {
-    // const orderedResponders = this.orderedResponders
-    // const unorderedResponders = this.unorderedResponders
-    //
-    // if (orderedResponders.size + unorderedResponders.size > 0) {
-    //   this.orderedResponders = new Map()
-    //   this.unorderedResponders = new Set()
-    //
-    //   runResponders(unorderedResponders, orderedResponders)
-    // }
-
     RunStack.runResponders(this.computeds, this.reactions, this.components)
-    // runResponders(this.unorderedResponders, this.orderedResponders)
   }
 }
 

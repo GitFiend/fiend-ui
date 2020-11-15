@@ -269,8 +269,6 @@ describe('computed scope', () => {
       a.$num
     })
 
-    // a.$num
-
     expect(count).toEqual(1)
     n(n() + 1)
     expect(count).toEqual(2)

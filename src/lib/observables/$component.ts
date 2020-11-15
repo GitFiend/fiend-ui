@@ -2,6 +2,7 @@ import {PureComponent} from '../..'
 import {globalStack} from './global-stack'
 import {F0, OrderedResponder, ResponderType} from './responder'
 import {makeObservable} from './$model'
+import {RefObject} from '../util/ref'
 
 export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   implements OrderedResponder {
@@ -10,9 +11,7 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   ordered = true as const
   disposers: F0[] = []
 
-  _removed = false
-
-  ref = {
+  _ref: RefObject<this> = {
     current: this,
   }
 
@@ -24,8 +23,7 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   }
 
   run() {
-    if (this._removed) {
-      console.log('run removed', this.constructor.name)
+    if (this._ref.current === null) {
       return
     }
 
@@ -39,7 +37,7 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   }
 
   remove(): void {
-    this._removed = true
+    this._ref.current = null
     this.disposers.forEach(d => d())
     super.remove()
   }

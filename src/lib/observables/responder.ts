@@ -1,5 +1,6 @@
 import {globalStack} from './global-stack'
 import {$Component} from './$component'
+import {RefObject} from '../util/ref'
 
 /*
 A Responder is an object that listens accesses to notifiers (observables). When these
@@ -23,13 +24,14 @@ export interface OrderedResponder {
   ordered: true
   order: string
   run(): void
+  _ref: RefObject<$Component>
 }
 
 export interface UnorderedResponder {
   responderType: ResponderType
   ordered: false
-  active: boolean
   run(): void
+  _ref: RefObject<UnorderedResponder>
 }
 
 export type F0 = () => void
@@ -37,24 +39,25 @@ export type F0 = () => void
 class AutoRun implements UnorderedResponder {
   responderType = ResponderType.autoRun as const
   ordered = false as const
-  active = true
+
+  _ref: RefObject<this> = {
+    current: this,
+  }
 
   constructor(public f: () => void) {
     this.run()
   }
 
   run() {
-    if (!this.active) return
+    if (this._ref.current === null) return
 
     globalStack.pushResponder(this)
-    // globalStack.startAction()
     this.f()
-    // globalStack.endAction()
     globalStack.popResponder()
   }
 
   end: F0 = () => {
-    this.active = false
+    this._ref.current = null
   }
 }
 
@@ -67,7 +70,9 @@ class Reaction<T> implements UnorderedResponder {
   ordered = false as const
   value: T
 
-  active = true
+  _ref: RefObject<this> = {
+    current: this,
+  }
 
   constructor(private calc: () => T, private f: (result: T) => void) {
     globalStack.pushResponder(this)
@@ -76,7 +81,7 @@ class Reaction<T> implements UnorderedResponder {
   }
 
   run(): void {
-    if (!this.active) return
+    if (this._ref.current === null) return
 
     globalStack.pushResponder(this)
     const value = this.calc()
@@ -85,14 +90,12 @@ class Reaction<T> implements UnorderedResponder {
     if (this.value !== value) {
       this.value = value
 
-      // $RunInAction(() => {
       this.f(value)
-      // })
     }
   }
 
   end: F0 = () => {
-    this.active = false
+    this._ref.current = null
   }
 }
 
