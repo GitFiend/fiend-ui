@@ -11,6 +11,8 @@ import {time, timeEnd} from '../util/measure'
 import {Order} from '../util/order'
 import {HostComponent} from './host/host-component'
 import {RootComponent} from './root-component'
+import {RefObject} from '../util/ref'
+import {RunStack} from '../observables/run-stack'
 
 export interface Rec {
   [prop: string]: unknown
@@ -27,6 +29,10 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 
   subComponents = new Map<string, AnyComponent>()
 
+  _ref: RefObject<this> = {
+    current: this,
+  }
+
   constructor(
     props: P,
     public parentHost: HostComponent | RootComponent,
@@ -40,7 +46,7 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 
   abstract render(): FiendNode | FiendNode[]
 
-  update = () => {
+  update() {
     if (__DEV__) {
       time(this.constructor.name)
     }
@@ -62,8 +68,9 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     if (!equalProps(this.props, props)) {
       this.props = props
       this.update()
+      // this.componentDidUpdate()
+      RunStack.componentDidUpdateStack.push(this._ref)
     }
-    this.componentDidUpdate()
   }
 
   componentDidMount(): void {}
@@ -72,11 +79,14 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 
   componentWillUnmount(): void {}
 
-  forceUpdate = this.update
+  forceUpdate = () => {
+    this.update()
+  }
 
   mount() {
     this.update()
-    this.componentDidMount()
+    // this.componentDidMount()
+    RunStack.componentDidMountStack.push(this._ref)
   }
 
   remove(): void {

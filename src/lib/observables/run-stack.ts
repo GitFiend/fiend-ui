@@ -5,6 +5,7 @@ import {RootComponent} from '../component-types/root-component'
 import {HostComponent} from '../component-types/host/host-component'
 import {applyInserts} from '../util/order'
 import {RefObject} from '../util/ref'
+import {PureComponent} from '../..'
 
 export class RunStack {
   static computeds = new Set<RefObject<UnorderedResponder>>()
@@ -15,6 +16,9 @@ export class RunStack {
 
   static insertsStack = new Set<RootComponent | HostComponent>()
   static removeStack = new Set<Element | Text>()
+
+  static componentDidMountStack: RefObject<PureComponent>[] = []
+  static componentDidUpdateStack: RefObject<PureComponent>[] = []
 
   // static depth = 0
 
@@ -66,6 +70,16 @@ export class RunStack {
       this.runInsertions()
 
       this.running = false
+    }
+
+    while (this.componentDidMountStack.length > 0) {
+      const ref = this.componentDidMountStack.shift()
+      ref?.current?.componentDidMount()
+    }
+
+    while (this.componentDidUpdateStack.length > 0) {
+      const ref = this.componentDidUpdateStack.shift()
+      ref?.current?.componentDidUpdate()
     }
     // this.depth--
   }

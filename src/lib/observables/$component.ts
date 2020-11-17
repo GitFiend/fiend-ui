@@ -2,7 +2,7 @@ import {PureComponent} from '../..'
 import {globalStack} from './global-stack'
 import {F0, OrderedResponder, ResponderType} from './responder'
 import {makeObservable} from './$model'
-import {RefObject} from '../util/ref'
+import {RunStack} from './run-stack'
 
 export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   implements OrderedResponder {
@@ -11,15 +11,12 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
   ordered = true as const
   disposers: F0[] = []
 
-  _ref: RefObject<this> = {
-    current: this,
-  }
-
   mount() {
     makeObservable(this)
 
-    this.run()
-    this.componentDidMount()
+    this.update()
+    RunStack.componentDidMountStack.push(this._ref)
+    // this.componentDidMount()
   }
 
   run() {
@@ -31,8 +28,16 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
       console.debug('run', this.constructor.name)
     }
 
-    globalStack.pushResponder(this)
     this.update()
+    // globalStack.pushResponder(this)
+    // this.update()
+    // globalStack.popResponder()
+    RunStack.componentDidUpdateStack.push(this._ref)
+  }
+
+  update() {
+    globalStack.pushResponder(this)
+    super.update()
     globalStack.popResponder()
   }
 
