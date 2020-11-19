@@ -1,4 +1,4 @@
-import {PureComponent} from '../..'
+import {$AutoRun, $Reaction, PureComponent} from '../..'
 import {globalStack} from './global-stack'
 import {F0, OrderedResponder, ResponderType} from './responder'
 import {makeObservable} from './$model'
@@ -46,5 +46,13 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
     // this._ref = {current: null}
     this.disposers.forEach(d => d())
     super.remove()
+  }
+
+  $AutoRun(f: () => void) {
+    this.disposers.push($AutoRun(f))
+  }
+
+  $Reaction<T>(calc: () => T, f: (result: T) => void) {
+    this.disposers.push($Reaction(calc, f))
   }
 }
