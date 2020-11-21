@@ -72,15 +72,6 @@ export class RunStack {
       this.running = false
     }
 
-    while (this.componentDidMountStack.length > 0) {
-      const ref = this.componentDidMountStack.shift()
-      ref?.current?.componentDidMount()
-    }
-
-    while (this.componentDidUpdateStack.length > 0) {
-      const ref = this.componentDidUpdateStack.shift()
-      ref?.current?.componentDidUpdate()
-    }
     // this.depth--
   }
 
@@ -94,5 +85,15 @@ export class RunStack {
       e.remove()
     }
     this.removeStack.clear()
+
+    while (this.componentDidMountStack.length > 0) {
+      const ref = this.componentDidMountStack.shift()
+      ref?.current?.componentDidMount()
+    }
+
+    while (this.componentDidUpdateStack.length > 0) {
+      const ref = this.componentDidUpdateStack.shift()
+      ref?.current?.componentDidUpdate()
+    }
   }
 }
