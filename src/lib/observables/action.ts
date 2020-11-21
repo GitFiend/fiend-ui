@@ -34,6 +34,7 @@ export const $Action = <T extends unknown[], U>(f: (...args: T) => ForbidPromise
   }
 }
 
+/** @deprecated */
 export const $AsyncAction = <T extends unknown[], U>(f: (...args: T) => Promise<U>) => {
   return async (...args: T): Promise<U> => {
     globalStack.startAction()
