@@ -20,7 +20,7 @@ export class RootComponent {
 
   render(tree: FiendElement) {
     this.component = Render.tree(tree, this.component, this, this, 0)
-    RunStack.runInsertions()
+    RunStack.run()
   }
 
   insertChild(child: HostComponent | TextComponent) {

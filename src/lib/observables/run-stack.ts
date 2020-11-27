@@ -40,10 +40,14 @@ export class RunStack {
       if (o.current !== null) this.reactions.add(o)
     }
 
+    this.run()
+
+    // this.depth--
+  }
+
+  static run() {
     if (!this.running) {
       this.running = true
-
-      // console.log(this.computeds.size, this.reactions.size, this.components.length)
 
       while (this.computeds.size > 0 || this.reactions.size > 0) {
         while (this.computeds.size > 0) {
@@ -67,33 +71,49 @@ export class RunStack {
         component?.run()
       }
 
-      this.runInsertions()
+      for (const c of this.insertsStack) applyInserts(c)
+      this.insertsStack.clear()
+
+      for (const e of this.removeStack) e.remove()
+      this.removeStack.clear()
+
+      while (this.componentDidMountStack.length > 0) {
+        const ref = this.componentDidMountStack.shift()
+        ref?.current?.componentDidMount()
+      }
+
+      while (this.componentDidUpdateStack.length > 0) {
+        const ref = this.componentDidUpdateStack.shift()
+        ref?.current?.componentDidUpdate()
+      }
 
       this.running = false
-    }
 
-    // this.depth--
+      if (!this.empty()) this.run()
+
+      // if (__DEV__) {
+      //   console.log(
+      //     this.computeds.size,
+      //     this.reactions.size,
+      //     this.components.length,
+      //     this.insertsStack.size,
+      //     this.removeStack.size,
+      //     this.componentDidMountStack.length,
+      //     this.componentDidUpdateStack.length
+      //   )
+      // }
+    }
   }
 
-  static runInsertions() {
-    for (const c of this.insertsStack) {
-      applyInserts(c)
-    }
-    this.insertsStack.clear()
-
-    for (const e of this.removeStack) {
-      e.remove()
-    }
-    this.removeStack.clear()
-
-    while (this.componentDidMountStack.length > 0) {
-      const ref = this.componentDidMountStack.shift()
-      ref?.current?.componentDidMount()
-    }
-
-    while (this.componentDidUpdateStack.length > 0) {
-      const ref = this.componentDidUpdateStack.shift()
-      ref?.current?.componentDidUpdate()
-    }
+  static empty(): boolean {
+    return (
+      this.computeds.size === 0 &&
+      this.reactions.size === 0 &&
+      this.components.length === 0 &&
+      this.insertsStack.size === 0 &&
+      this.removeStack.size === 0 &&
+      this.componentDidMountStack.length === 0 &&
+      this.componentDidUpdateStack.length === 0
+    )
   }
 }
