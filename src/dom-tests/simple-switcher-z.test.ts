@@ -1,11 +1,11 @@
-import {render} from '../lib/render'
+import {render} from '..'
 import {screen} from '@testing-library/dom'
 import {$Val} from '../lib/observables/observable'
-import {$Component} from '../lib/observables/$component'
-import {div} from '../lib/component-types/host/host-components'
+import {$Component} from '..'
+import {div} from '..'
 
 export function sleep(ms: number) {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     setTimeout(() => {
       resolve()
     }, ms)

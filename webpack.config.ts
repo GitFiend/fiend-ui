@@ -36,7 +36,7 @@ const config = (env: Env, argv: Argv): Configuration => {
     },
     target: 'web',
     mode: devMode ? 'development' : 'production',
-    devtool: devMode ? 'cheap-module-eval-source-map' : undefined,
+    devtool: devMode ? 'eval-cheap-module-source-map' : undefined,
     node: false,
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
