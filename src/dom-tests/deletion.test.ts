@@ -1,8 +1,8 @@
 import {PureComponent} from '..'
-import {mkRoot} from './host.test'
 import {render} from '..'
 import {div, h1} from '..'
 import {FiendNode} from '..'
+import {mkRoot} from './test-helpers'
 
 describe('deletion of custom component', () => {
   test('host inside host', () => {

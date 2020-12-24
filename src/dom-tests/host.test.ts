@@ -1,5 +1,5 @@
 import {div} from '..'
-import {RootComponent} from '../lib/component-types/root-component'
+import {mkRoot} from './test-helpers'
 
 describe('simple div', () => {
   // xtest('render host', () => {
@@ -62,7 +62,3 @@ describe('simple div', () => {
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
   })
 })
-
-export function mkRoot(): RootComponent {
-  return new RootComponent(document.createElement('div'))
-}

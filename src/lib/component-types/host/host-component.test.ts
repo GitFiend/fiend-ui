@@ -1,8 +1,8 @@
 import {div} from './host-components'
 import {PureComponent} from '../pure-component'
-import {mkRoot} from '../../../dom-tests/host.test'
 import {FiendNode} from '../../..'
 import {ElementNamespace, ElementType} from '../../util/element'
+import {mkRoot} from '../../../dom-tests/test-helpers'
 
 describe('div renders', () => {
   test('no args', () => {

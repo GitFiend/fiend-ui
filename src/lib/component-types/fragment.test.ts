@@ -1,8 +1,8 @@
 import {$F} from './fragment'
 import {div} from './host/host-components'
-import {mkRoot} from '../../dom-tests/host.test'
 import {$Component} from '../..'
 import {makeObservable} from '../..'
+import {mkRoot} from '../../dom-tests/test-helpers'
 
 describe('fragment', () => {
   test('one host child', () => {

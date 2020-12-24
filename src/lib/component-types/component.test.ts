@@ -1,7 +1,7 @@
 import {PureComponent} from './pure-component'
-import {mkRoot} from '../../dom-tests/host.test'
 import {div} from './host/host-components'
 import {$Component, makeObservable} from '../..'
+import {mkRoot} from '../../dom-tests/test-helpers'
 // import {$Model} from '../..'
 
 describe('component', () => {

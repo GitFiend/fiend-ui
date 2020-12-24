@@ -1,6 +1,6 @@
 import {$Component} from './$component'
 import {div, FiendNode, makeObservable, PureComponent} from '../..'
-import {mkRoot} from '../../dom-tests/host.test'
+import {mkRoot} from '../../dom-tests/test-helpers'
 
 describe('$Component', () => {
   test('order 1', () => {

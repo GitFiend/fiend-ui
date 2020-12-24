@@ -1,9 +1,9 @@
 import {Order} from './order'
-import {mkRoot} from '../../dom-tests/host.test'
 import {HostComponent} from '../component-types/host/host-component'
 import {ElementNamespace} from './element'
 import {ElementComponent} from '../component-types/base-component'
 import {RunStack} from '../observables/run-stack'
+import {mkRoot} from '../../dom-tests/test-helpers'
 
 describe('Order.add comparisons', () => {
   test('1.1 < 1.2', () => {

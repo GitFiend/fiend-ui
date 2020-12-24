@@ -1,7 +1,7 @@
 import {PureComponent} from './pure-component'
 import {div} from './host/host-components'
-import {mkRoot} from '../../dom-tests/host.test'
 import {FiendNode} from '../..'
+import {mkRoot} from '../../dom-tests/test-helpers'
 
 describe('test re-rendering keyed lists', () => {
   test('plain divs with keys', () => {
