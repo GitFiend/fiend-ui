@@ -1,8 +1,7 @@
-import path from 'path'
+import * as path from 'path'
 import webpack, {Configuration} from 'webpack'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import {CleanWebpackPlugin} from 'clean-webpack-plugin'
-import TerserPlugin from 'terser-webpack-plugin'
 
 interface Argv {
   mode: 'development' | 'production'
@@ -40,24 +39,6 @@ const config = (env: Env, argv: Argv): Configuration => {
     node: false,
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
-    },
-    optimization: {
-      // concatenateModules: false,
-      minimizer: [
-        // new TerserPlugin({}),
-        new TerserPlugin({
-          terserOptions: {
-            ecma: 9,
-            toplevel: true,
-            compress: {
-              // drop_console: true,
-              ecma: 9,
-              passes: 3,
-              unsafe_arrows: true,
-            },
-          },
-        }),
-      ],
     },
     plugins: [
       new CleanWebpackPlugin(),
