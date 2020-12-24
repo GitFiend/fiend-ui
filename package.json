@@ -1,8 +1,8 @@
 {
-    "name": "zeact",
+    "name": "fiend-ui",
     "version": "0.1.0",
     "description": "Experiment in creating a React replacement with different trade-offs.",
-    "homepage": "https://github.com/GitFiend/zeact",
+    "homepage": "https://github.com/GitFiend/fiend-ui",
     "main": "./output-code/main.js",
     "scripts": {
         "test": "jest --config ./jest.config.js --watch",

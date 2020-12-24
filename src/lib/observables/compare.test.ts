@@ -4,7 +4,7 @@ import {$Val} from './observable'
 import {$Calc} from './computed'
 import {makeObservable} from './$model'
 
-xdescribe('compare mbox computeds with zeact', () => {
+xdescribe('compare mbox computeds with fiend-ui', () => {
   const loops = 1000
 
   test('time b', () => {
@@ -66,7 +66,7 @@ xdescribe('compare mbox computeds with zeact', () => {
     console.timeEnd('mobx')
   })
 
-  test('zeact', () => {
+  test('fiend-ui', () => {
     class E {
       a = $Val(5)
 
@@ -93,7 +93,7 @@ xdescribe('compare mbox computeds with zeact', () => {
       }
     }
 
-    console.time('zeact')
+    console.time('fiend-ui')
     let z = 0
     for (let i = 0; i < loops; i++) {
       const r = new Run()
@@ -106,11 +106,11 @@ xdescribe('compare mbox computeds with zeact', () => {
       r.b.a(12)
       r.b.a(14)
       z = c()
-      // console.log('zeact', z)
+      // console.log('fiend-ui', z)
     }
 
     expect(z).toEqual(24)
-    console.timeEnd('zeact')
+    console.timeEnd('fiend-ui')
   })
 
   test('fiend', () => {
@@ -153,7 +153,7 @@ xdescribe('compare mbox computeds with zeact', () => {
       r.b.$a = 12
       r.b.$a = 14
       z = c()
-      // console.log('zeact', z)
+      // console.log('fiend-ui', z)
     }
 
     expect(z).toEqual(24)

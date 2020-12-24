@@ -34,7 +34,7 @@ class E {
   }
 }
 
-describe('new zeact class construction speed', () => {
+describe('new fiend-ui class construction speed', () => {
   const loops = 10_000
 
   timeConstructor(B, 'plain', loops)
