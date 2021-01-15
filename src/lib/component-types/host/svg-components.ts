@@ -43,13 +43,13 @@ export type PolygonAttributes = Omit<SvgElementAttributes<'polygon'>, 'points'> 
 }
 
 export const svg = makeSvgElementConstructor('svg') as (
-  ...args: [SvgAttributes, ...FiendNode[]] | FiendNode[]
+  ...args: [SvgAttributes] | FiendNode[]
 ) => FiendElement
 export const polyline = makeSvgElementConstructor('polyline') as (
-  ...args: [PolyLineAttributes, ...FiendNode[]] | FiendNode[]
+  ...args: [PolyLineAttributes] | FiendNode[]
 ) => FiendElement
 export const polygon = makeSvgElementConstructor('polygon') as (
-  ...args: [PolygonAttributes, ...FiendNode[]] | FiendNode[]
+  ...args: [PolygonAttributes] | FiendNode[]
 ) => FiendElement
 export const title = makeSvgElementConstructor('title')
 export const g = makeSvgElementConstructor('g')
@@ -61,21 +61,3 @@ export const Svg = {
   title,
   g,
 }
-
-// export const Svg = {
-//   svg: makeSvgElementConstructor('svg') as (
-//     ...args: [SvgAttributes, ...FiendNode[]] | FiendNode[]
-//   ) => FiendElement,
-//
-//   polyline: makeSvgElementConstructor('polyline') as (
-//     ...args: [PolyLineAttributes, ...FiendNode[]] | FiendNode[]
-//   ) => FiendElement,
-//
-//   polygon: makeSvgElementConstructor('polygon') as (
-//     ...args: [PolygonAttributes, ...FiendNode[]] | FiendNode[]
-//   ) => FiendElement,
-//
-//   title: makeSvgElementConstructor('title'),
-//
-//   g: makeSvgElementConstructor('g'),
-// }
