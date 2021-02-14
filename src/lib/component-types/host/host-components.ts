@@ -24,3 +24,8 @@ export const form = makeHtmlElementConstructor('form')
 export const input = makeHtmlElementConstructor('input')
 export const textarea = makeHtmlElementConstructor('textarea')
 export const label = makeHtmlElementConstructor('label')
+
+export const table = makeHtmlElementConstructor('table')
+export const tr = makeHtmlElementConstructor('tr')
+export const td = makeHtmlElementConstructor('td')
+export const th = makeHtmlElementConstructor('th')
