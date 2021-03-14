@@ -80,6 +80,10 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
   componentWillUnmount(): void {}
 
   forceUpdate = () => {
+    // Sometimes we put a forceUpdate inside a setTimeout, we don't want it
+    // to run if this element has been removed before it runs.
+    if (this.removed) return
+
     this.update()
   }
 
@@ -89,11 +93,15 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     RunStack.componentDidMountStack.push(this._ref)
   }
 
+  removed = false
+
   remove(): void {
     this.componentWillUnmount()
 
     for (const [, c] of this.subComponents) c.remove()
     this.subComponents.clear()
+
+    this.removed = true
   }
 
   static $<T extends PureComponent>(
