@@ -13,6 +13,7 @@ import {HostComponent} from './host/host-component'
 import {RootComponent} from './root-component'
 import {RefObject} from '../util/ref'
 import {RunStack} from '../observables/run-stack'
+import {br} from './host/host-components'
 
 export interface Rec {
   [prop: string]: unknown
@@ -138,12 +139,19 @@ export function renderCustom<P extends StandardProps>(
       prevTree.order = newOrder
 
       for (const [, c] of prevTree.subComponents) {
-        if (c._type === ComponentType.host) {
-          const no = Order.key(prevTree.order, c.index)
+        const no = Order.key(prevTree.order, c.index)
 
-          if (c.order !== no) {
-            c.order = no
-            parentHost.moveChild(c)
+        if (c.order !== no) {
+          c.order = no
+
+          switch (c._type) {
+            case ComponentType.host:
+            case ComponentType.text:
+              parentHost.moveChild(c)
+              break
+            case ComponentType.custom:
+              c.update()
+              break
           }
         }
       }

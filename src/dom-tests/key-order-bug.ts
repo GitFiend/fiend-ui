@@ -1,11 +1,10 @@
-import {$Component} from '../lib/observables/$component'
 import {div} from '../lib/component-types/host/host-components'
 import {FiendNode} from '../lib/util/element'
 import {PureComponent} from '../lib/component-types/pure-component'
 
 const numElements = 3
 
-export class ScaleElements extends $Component<{position: number}> {
+export class ScaleElements extends PureComponent<{position: number}> {
   render() {
     const {position} = this.props
 
