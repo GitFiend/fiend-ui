@@ -6,6 +6,7 @@ import {HostComponent} from '../component-types/host/host-component'
 import {applyInserts} from '../util/order'
 import {RefObject} from '../util/ref'
 import {PureComponent} from '../..'
+import {time, timeEnd} from '../util/measure'
 
 export class RunStack {
   static computeds = new Set<RefObject<UnorderedResponder>>()
@@ -49,43 +50,47 @@ export class RunStack {
     if (!this.running) {
       this.running = true
 
+      time('😈Reactions')
       while (this.computeds.size > 0 || this.reactions.size > 0) {
         while (this.computeds.size > 0) {
-          const computed = this.computeds.values().next().value as RefObject<
-            UnorderedResponder
-          >
+          const computed = this.computeds.values().next()
+            .value as RefObject<UnorderedResponder>
           this.computeds.delete(computed)
           computed.current?.run()
         }
         while (this.reactions.size > 0) {
-          const reaction = this.reactions.values().next().value as RefObject<
-            UnorderedResponder
-          >
+          const reaction = this.reactions.values().next()
+            .value as RefObject<UnorderedResponder>
           this.reactions.delete(reaction)
           reaction.current?.run()
         }
       }
+      timeEnd('😈Reactions')
 
+      time('😈Render')
       while (this.components.length > 0) {
         const component = this.components.shift()
         component?.run()
       }
+      timeEnd('😈Render')
 
-      for (const c of this.insertsStack) applyInserts(c)
-      this.insertsStack.clear()
-
+      time('😈DOM')
       for (const e of this.removeStack) e.remove()
       this.removeStack.clear()
+      for (const c of this.insertsStack) applyInserts(c)
+      this.insertsStack.clear()
+      timeEnd('😈DOM')
 
+      time('😈Mount/Update')
       while (this.componentDidMountStack.length > 0) {
         const ref = this.componentDidMountStack.shift()
         ref?.current?.componentDidMount()
       }
-
       while (this.componentDidUpdateStack.length > 0) {
         const ref = this.componentDidUpdateStack.shift()
         ref?.current?.componentDidUpdate()
       }
+      timeEnd('😈Mount/Update')
 
       this.running = false
 
