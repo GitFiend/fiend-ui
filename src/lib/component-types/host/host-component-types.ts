@@ -20,7 +20,7 @@ export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Omit<
   ref?: RefObject<HTMLElementTagNameMap[N]>
   'aria-selected'?: boolean
   'aria-labelledby'?: string
-  'aria-checked'?: boolean
+  'aria-checked'?: 'true' | 'false' | 'mixed' | boolean
   'aria-describedby'?: string
   'aria-modal'?: boolean
   role?: 'tab' | 'dialog' | 'checkbox'
