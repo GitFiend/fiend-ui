@@ -47,6 +47,46 @@ describe('updateAttributes', () => {
   })
 })
 
+describe('handling of undefined props', () => {
+  test(`expect undefined attributes don't show on element on first set`, () => {
+    const parent = document.createElement('div')
+    const div = document.createElement('div')
+
+    parent.appendChild(div)
+
+    const props: HTMLAttributes<HTMLDivElement> = {
+      id: undefined,
+    }
+
+    setAttributesFromProps(div, ElementNamespace.html, props as Rec)
+
+    expect(parent.innerHTML).toEqual('<div></div>')
+  })
+
+  test(`expect undefined attributes don't show on element after previously defined`, () => {
+    const parent = document.createElement('div')
+    const div = document.createElement('div')
+
+    parent.appendChild(div)
+
+    const props: HTMLAttributes<HTMLDivElement> = {
+      id: 'simple',
+    }
+
+    setAttributesFromProps(div, ElementNamespace.html, props as Rec)
+
+    expect(parent.innerHTML).toEqual('<div id="simple"></div>')
+
+    const newProps: HTMLAttributes<HTMLDivElement> = {
+      id: undefined,
+    }
+
+    updateAttributes(div, ElementNamespace.html, newProps as Rec, props as Rec)
+
+    expect(parent.innerHTML).toEqual('<div></div>')
+  })
+})
+
 describe('Applies expected attribute', () => {
   test('disabled', () => {
     render(button({disabled: true}), document.body)

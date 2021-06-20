@@ -2,6 +2,7 @@ import {Rec} from '../pure-component'
 import {RefObject} from '../../util/ref'
 import {ElementNamespace} from '../../util/element'
 
+// This should only be called the first time or if previous props were null.
 export function setAttributesFromProps(
   element: Element,
   namespace: ElementNamespace,
@@ -10,7 +11,11 @@ export function setAttributesFromProps(
   const attributes = Object.keys(props)
 
   for (const attr of attributes) {
-    setAttribute(element, namespace, attr, props[attr])
+    const value = props[attr]
+
+    if (value !== undefined) {
+      setAttribute(element, namespace, attr, props[attr])
+    }
   }
 }
 
@@ -38,22 +43,27 @@ function updateAttrInner(
   const oldKeys = Object.keys(oldProps)
 
   for (const key of newKeys) {
-    const o = oldProps[key]
-    const n = newProps[key]
+    const oldValue = oldProps[key]
+    const newValue = newProps[key]
 
-    if (o === undefined && n !== undefined) {
-      setAttribute(element, namespace, key, n)
+    if (newValue === undefined) continue
+
+    if (oldValue === undefined) {
+      setAttribute(element, namespace, key, newValue)
     } //
-    else if (o !== n) {
-      if (key.startsWith('on')) deleteAttribute(element, key, o)
+    else if (oldValue !== newValue) {
+      if (key.startsWith('on')) deleteAttribute(element, key, oldValue)
 
-      setAttribute(element, namespace, key, n)
+      setAttribute(element, namespace, key, newValue)
     }
   }
 
   for (const key of oldKeys) {
-    if (newProps[key] === undefined) {
-      deleteAttribute(element, key, oldProps[key])
+    const oldValue = oldProps[key]
+    const newValue = newProps[key]
+
+    if (newValue === undefined && oldValue !== undefined) {
+      deleteAttribute(element, key, oldValue)
     }
   }
 }
@@ -67,8 +77,6 @@ function setAttribute(
 ): void {
   switch (attr) {
     case 'key':
-    // element.setAttribute('key', value)
-    // break
     case 'children':
       break
     case 'className':
