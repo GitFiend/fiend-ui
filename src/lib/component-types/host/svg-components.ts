@@ -51,13 +51,14 @@ export const polyline = makeSvgElementConstructor('polyline') as (
 export const polygon = makeSvgElementConstructor('polygon') as (
   ...args: [PolygonAttributes] | FiendNode[]
 ) => FiendElement
+export const circle = makeSvgElementConstructor('circle') as any
 export const title = makeSvgElementConstructor('title')
 export const g = makeSvgElementConstructor('g')
 
-export const Svg = {
-  svg,
-  polyline,
-  polygon,
-  title,
-  g,
-}
+// export const Svg = {
+//   svg,
+//   polyline,
+//   polygon,
+//   title,
+//   g,
+// }
