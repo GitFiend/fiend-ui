@@ -77,3 +77,13 @@ export function makeObservableInner(object: Object, Con: Constructor) {
     }
   }
 }
+
+// This lets you get the value of an observable without setting up a dependency/notifying.
+// This can help avoid a dependency infinite loop.
+// Only use if you are sure that the observable will be up to date.
+export function getObservableUntracked<T, K extends keyof T>(object: T, key: K): T[K] {
+  const untrackedKey = `__${key}` as typeof key
+
+  // @ts-ignore
+  return object[untrackedKey].value
+}
