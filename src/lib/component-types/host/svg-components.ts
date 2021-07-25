@@ -1,6 +1,7 @@
 import {FiendElement, FiendNode, SvgElementAttributes} from '../../..'
 import {ElementNamespace, ElementType, SvgElement} from '../../util/element'
 
+/** @deprecated as this approach doesn't work well for Svg */
 export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
   tagName: N
 ): (props: SvgElementAttributes<N> | string) => SvgElement {
@@ -14,6 +15,19 @@ export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
           children: [props],
         },
       }
+    return {
+      elementType: ElementType.host,
+      _type: tagName,
+      namespace: ElementNamespace.svg,
+      props,
+    }
+  }
+}
+
+export function makeSvgElementConstructor2<Props>(
+  tagName: keyof SVGElementTagNameMap
+): (props: Props) => SvgElement {
+  return props => {
     return {
       elementType: ElementType.host,
       _type: tagName,
@@ -55,10 +69,10 @@ export const circle = makeSvgElementConstructor('circle') as any
 export const title = makeSvgElementConstructor('title')
 export const g = makeSvgElementConstructor('g')
 
-// export const Svg = {
-//   svg,
-//   polyline,
-//   polygon,
-//   title,
-//   g,
-// }
+export const line = makeSvgElementConstructor2<{
+  x1?: number
+  x2?: number
+  y1?: number
+  y2?: number
+  stroke?: string
+}>('line')
