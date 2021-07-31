@@ -95,7 +95,8 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     for (const r of this.reactions) {
       if (r.current !== null) return true
     }
-    for (const [, c] of this.components) {
+    // for (const [, c] of this.components) {
+    for (const c of this.components.values()) {
       if (c.current !== null) {
         return true
       }

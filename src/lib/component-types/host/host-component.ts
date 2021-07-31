@@ -79,7 +79,8 @@ export class HostComponent<P extends StandardProps = {}> {
 
     if (this.subComponents.size > 0) {
       // This is required so that observer components don't keep updating.
-      for (const [, c] of this.subComponents) c.remove()
+      // for (const [, c] of this.subComponents) c.remove()
+      for (const c of this.subComponents.values()) c.remove()
       this.subComponents.clear()
     }
 

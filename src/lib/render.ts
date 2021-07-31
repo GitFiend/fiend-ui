@@ -60,7 +60,9 @@ export class Render {
         this.subtree(parentHost, directParent, child, prevComponents, newComponents, i)
       }
     }
-    for (const [, c] of prevComponents) c.remove()
+
+    for (const c of prevComponents.values()) c.remove()
+    // for (const [, c] of prevComponents) c.remove()
 
     return newComponents
   }

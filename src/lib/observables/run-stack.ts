@@ -31,7 +31,8 @@ export class RunStack {
     // this.depth++
     // console.log('depth: ', this.depth)
 
-    for (const [, c] of components) {
+    // for (const [, c] of components) {
+    for (const c of components.values()) {
       if (c.current !== null) OArray.insert(this.components, c.current)
     }
     for (const o of computeds) {

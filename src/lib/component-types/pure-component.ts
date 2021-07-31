@@ -99,7 +99,8 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
   remove(): void {
     this.componentWillUnmount()
 
-    for (const [, c] of this.subComponents) c.remove()
+    for (const c of this.subComponents.values()) c.remove()
+    // for (const [, c] of this.subComponents) c.remove()
     this.subComponents.clear()
 
     this.removed = true
@@ -138,7 +139,8 @@ export function renderCustom<P extends StandardProps>(
       prevTree.index = index
       prevTree.order = newOrder
 
-      for (const [, c] of prevTree.subComponents) {
+      // for (const [, c] of prevTree.subComponents) {
+      for (const c of prevTree.subComponents.values()) {
         const no = Order.key(prevTree.order, c.index)
 
         if (c.order !== no) {
