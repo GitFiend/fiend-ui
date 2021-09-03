@@ -35,7 +35,7 @@ describe('switch between custom and host component', () => {
     $custom = false
   }
 
-  class Div extends PureComponent {
+  class DivC extends PureComponent {
     render() {
       return div('custom')
     }
@@ -47,7 +47,7 @@ describe('switch between custom and host component', () => {
         const {model} = this.props
 
         if (model.$custom) {
-          return Div.$({})
+          return DivC.$({})
         }
         return div('host')
       }
@@ -71,7 +71,7 @@ describe('switch between custom and host component', () => {
       render() {
         const {model} = this.props
 
-        return [div('a'), model.$custom ? Div.$({}) : div('host')]
+        return [div('a'), model.$custom ? DivC.$({}) : div('host')]
       }
     }
 
@@ -93,7 +93,7 @@ describe('switch between custom and host component', () => {
       render() {
         const {model} = this.props
 
-        return [model.$custom ? Div.$({}) : null, div('a')]
+        return [model.$custom ? DivC.$({}) : null, div('a')]
       }
     }
 

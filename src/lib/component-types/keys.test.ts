@@ -106,7 +106,7 @@ describe('test re-rendering keyed lists', () => {
   test('wrapped divs', () => {
     const num = 3
 
-    class Div extends PureComponent<{text: string}> {
+    class DivC extends PureComponent<{text: string}> {
       render() {
         return div({children: [this.props.text]})
       }
@@ -122,7 +122,7 @@ describe('test re-rendering keyed lists', () => {
           const s = `${n + i}`
 
           elements.push(
-            Div.$({
+            DivC.$({
               text: s,
               key: s,
             })

@@ -64,19 +64,19 @@ describe('$Component', () => {
   test('order, no keys, custom component', () => {
     const root = mkRoot()
 
-    class Div extends PureComponent {
+    class DivC extends PureComponent {
       render(): FiendNode {
         return div({children: this.props.children})
       }
     }
 
-    const a = Div.$({children: [Div.$({children: ['a']})]})
+    const a = DivC.$({children: [DivC.$({children: ['a']})]})
 
     root.render(a)
 
     expect(root.element.innerHTML).toEqual('<div><div>a</div></div>')
 
-    const b = Div.$({children: [Div.$({children: ['b']}), Div.$({children: ['a']})]})
+    const b = DivC.$({children: [DivC.$({children: ['b']}), DivC.$({children: ['a']})]})
 
     root.render(b)
 
