@@ -1,4 +1,4 @@
-import {div} from '../lib/component-types/host/host-components'
+import {Div} from '../lib/component-types/host/host-components'
 import {FiendNode} from '../lib/util/element'
 import {PureComponent} from '../lib/component-types/pure-component'
 
@@ -21,7 +21,7 @@ export class ScaleElements extends PureComponent<{position: number}> {
       )
     }
 
-    return div({children: elements})
+    return Div({children: elements})
   }
 }
 
@@ -40,7 +40,7 @@ class ElementInner extends PureComponent<{text: string}> {
   render() {
     const {text} = this.props
 
-    return div({
+    return Div({
       key: text,
       children: [text],
     })

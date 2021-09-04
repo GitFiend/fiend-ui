@@ -1,5 +1,5 @@
 import {PureComponent} from './pure-component'
-import {div} from './host/host-components'
+import {Div} from './host/host-components'
 import {FiendNode} from '../..'
 import {mkRoot} from '../../dom-tests/test-helpers'
 
@@ -17,7 +17,7 @@ describe('test re-rendering keyed lists', () => {
           const s = `${n + i}`
 
           elements.push(
-            div({
+            Div({
               children: [s],
               key: s,
             })
@@ -59,7 +59,7 @@ describe('test re-rendering keyed lists', () => {
           const s = `${n + i}`
 
           elements.push(
-            div({
+            Div({
               children: [s],
             })
           )
@@ -108,7 +108,7 @@ describe('test re-rendering keyed lists', () => {
 
     class DivC extends PureComponent<{text: string}> {
       render() {
-        return div({children: [this.props.text]})
+        return Div({children: [this.props.text]})
       }
     }
 

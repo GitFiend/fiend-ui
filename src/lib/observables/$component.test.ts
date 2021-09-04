@@ -1,5 +1,5 @@
 import {$Component} from './$component'
-import {div, FiendNode, makeObservable, PureComponent} from '../..'
+import {Div, FiendNode, makeObservable, PureComponent} from '../..'
 import {mkRoot} from '../../dom-tests/test-helpers'
 
 describe('$Component', () => {
@@ -23,7 +23,7 @@ describe('$Component', () => {
 
         if (depth <= 0) return null
 
-        return div({
+        return Div({
           children: [`${store.$num} - ${depth}`, A.$({store, depth: depth - 1})],
         })
       }
@@ -48,13 +48,13 @@ describe('$Component', () => {
   test('order without keys', () => {
     const root = mkRoot()
 
-    const a = div({children: [div('a')]})
+    const a = Div({children: [Div('a')]})
 
     root.render(a)
 
     expect(root.element.innerHTML).toEqual('<div><div>a</div></div>')
 
-    const b = div({children: [div('b'), div('a')]})
+    const b = Div({children: [Div('b'), Div('a')]})
 
     root.render(b)
 
@@ -66,7 +66,7 @@ describe('$Component', () => {
 
     class DivC extends PureComponent {
       render(): FiendNode {
-        return div({children: this.props.children})
+        return Div({children: this.props.children})
       }
     }
 
@@ -86,7 +86,7 @@ describe('$Component', () => {
   test('order 2, without keys', () => {
     const root = mkRoot()
 
-    const a = div({children: [div('a'), div('b'), div('c')]})
+    const a = Div({children: [Div('a'), Div('b'), Div('c')]})
 
     root.render(a)
 
@@ -94,7 +94,7 @@ describe('$Component', () => {
       '<div><div>a</div><div>b</div><div>c</div></div>'
     )
 
-    const b = div({children: [div('d'), div('a'), div('b'), div('c')]})
+    const b = Div({children: [Div('d'), Div('a'), Div('b'), Div('c')]})
 
     root.render(b)
 
@@ -106,11 +106,11 @@ describe('$Component', () => {
   test('order 3, with keys', () => {
     const root = mkRoot()
 
-    const a = div({
+    const a = Div({
       children: [
-        div({children: ['a'], key: 'a'}),
-        div({children: ['b'], key: 'b'}),
-        div({children: ['c'], key: 'c'}),
+        Div({children: ['a'], key: 'a'}),
+        Div({children: ['b'], key: 'b'}),
+        Div({children: ['c'], key: 'c'}),
       ],
     })
 
@@ -120,12 +120,12 @@ describe('$Component', () => {
       '<div><div>a</div><div>b</div><div>c</div></div>'
     )
 
-    const b = div({
+    const b = Div({
       children: [
-        div({children: ['d'], key: 'd'}),
-        div({children: ['a'], key: 'a'}),
-        div({children: ['b'], key: 'b'}),
-        div({children: ['c'], key: 'c'}),
+        Div({children: ['d'], key: 'd'}),
+        Div({children: ['a'], key: 'a'}),
+        Div({children: ['b'], key: 'b'}),
+        Div({children: ['c'], key: 'c'}),
       ],
     })
 

@@ -2,7 +2,7 @@ import {render} from '..'
 import {screen} from '@testing-library/dom'
 import {$Val} from '../lib/observables/observable'
 import {$Component} from '..'
-import {div} from '..'
+import {Div} from '..'
 
 export function sleep(ms: number) {
   return new Promise<void>(resolve => {
@@ -44,9 +44,9 @@ class Switcher extends $Component<SwitcherProps> {
     const {store} = this.props
 
     if (store.a()) {
-      return div('a')
+      return Div('a')
     }
 
-    return div('b')
+    return Div('b')
   }
 }

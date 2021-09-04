@@ -1,4 +1,4 @@
-import {div, h1, p} from './component-types/host/host-components'
+import {Div, H1, p} from './component-types/host/host-components'
 import {ElementNamespace, ElementType} from './util/element'
 
 // const numLoops = 300000
@@ -11,7 +11,7 @@ describe('create element', () => {
   // })
 
   test('1 child', () => {
-    const d = h1('Heading')
+    const d = H1('Heading')
 
     expect(d).toEqual({
       _type: 'h1',
@@ -22,7 +22,7 @@ describe('create element', () => {
   })
 
   test('2 children', () => {
-    const d = div({children: [h1('Heading'), p('paragraph')]})
+    const d = Div({children: [H1('Heading'), p('paragraph')]})
 
     expect(d).toEqual({
       _type: 'div',
@@ -52,7 +52,7 @@ describe('create element', () => {
   })
 
   test('child array', () => {
-    const d = div({children: [...[1, 2, 3].map(n => div(`${n}`))]})
+    const d = Div({children: [...[1, 2, 3].map(n => Div(`${n}`))]})
 
     expect(d).toEqual({
       _type: 'div',
@@ -90,7 +90,7 @@ describe('create element', () => {
   })
 
   test('child array mixed', () => {
-    const d = div({children: [h1('Heading'), ...[1, 2, 3].map(n => div(`${n}`))]})
+    const d = Div({children: [H1('Heading'), ...[1, 2, 3].map(n => Div(`${n}`))]})
 
     expect(d).toEqual({
       _type: 'div',

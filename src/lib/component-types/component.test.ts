@@ -1,5 +1,5 @@
 import {PureComponent} from './pure-component'
-import {div} from './host/host-components'
+import {Div} from './host/host-components'
 import {$Component, makeObservable} from '../..'
 import {mkRoot} from '../../dom-tests/test-helpers'
 // import {$Model} from '../..'
@@ -11,7 +11,7 @@ describe('component', () => {
         const {ok} = this.props
 
         if (!ok) return null
-        return div('OK')
+        return Div('OK')
       }
     }
 
@@ -37,7 +37,7 @@ describe('switch between custom and host component', () => {
 
   class DivC extends PureComponent {
     render() {
-      return div('custom')
+      return Div('custom')
     }
   }
 
@@ -49,7 +49,7 @@ describe('switch between custom and host component', () => {
         if (model.$custom) {
           return DivC.$({})
         }
-        return div('host')
+        return Div('host')
       }
     }
 
@@ -71,7 +71,7 @@ describe('switch between custom and host component', () => {
       render() {
         const {model} = this.props
 
-        return [div('a'), model.$custom ? DivC.$({}) : div('host')]
+        return [Div('a'), model.$custom ? DivC.$({}) : Div('host')]
       }
     }
 
@@ -93,7 +93,7 @@ describe('switch between custom and host component', () => {
       render() {
         const {model} = this.props
 
-        return [model.$custom ? DivC.$({}) : null, div('a')]
+        return [model.$custom ? DivC.$({}) : null, Div('a')]
       }
     }
 

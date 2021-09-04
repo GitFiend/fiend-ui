@@ -1,6 +1,6 @@
 import {PureComponent} from '../lib/component-types/pure-component'
 import {render} from '../lib/render'
-import {div} from '../lib/component-types/host/host-components'
+import {Div} from '../lib/component-types/host/host-components'
 import {s} from '../lib/util/style'
 import {FiendElement} from '../lib/util/element'
 
@@ -17,7 +17,7 @@ export class Boxes extends PureComponent<BoxesProps> {
 
     const {width, height} = this.props
 
-    return div({children: this.drawBoxes(width, height, -t)})
+    return Div({children: this.drawBoxes(width, height, -t)})
   }
 
   drawBoxes(width: number, height: number, top: number) {
@@ -35,7 +35,7 @@ export class Boxes extends PureComponent<BoxesProps> {
   }
 
   drawBox(x: number, y: number, w: number, h: number): FiendElement {
-    return div({
+    return Div({
       style: s`
           position: absolute;
           left: ${x}px;

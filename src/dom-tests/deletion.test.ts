@@ -1,6 +1,6 @@
 import {PureComponent} from '..'
 import {render} from '..'
-import {div, h1} from '..'
+import {Div, H1} from '..'
 import {FiendNode} from '..'
 import {mkRoot} from './test-helpers'
 
@@ -8,19 +8,19 @@ describe('deletion of custom component', () => {
   test('host inside host', () => {
     const root = mkRoot()
 
-    const c = div({children: [div('a'), div('b')]})
+    const c = Div({children: [Div('a'), Div('b')]})
 
     root.render(c)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    const c2 = div({children: [div('a')]})
+    const c2 = Div({children: [Div('a')]})
 
     root.render(c2)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
 
-    const c3 = div({children: [div('a'), div('b')]})
+    const c3 = Div({children: [Div('a'), Div('b')]})
 
     root.render(c3)
 
@@ -30,19 +30,19 @@ describe('deletion of custom component', () => {
   test('host inside custom', () => {
     const root = mkRoot()
 
-    const c = C.$({children: [div('a'), div('b')]})
+    const c = C.$({children: [Div('a'), Div('b')]})
 
     root.render(c)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div><div>b</div></div>`)
 
-    const c2 = C.$({children: [div('a')]})
+    const c2 = C.$({children: [Div('a')]})
 
     root.render(c2)
 
     expect(root.element.innerHTML).toEqual(`<div><div>a</div></div>`)
 
-    const c3 = C.$({children: [div('a'), div('b')]})
+    const c3 = C.$({children: [Div('a'), Div('b')]})
 
     root.render(c3)
 
@@ -132,7 +132,7 @@ describe('deletion of custom component', () => {
   test('different order', () => {
     class Outer extends PureComponent {
       render() {
-        return [A.$({}), h1('Heading')]
+        return [A.$({}), H1('Heading')]
       }
     }
 
@@ -147,12 +147,12 @@ class C extends PureComponent {
   render(): FiendNode {
     const {children = []} = this.props
 
-    return div({children})
+    return Div({children})
   }
 }
 
 class A extends PureComponent {
   render(): FiendNode | null {
-    return div('A')
+    return Div('A')
   }
 }

@@ -1,9 +1,9 @@
 import {makeHtmlElementConstructor} from './host-component-types'
 
-export const h1 = makeHtmlElementConstructor('h1')
-export const h2 = makeHtmlElementConstructor('h2')
-export const h3 = makeHtmlElementConstructor('h3')
-export const div = makeHtmlElementConstructor('div')
+export const H1 = makeHtmlElementConstructor('h1')
+export const H2 = makeHtmlElementConstructor('h2')
+export const H3 = makeHtmlElementConstructor('h3')
+export const Div = makeHtmlElementConstructor('div')
 export const header = makeHtmlElementConstructor('header')
 export const footer = makeHtmlElementConstructor('footer')
 export const span = makeHtmlElementConstructor('span')

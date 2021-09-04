@@ -1,4 +1,4 @@
-import {div} from './host-components'
+import {Div} from './host-components'
 import {PureComponent} from '../pure-component'
 import {FiendNode} from '../../..'
 import {ElementNamespace, ElementType} from '../../util/element'
@@ -6,7 +6,7 @@ import {mkRoot} from '../../../dom-tests/test-helpers'
 
 describe('div renders', () => {
   test('no args', () => {
-    const el = div({children: []})
+    const el = Div({children: []})
 
     expect(el).toEqual({
       elementType: ElementType.host,
@@ -17,7 +17,7 @@ describe('div renders', () => {
   })
 
   test('single element arg', () => {
-    const el = div('hello')
+    const el = Div('hello')
 
     expect(el).toEqual({
       elementType: ElementType.host,
@@ -28,7 +28,7 @@ describe('div renders', () => {
   })
 
   test('single attribute arg', () => {
-    const el = div({className: 'hi'})
+    const el = Div({className: 'hi'})
 
     expect(el).toEqual({
       elementType: ElementType.host,
@@ -39,7 +39,7 @@ describe('div renders', () => {
   })
 
   test('both attributes and elements', () => {
-    const el = div({className: 'hi', children: ['hello']})
+    const el = Div({className: 'hi', children: ['hello']})
 
     expect(el).toEqual({
       elementType: ElementType.host,
@@ -50,7 +50,7 @@ describe('div renders', () => {
   })
 
   test('two elements only', () => {
-    const el = div({children: ['hello', 'hello']})
+    const el = Div({children: ['hello', 'hello']})
 
     expect(el).toEqual({
       elementType: ElementType.host,
@@ -63,7 +63,7 @@ describe('div renders', () => {
   test('render to dom', () => {
     const root = mkRoot()
 
-    root.render(div({children: ['omg']}))
+    root.render(Div({children: ['omg']}))
 
     expect(root.element.innerHTML).toEqual(`<div>omg</div>`)
   })
@@ -79,7 +79,7 @@ describe('div renders', () => {
 
 class A extends PureComponent {
   render(): FiendNode {
-    return div('omg')
+    return Div('omg')
   }
 }
 

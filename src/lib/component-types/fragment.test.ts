@@ -1,5 +1,5 @@
 import {$F} from './fragment'
-import {div} from './host/host-components'
+import {Div} from './host/host-components'
 import {$Component} from '../..'
 import {makeObservable} from '../..'
 import {mkRoot} from '../../dom-tests/test-helpers'
@@ -8,7 +8,7 @@ describe('fragment', () => {
   test('one host child', () => {
     const root = mkRoot()
 
-    const t = $F(div('omg'))
+    const t = $F(Div('omg'))
 
     root.render(t)
 
@@ -18,7 +18,7 @@ describe('fragment', () => {
   test('custom component child', () => {
     class C extends $Component {
       render() {
-        return div('omg')
+        return Div('omg')
       }
     }
 
@@ -31,13 +31,13 @@ describe('fragment', () => {
   test('multiple children', () => {
     const root = mkRoot()
 
-    let t = $F(div('a'), div('b'), div('c'))
+    let t = $F(Div('a'), Div('b'), Div('c'))
 
     root.render(t)
 
     expect(root.element.innerHTML).toEqual('<div>a</div><div>b</div><div>c</div>')
 
-    t = $F(div('a'), div('b'), div('c'), div('d'))
+    t = $F(Div('a'), Div('b'), Div('c'), Div('d'))
 
     root.render(t)
 
@@ -45,7 +45,7 @@ describe('fragment', () => {
       '<div>a</div><div>b</div><div>c</div><div>d</div>'
     )
 
-    t = $F(div('d'), div('a'), div('b'), div('c'))
+    t = $F(Div('d'), Div('a'), Div('b'), Div('c'))
 
     root.render(t)
 
@@ -65,7 +65,7 @@ describe('fragment', () => {
 
     class C extends $Component<{store: S}> {
       render() {
-        return div({children: [this.props.store.$text], key: 'container'})
+        return Div({children: [this.props.store.$text], key: 'container'})
       }
     }
     const root = mkRoot()

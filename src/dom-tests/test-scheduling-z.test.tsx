@@ -2,7 +2,7 @@ import {render} from '..'
 import {screen} from '@testing-library/dom'
 import {$Val} from '../lib/observables/observable'
 import {$Component} from '..'
-import {div} from '..'
+import {Div} from '..'
 
 export function sleep(ms: number) {
   return new Promise<void>(resolve => {
@@ -49,7 +49,7 @@ class A extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return [div(store.a().toString()), B.$({store})]
+    return [Div(store.a().toString()), B.$({store})]
 
     // return (
     //   <F>
@@ -63,13 +63,13 @@ class B extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return div(store.b().toString())
+    return Div(store.b().toString())
   }
 }
 class C extends $Component<SwitcherProps> {
   render() {
     const {store} = this.props
 
-    return div(store.c().toString())
+    return Div(store.c().toString())
   }
 }

@@ -1,4 +1,4 @@
-import {div} from './component-types/host/host-components'
+import {Div} from './component-types/host/host-components'
 import {render} from './render'
 import {$Component} from './observables/$component'
 import {model} from './observables/$model'
@@ -19,19 +19,19 @@ describe('render', () => {
   test('repeat render', () => {
     const el = document.createElement('div')
 
-    let t = frag(div('a'), div('b'), div('c'))
+    let t = frag(Div('a'), Div('b'), Div('c'))
 
     render(t, el)
 
     expect(el.innerHTML).toEqual('<div>a</div><div>b</div><div>c</div>')
 
-    t = frag(div('a'), div('b'), div('c'), div('d'))
+    t = frag(Div('a'), Div('b'), Div('c'), Div('d'))
 
     render(t, el)
 
     expect(el.innerHTML).toEqual('<div>a</div><div>b</div><div>c</div><div>d</div>')
 
-    t = frag(div('d'), div('a'), div('b'), div('c'))
+    t = frag(Div('d'), Div('a'), Div('b'), Div('c'))
 
     render(t, el)
 
@@ -46,12 +46,12 @@ describe('render', () => {
 
     class A extends PureComponent {
       render() {
-        return div('a')
+        return Div('a')
       }
     }
     class B extends PureComponent {
       render() {
-        return div('b')
+        return Div('b')
       }
     }
 
