@@ -7,7 +7,7 @@ import {RefObject} from '../util/ref'
 
 type FunctionWithoutPromise<T> = T extends () => Promise<void> ? never : T
 
-// Passed function needs to be synchronise otherwise it won't really be run inside action.
+// Passed function needs to be synchronous otherwise it won't really be run inside action.
 export function $RunInAction(f: FunctionWithoutPromise<() => void | undefined>): void {
   globalStack.startAction()
   f()
