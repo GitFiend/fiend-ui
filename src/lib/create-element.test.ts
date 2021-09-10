@@ -1,4 +1,4 @@
-import {Div, H1, p} from './component-types/host/host-components'
+import {Div, H1, P} from './component-types/host/host-components'
 import {ElementNamespace, ElementType} from './util/element'
 
 // const numLoops = 300000
@@ -22,7 +22,7 @@ describe('create element', () => {
   })
 
   test('2 children', () => {
-    const d = Div({children: [H1('Heading'), p('paragraph')]})
+    const d = Div({children: [H1('Heading'), P('paragraph')]})
 
     expect(d).toEqual({
       _type: 'div',

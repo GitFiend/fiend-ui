@@ -1,7 +1,7 @@
 import {PureComponent} from '../lib/component-types/pure-component'
 import {createRef} from '../lib/util/ref'
 import {render} from '../lib/render'
-import {canvas} from '../lib/component-types/host/host-components'
+import {Canvas} from '../lib/component-types/host/host-components'
 import {s} from '../lib/util/style'
 
 interface TextCanvasProps {
@@ -17,7 +17,7 @@ export class TextCanvas extends PureComponent<TextCanvasProps> {
   render() {
     const {width, height} = this.props
 
-    return canvas({ref: this.ref, style: s`width: ${width}px; height: ${height}px;`})
+    return Canvas({ref: this.ref, style: s`width: ${width}px; height: ${height}px;`})
   }
 
   componentDidMount(): void {
