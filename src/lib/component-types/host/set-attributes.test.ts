@@ -1,7 +1,7 @@
 import {HTMLAttributes} from 'react'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {Rec} from '../pure-component'
-import {button} from './host-components'
+import {Button} from './host-components'
 import {render} from '../../render'
 import {ElementNamespace} from '../../util/element'
 
@@ -89,11 +89,11 @@ describe('handling of undefined props', () => {
 
 describe('Applies expected attribute', () => {
   test('disabled', () => {
-    render(button({disabled: true}), document.body)
+    render(Button({disabled: true}), document.body)
     const b = document.getElementsByTagName('button').item(0)
     expect(b?.disabled).toEqual(true)
 
-    render(button({disabled: false}), document.body)
+    render(Button({disabled: false}), document.body)
 
     const b2 = document.getElementsByTagName('button').item(0)
     expect(b2?.disabled).toEqual(false)

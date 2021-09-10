@@ -37,9 +37,9 @@ export class MyComponent extends $Component<MyComponentProps> {
       const {$num, $square} = this.props.store;
 
       return (
-         div({className: "MyComponent", children: [
+         Div({className: "MyComponent", children: [
             `Square of ${$num} equals ${$square}.`,
-            button({children: ['increment'], onclick: this.onClickIncrement})
+            Button({children: ['increment'], onclick: this.onClickIncrement})
          ]})
       );
    }
