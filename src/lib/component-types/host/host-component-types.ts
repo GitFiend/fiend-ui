@@ -23,7 +23,7 @@ export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Omit<
   'aria-checked'?: 'true' | 'false' | 'mixed' | boolean
   'aria-describedby'?: string
   'aria-modal'?: boolean
-  role?: 'tab' | 'dialog' | 'checkbox'
+  role?: 'tab' | 'dialog' | 'checkbox' | 'button'
   children?: FiendNode[]
 }
 
