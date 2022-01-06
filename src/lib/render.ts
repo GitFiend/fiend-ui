@@ -53,6 +53,10 @@ export class Render {
 
     const len = children.length - 1
 
+    if (__DEV__) {
+      checkChildrenKeys(children)
+    }
+
     for (let i = len; i >= 0; i--) {
       const child = children[i]
 
@@ -107,4 +111,22 @@ export class Render {
 export function render(tree: FiendElement | null, target: HTMLElement): void {
   if (tree === null) renderManager.clear()
   else renderManager.render(tree, target)
+}
+
+function checkChildrenKeys(children: FiendNode[]) {
+  let numKeys = 0
+  const set = new Set<string>()
+
+  for (const child of children) {
+    if (child !== null && typeof child !== 'string') {
+      if (typeof child.props.key === 'string') {
+        numKeys++
+        set.add(child.props.key)
+      }
+    }
+  }
+
+  if (numKeys !== set.size) {
+    console.error(`Subtrees contain duplicate keys: `, children)
+  }
 }
