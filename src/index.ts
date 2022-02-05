@@ -1,3 +1,4 @@
+export {$RunInAction, $Action, $AsyncAction} from './lib/observables/action'
 export {$Val} from './lib/observables/observable'
 export * from './lib/component-types/host/host-component-types'
 export {render} from './lib/render'
