@@ -66,7 +66,7 @@ export function makeObservableInner(object: Object, Con: Constructor) {
 
       Object.defineProperties(object, {
         [valueName]: {
-          value: new Computed(descriptor.get.bind(object)),
+          value: new Computed(descriptor.get.bind(object), valueName),
         },
         [key]: {
           get() {

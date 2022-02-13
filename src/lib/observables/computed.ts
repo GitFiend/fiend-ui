@@ -35,7 +35,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   ordered = false as const
 
   // Things we call when this computed updates.
-  computeds = new Set<RefObject<UnorderedResponder>>()
+  computeds = new Set<RefObject<Computed<unknown>>>()
   reactions = new Set<RefObject<UnorderedResponder>>()
   components = new Map<string, RefObject<$Component>>()
 
@@ -48,10 +48,9 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     current: this,
   }
 
-  // firstRun = true
-  dirty = true
+  private dirty = true
 
-  constructor(public f: () => T) {}
+  constructor(public f: () => T, public name: string) {}
 
   run(): void {
     this.dirty = true
@@ -62,13 +61,21 @@ export class Computed<T> implements UnorderedResponder, Notifier {
       this.dirty = false
       globalStack.popResponder()
 
-      this._ref.current = this.hasActiveResponders() ? this : null
+      const active = this.hasActiveResponders()
+
+      if (active) {
+        this._ref.current = this
+      } else {
+        this._ref.current = null
+      }
 
       if (result !== this.value) {
         this.value = result
 
         notify(this)
       }
+    } else {
+      this._ref.current = null
     }
   }
 
@@ -79,29 +86,45 @@ export class Computed<T> implements UnorderedResponder, Notifier {
       this.dirty = false
       globalStack.popResponder()
     } else {
-      globalStack.runComputedNowIfDirty(this._ref)
+      globalStack.runComputedNowIfInActionStack(this._ref)
     }
 
     addCallingResponderToOurList(this)
-    this._ref.current = this.hasActiveResponders() ? this : null
+
+    const active = this.hasActiveResponders()
+
+    if (active) {
+      this._ref.current = this
+    } else {
+      this._ref.current = null
+    }
 
     return this.value
   }
 
-  hasActiveResponders(): boolean {
-    for (const c of this.computeds) {
-      if (c.current !== null) return true
-    }
+  hasActiveResponders(deep = false): boolean {
     for (const r of this.reactions) {
       if (r.current !== null) return true
     }
-    // for (const [, c] of this.components) {
+
     for (const c of this.components.values()) {
       if (c.current !== null) {
         return true
       }
     }
-    clearNotifier(this)
+    if (deep) {
+      for (const c of this.computeds) {
+        if (c.current?.hasActiveResponders() === true) {
+          return true
+        }
+      }
+    } else {
+      for (const r of this.computeds) {
+        if (r.current !== null) return true
+      }
+    }
+
+    // clearNotifier(this)
     return false
   }
 }
@@ -112,7 +135,7 @@ export interface Calc<T> {
 }
 
 export function $Calc<T>(f: () => T): Calc<T> {
-  const c = new Computed(f)
+  const c = new Computed(f, f.name)
 
   return (() => {
     return c.get()

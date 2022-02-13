@@ -2,6 +2,7 @@ import {$AutoRun} from './responder'
 import {$Val} from './observable'
 import {$RunInAction} from './action'
 import {$Calc} from './computed'
+import {makeObservable} from './$model'
 
 describe('observables', () => {
   test('autorun', () => {
@@ -98,5 +99,38 @@ describe('observables', () => {
     })
 
     expect(count).toEqual(2)
+  })
+
+  test('computeds in actions 2', () => {
+    class A {
+      count = 0
+
+      $a = 2
+
+      get $c() {
+        this.count++
+        return this.$a + 1
+      }
+
+      constructor() {
+        makeObservable(this)
+      }
+    }
+
+    const a = new A()
+
+    expect(a.count).toEqual(0)
+
+    a.$c
+
+    $RunInAction(() => {
+      a.$a = 3
+
+      expect(a.$a).toEqual(3)
+      expect(a.count).toEqual(1)
+
+      expect(a.$c).toEqual(4)
+      expect(a.count).toEqual(2)
+    })
   })
 })

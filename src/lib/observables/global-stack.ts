@@ -48,7 +48,7 @@ export class GlobalStack {
   We don't wait till the end of an action before running a computed if accessed as
   computeds need to always return the correct value.
    */
-  runComputedNowIfDirty(computed: RefObject<Computed<unknown>>): boolean {
+  runComputedNowIfInActionStack(computed: RefObject<Computed<unknown>>): boolean {
     if (this.actionStack?.computeds.delete(computed) === true) {
       computed.current?.run()
       return true
