@@ -1,7 +1,7 @@
 import {autorun, computed, IReactionDisposer, observable, runInAction} from 'mobx'
 import {$AutoRun} from '../observables/responder'
 import {$Val} from '../observables/atom'
-import {$Calc} from '../observables/computed'
+import {$Calc} from '../observables/computed/computed'
 import {makeObservable} from '../observables/$model'
 
 xdescribe('compare mbox computeds with fiend-ui', () => {

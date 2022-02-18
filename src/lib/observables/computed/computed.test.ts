@@ -1,5 +1,5 @@
-import {makeObservable} from './$model'
-import {$AutoRun, F0} from './responder'
+import {makeObservable} from '../$model'
+import {$AutoRun, F0} from '../responder'
 
 describe('Computed', () => {
   class A {

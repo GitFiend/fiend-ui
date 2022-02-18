@@ -1,5 +1,5 @@
 import {Atom} from './atom'
-import {Computed} from './computed'
+import {Computed} from './computed/computed'
 import {globalStack} from './global-stack'
 
 export type Constructor = {new (...args: any[]): {}}

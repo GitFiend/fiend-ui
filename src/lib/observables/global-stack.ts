@@ -1,7 +1,7 @@
 import {Responder, ResponderType} from './responder'
 import {Notifier} from './notifier'
 import {ActionState} from './action'
-import {Computed} from './computed'
+import {Computed} from './computed/computed'
 import {RefObject} from '../util/ref'
 
 export class GlobalStack {

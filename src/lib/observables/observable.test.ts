@@ -1,7 +1,7 @@
 import {$AutoRun} from './responder'
 import {$Val} from './atom'
 import {$RunInAction} from './action'
-import {$Calc} from './computed'
+import {$Calc} from './computed/computed'
 import {makeObservable} from './$model'
 
 describe('observables', () => {

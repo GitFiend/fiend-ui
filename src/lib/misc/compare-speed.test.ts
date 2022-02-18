@@ -1,5 +1,5 @@
 import {$Val} from '../observables/atom'
-import {$Calc} from '../observables/computed'
+import {$Calc} from '../observables/computed/computed'
 import {$AutoRun, $Reaction} from '../observables/responder'
 import {makeObservable} from '../observables/$model'
 import {autorun, computed, observable} from 'mobx'

@@ -1,7 +1,7 @@
 import {$Action, $AsyncAction, $RunInAction} from './action'
 import {$AutoRun} from './responder'
 import {$Val} from './atom'
-import {$Calc} from './computed'
+import {$Calc} from './computed/computed'
 import {sleep} from '../../dom-tests/simple-switcher-z.test'
 
 describe('action', () => {

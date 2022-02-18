@@ -1,8 +1,8 @@
-import {addCallingResponderToOurList, clearNotifier, Notifier, notify} from './notifier'
-import {globalStack} from './global-stack'
-import {Responder, ResponderType, UnorderedResponder} from './responder'
-import {$Component} from './$component'
-import {RefObject} from '../util/ref'
+import {addCallingResponderToOurList, clearNotifier, Notifier, notify} from '../notifier'
+import {globalStack} from '../global-stack'
+import {Responder, ResponderType, UnorderedResponder} from '../responder'
+import {$Component} from '../$component'
+import {RefObject} from '../../util/ref'
 
 /*
 Notes:
