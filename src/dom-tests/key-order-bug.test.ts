@@ -25,6 +25,6 @@ describe('key order bug', () => {
       '<div><div>element 0</div><div>element 1</div><div>element 2</div></div>'
     )
 
-    console.log(root.element.innerHTML)
+    // console.log(root.element.innerHTML)
   })
 })

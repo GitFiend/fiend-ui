@@ -82,7 +82,7 @@ describe('test re-rendering keyed lists', () => {
     expect(root.inserted.length).toEqual(num)
     expect(root.html).toEqual(result(n, num))
 
-    console.log(result(n, num))
+    // console.log(result(n, num))
 
     // Scroll backward
     n = 5

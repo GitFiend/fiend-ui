@@ -18,7 +18,7 @@ describe('s - tagged style string template function', () => {
 })
 
 describe('class merging', () => {
-  test('omg', () => {
+  test('generates expected class string when given bool flags', () => {
     expect(c`CloneDialog ${true}`).toEqual('CloneDialog')
     expect(c`CloneDialog ${false}`).toEqual('')
 
@@ -27,7 +27,9 @@ describe('class merging', () => {
     expect(c`omg ${false} nah ${false}`).toEqual('')
     expect(c`omg`).toEqual('omg')
     expect(c`omg nah`).toEqual('omg nah')
+  })
 
+  xtest('compare speed', () => {
     const num = 1000000
 
     let s: string

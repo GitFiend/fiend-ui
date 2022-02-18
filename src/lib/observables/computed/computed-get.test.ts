@@ -1,4 +1,4 @@
-import {$AutoRun, $Reaction, F0} from '../responder'
+import {F0} from '../responder'
 import {makeObservable} from '../$model'
 import {Computed} from './computed'
 import {Atom} from '../atom'

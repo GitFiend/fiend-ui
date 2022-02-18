@@ -25,7 +25,7 @@ describe('reaction tests', () => {
   })
 })
 
-describe('proxy test', () => {
+xdescribe('proxy test', () => {
   type Target = {message2: string; message1: string}
 
   const target: Target = {
@@ -66,7 +66,7 @@ describe('proxy test', () => {
   })
 })
 
-describe('construction speed', () => {
+xdescribe('construction speed', () => {
   const num = 1_000_000
 
   test('time things', () => {
@@ -102,7 +102,7 @@ describe('construction speed', () => {
   })
 })
 
-describe('map vs object', () => {
+xdescribe('map vs object', () => {
   const o = {
     a: 1,
     b: 2,
@@ -308,8 +308,10 @@ describe('mobx computed scope', () => {
   test('init computed', () => {
     const a = new A()
 
+    let result = 0
+
     const d = autorun(() => {
-      console.log(a.num2)
+      result = a.num2
     })
 
     expect(count).toEqual(1)

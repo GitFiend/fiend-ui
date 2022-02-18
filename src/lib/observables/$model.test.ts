@@ -25,7 +25,7 @@ class Mobx {
   b = 6
 }
 
-describe('new fiend-ui class construction speed', () => {
+xdescribe('new fiend-ui class construction speed', () => {
   const loops = 10_000
 
   timeConstructor(Val, 'plain', loops)
@@ -33,9 +33,11 @@ describe('new fiend-ui class construction speed', () => {
   timeConstructor(Mobx, 'mobx', loops)
   timeConstructor2('static', loops)
 
-  console.time('cold construction')
-  new Model()
-  console.timeEnd('cold construction')
+  test('construct once time', () => {
+    console.time('cold construction')
+    new Model()
+    console.timeEnd('cold construction')
+  })
 })
 
 function timeConstructor<T extends {new (...args: any[]): {}}>(
@@ -69,7 +71,7 @@ function timeConstructor2(name: string, loops: number) {
   })
 }
 
-describe('access and set observable speed', () => {
+xdescribe('access and set observable speed', () => {
   const loops = 100_000
 
   test('plain', () => {
@@ -108,7 +110,6 @@ describe('makeObservable Alternative', () => {
   class Test {
     $a = 4
     $b = 3
-    c = 'omg'
 
     constructor() {
       makeObservable(this)
@@ -122,8 +123,10 @@ describe('makeObservable Alternative', () => {
   test('some numbers', () => {
     const t = new Test()
 
+    let result = 0
+
     $AutoRun(() => {
-      console.log(t.$n)
+      result = t.$n
     })
 
     expect(t.$a).toEqual(4)

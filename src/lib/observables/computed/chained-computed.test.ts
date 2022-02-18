@@ -22,12 +22,12 @@ describe('Computed', () => {
       makeObservable(this)
     }
 
+    result = 0
     enableReactions() {
       this.d.push(
         $AutoRun(() => {
           this.runs++
-          const {$c3} = this
-          console.log({$c3})
+          this.result = this.$c3
         })
       )
     }
