@@ -48,6 +48,8 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     current: this,
   }
 
+  // Dirty used to mean we are scheduled to run but haven't yet.
+  // I think it now only means we haven't run the first time yet.
   private dirty = true
 
   constructor(public f: () => T, public name: string) {
