@@ -1,8 +1,7 @@
-import {$Val} from '../observables/atom'
-import {$Calc} from '../observables/computed/computed'
 import {$AutoRun, $Reaction} from '../observables/responder'
 import {makeObservable} from '../observables/$model'
 import {autorun, computed, observable} from 'mobx'
+import {$Calc, $Val} from '../observables/value-style'
 
 describe('reaction tests', () => {
   test('basic reaction', () => {

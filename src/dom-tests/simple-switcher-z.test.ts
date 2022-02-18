@@ -1,8 +1,8 @@
 import {render} from '..'
 import {screen} from '@testing-library/dom'
-import {$Val} from '../lib/observables/atom'
 import {$Component} from '..'
 import {Div} from '..'
+import {$Val} from '../lib/observables/value-style'
 
 export function sleep(ms: number) {
   return new Promise<void>(resolve => {

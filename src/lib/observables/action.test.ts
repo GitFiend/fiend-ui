@@ -1,8 +1,7 @@
 import {$Action, $AsyncAction, $RunInAction} from './action'
 import {$AutoRun} from './responder'
-import {$Val} from './atom'
-import {$Calc} from './computed/computed'
 import {sleep} from '../../dom-tests/simple-switcher-z.test'
+import {$Calc, $Val} from './value-style'
 
 describe('action', () => {
   test('action batches updates', () => {

@@ -1,6 +1,6 @@
 import {makeObservable} from './$model'
 import {$AutoRun} from './responder'
-import {$Val} from './atom'
+import {$Val} from './value-style'
 
 describe('memory leak test', () => {
   let n = 0

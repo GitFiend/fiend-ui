@@ -19,26 +19,21 @@ export interface Notifier {
 export function addCallingResponderToOurList(
   notifier: Notifier,
   responder: Responder
-): boolean {
-  // const responder = globalStack.getCurrentResponder()
-
-  // if (responder !== null) {
+): void {
   switch (responder.responderType) {
     case ResponderType.computed:
       notifier.computeds.add(responder._ref)
-      return true
+      break
     case ResponderType.autoRun:
     case ResponderType.reaction:
       notifier.reactions.add(responder._ref)
-      return true
+      break
     case ResponderType.component:
       // TODO: Improve types.
       const r = responder as $Component
       notifier.components.set(r.order, r._ref)
-      return true
+      break
   }
-  // }
-  return false
 }
 
 export function notify(notifier: Notifier): void {

@@ -45,14 +45,12 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   reactions = new Set<RefObject<UnorderedResponder>>()
   components = new Map<string, RefObject<$Component>>()
 
-  value: T | any
+  value: T | unknown
 
   _ref: RefObject<this> = {
     current: this,
   }
 
-  // Dirty used to mean we are scheduled to run but haven't yet.
-  // I think it now only means we haven't run the first time yet.
   private dirty = true
 
   constructor(public f: () => T, public name: string) {}
@@ -77,7 +75,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     }
   }
 
-  get(responder: Responder | null): T {
+  get(responder: Responder | null): T | unknown {
     if (this._ref.current === null || this.dirty) {
       globalStack.pushResponder(this)
       this.value = this.f()
@@ -88,13 +86,17 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     }
 
     if (responder !== null) {
-      addCallingResponderToOurList(this, responder)
+      this.addCallingResponderToOurList(responder)
     }
 
     // TODO: Why? Is this because the responder hasn't finished becoming active yet?
     this.activate(responder !== null || this.hasActiveResponders())
 
     return this.value
+  }
+
+  addCallingResponderToOurList(responder: Responder) {
+    addCallingResponderToOurList(this, responder)
   }
 
   hasActiveResponders(): boolean {
@@ -104,31 +106,18 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   activate(shouldActivate: boolean) {
     if (shouldActivate) {
       if (this._ref.current === null) {
-        // console.log(`${this.name} on`)
         this._ref.current = this
       }
     } else {
       if (this._ref.current !== null) {
-        // console.log(`${this.name} off, ${count}`)
         this._ref.current = null
 
-        // TODO: Is something like this required?
-        // this._ref = {current: null}
-        clearNotifier(this)
+        this.clearNotifyList()
       }
     }
   }
-}
 
-export interface Calc<T> {
-  (): Readonly<T>
-  length: Symbol // This is to prevent accidental comparisons.
-}
-
-export function $Calc<T>(f: () => T): Calc<T> {
-  const c = new Computed(f, f.name)
-
-  return (() => {
-    return c.get(globalStack.getCurrentResponder())
-  }) as any
+  clearNotifyList(): void {
+    clearNotifier(this)
+  }
 }

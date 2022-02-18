@@ -1,7 +1,7 @@
 import {makeObservable} from './$model'
 import {$AutoRun} from './responder'
-import {$Val} from './atom'
 import {observable} from 'mobx'
+import {$Val} from './value-style'
 
 class Model {
   $a = 5
