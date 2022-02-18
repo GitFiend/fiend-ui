@@ -1,7 +1,7 @@
-import {$Val} from './atom'
-import {$Calc} from './computed'
-import {$AutoRun, $Reaction} from './responder'
-import {makeObservable} from './$model'
+import {$Val} from '../observables/atom'
+import {$Calc} from '../observables/computed'
+import {$AutoRun, $Reaction} from '../observables/responder'
+import {makeObservable} from '../observables/$model'
 import {autorun, computed, observable} from 'mobx'
 
 describe('reaction tests', () => {

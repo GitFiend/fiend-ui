@@ -1,4 +1,5 @@
 # Computed Behaviour
+#### TODO: Convert these scenarios into unit tests.
 
 A computed can be notified by (via run())
  - Observable
@@ -35,11 +36,14 @@ that called it is allowed to be outside a responder.
 ### get(responder: Responder | null = null)
 get is typically called by another computed, a reaction or $Component.
 
+Example:
+We call a computed inside the body of a $Reaction.
+
 (TODO: Check this example, seems wrong)
 Imagine an onmouseover event; a computed is then called outside a responder via `get(null)`.
 E.g. onmouseover -> set $hoverIndex -> notify $hovering computed -> draw
 
-If we are dirty (run() queued in action), then rerun.
+If we are dirty (run() queued in action), then rerun. Notify responders.
 if _ref is null we don't know whether we are dirty because `run()` can only be called 
 (by a notifier) if _ref is not null! (we have been turned off after all)
 This means we also have to rerun. We should have no responders?

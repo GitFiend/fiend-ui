@@ -33,5 +33,3 @@ describe('memory leak test', () => {
     expect(n).toEqual(5)
   })
 })
-
-// WeakRef

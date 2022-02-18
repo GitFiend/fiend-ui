@@ -58,6 +58,7 @@ class AutoRun implements UnorderedResponder {
 
   end: F0 = () => {
     this._ref.current = null
+    // this._ref = {current: null}
   }
 }
 
@@ -96,6 +97,7 @@ class Reaction<T> implements UnorderedResponder {
 
   end: F0 = () => {
     this._ref.current = null
+    // this._ref = {current: null}
   }
 }
 
