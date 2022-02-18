@@ -1,4 +1,3 @@
-import {F0} from '../responder'
 import {makeObservable} from '../$model'
 import {Computed} from './computed'
 import {Atom} from '../atom'
@@ -9,9 +8,7 @@ describe('Computed get behaviour', () => {
       declare __$o: Atom<number>
       $o = 0
 
-      d: F0[] = []
       runs = 0
-      result = 0
 
       constructor() {
         makeObservable(this)
@@ -36,5 +33,32 @@ describe('Computed get behaviour', () => {
 
     expect(a.__$c._ref.current).toBe(null)
     expect(a.__$o.hasActiveResponders()).toBe(false)
+  })
+
+  test(`Computed shouldn't become active if the calling computed isn't active`, () => {
+    class A {
+      declare __$o: Atom<number>
+      $o = 0
+
+      constructor() {
+        makeObservable(this)
+      }
+
+      declare __$c: Computed<number>
+      get $c() {
+        return this.$o
+      }
+
+      declare __$c2: Computed<number>
+      get $c2() {
+        return this.$c
+      }
+    }
+
+    const a = new A()
+
+    expect(a.$c2).toBe(0)
+    expect(a.__$c2._ref.current).toBe(null)
+    expect(a.__$c._ref.current).toBe(null)
   })
 })

@@ -33,6 +33,10 @@ Imagine:
 If a Computed is called outside a responder it should run because the observable
 that called it is allowed to be outside a responder.
 
+Responders don't get added to this computed as part of run(). We could
+get added to the calling observable or computed. We shouldn't if we have no 
+responders.
+
 ### get(null)
 get is typically called by another computed, a reaction or $Component.
 

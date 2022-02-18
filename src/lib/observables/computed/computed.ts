@@ -86,6 +86,9 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     }
 
     if (responder !== null) {
+      // This shouldn't be added unless it is properly active.
+      // TODO: Write a test where responder is added even though the calling computed
+      // isn't active?
       this.addCallingResponderToOurList(responder)
     }
 
@@ -93,14 +96,6 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     this.activate(responder !== null || this.hasActiveResponders())
 
     return this.value
-  }
-
-  addCallingResponderToOurList(responder: Responder) {
-    addCallingResponderToOurList(this, responder)
-  }
-
-  hasActiveResponders(): boolean {
-    return hasActiveResponders(this)
   }
 
   activate(shouldActivate: boolean) {
@@ -115,6 +110,14 @@ export class Computed<T> implements UnorderedResponder, Notifier {
         this.clearNotifyList()
       }
     }
+  }
+
+  addCallingResponderToOurList(responder: Responder) {
+    addCallingResponderToOurList(this, responder)
+  }
+
+  hasActiveResponders(): boolean {
+    return hasActiveResponders(this)
   }
 
   clearNotifyList(): void {
