@@ -1,7 +1,8 @@
-import {UnorderedResponder} from './responder'
+import {Responder, UnorderedResponder} from './responder'
 import {addCallingResponderToOurList, Notifier, notify} from './notifier'
 import {$Component} from './$component'
 import {RefObject} from '../util/ref'
+import {globalStack} from './global-stack'
 
 export interface Observable<T> {
   (): Readonly<T>
@@ -15,7 +16,9 @@ export function $Val<T>(value: T): Observable<T> {
   function inner(): T
   function inner(newValue: T): T
   function inner(newValue?: T) {
-    if (arguments.length === 0) return a.get()
+    if (arguments.length === 0) {
+      return a.get(globalStack.getCurrentResponder())
+    }
 
     if (newValue !== undefined) a.set(newValue)
 
@@ -32,8 +35,10 @@ export class Atom<T> implements Notifier {
 
   constructor(public value: T, public name: string) {}
 
-  get(): T {
-    const hasContext = addCallingResponderToOurList(this)
+  get(responder: Responder | null): T {
+    if (responder !== null) {
+      addCallingResponderToOurList(this, responder)
+    }
 
     // TODO: Need/possible to clean up here?
 

@@ -1,6 +1,6 @@
 import {addCallingResponderToOurList, clearNotifier, Notifier, notify} from './notifier'
 import {globalStack} from './global-stack'
-import {ResponderType, UnorderedResponder} from './responder'
+import {Responder, ResponderType, UnorderedResponder} from './responder'
 import {$Component} from './$component'
 import {RefObject} from '../util/ref'
 
@@ -75,7 +75,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     }
   }
 
-  get(): T {
+  get(responder: Responder | null): T {
     if (this._ref.current === null || this.dirty) {
       globalStack.pushResponder(this)
       this.value = this.f()
@@ -85,7 +85,12 @@ export class Computed<T> implements UnorderedResponder, Notifier {
       globalStack.runComputedNowIfInActionStack(this._ref)
     }
 
-    this.activate(addCallingResponderToOurList(this) || this.hasActiveResponders())
+    if (responder !== null) {
+      addCallingResponderToOurList(this, responder)
+    }
+
+    // TODO: Why? Is this because the responder hasn't finished becoming active yet?
+    this.activate(responder !== null || this.hasActiveResponders())
 
     return this.value
   }
@@ -148,6 +153,6 @@ export function $Calc<T>(f: () => T): Calc<T> {
   const c = new Computed(f, f.name)
 
   return (() => {
-    return c.get()
+    return c.get(globalStack.getCurrentResponder())
   }) as any
 }

@@ -1,5 +1,5 @@
 import {globalStack} from './global-stack'
-import {ResponderType, UnorderedResponder} from './responder'
+import {Responder, ResponderType, UnorderedResponder} from './responder'
 import {$Component} from './$component'
 import {RunStack} from './run-stack'
 import {RefObject} from '../util/ref'
@@ -16,25 +16,28 @@ export interface Notifier {
   components: Map<string, RefObject<$Component>>
 }
 
-export function addCallingResponderToOurList(notifier: Notifier): boolean {
-  const responder = globalStack.getCurrentResponder()
+export function addCallingResponderToOurList(
+  notifier: Notifier,
+  responder: Responder
+): boolean {
+  // const responder = globalStack.getCurrentResponder()
 
-  if (responder !== null) {
-    switch (responder.responderType) {
-      case ResponderType.computed:
-        notifier.computeds.add(responder._ref)
-        return true
-      case ResponderType.autoRun:
-      case ResponderType.reaction:
-        notifier.reactions.add(responder._ref)
-        return true
-      case ResponderType.component:
-        // TODO: Improve types.
-        const r = responder as $Component
-        notifier.components.set(r.order, r._ref)
-        return true
-    }
+  // if (responder !== null) {
+  switch (responder.responderType) {
+    case ResponderType.computed:
+      notifier.computeds.add(responder._ref)
+      return true
+    case ResponderType.autoRun:
+    case ResponderType.reaction:
+      notifier.reactions.add(responder._ref)
+      return true
+    case ResponderType.component:
+      // TODO: Improve types.
+      const r = responder as $Component
+      notifier.components.set(r.order, r._ref)
+      return true
   }
+  // }
   return false
 }
 

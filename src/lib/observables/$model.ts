@@ -1,5 +1,6 @@
 import {Atom} from './atom'
 import {Computed} from './computed'
+import {globalStack} from './global-stack'
 
 export type Constructor = {new (...args: any[]): {}}
 
@@ -43,7 +44,7 @@ export function makeObservableInner(object: Object, Con: Constructor) {
           },
           [key]: {
             get() {
-              return this[valueName].get()
+              return this[valueName].get(globalStack.getCurrentResponder())
             },
             set(value) {
               if (__FIEND_DEV__) console.debug(`${Con.name}.${key} <- `, value)
@@ -70,7 +71,7 @@ export function makeObservableInner(object: Object, Con: Constructor) {
         },
         [key]: {
           get() {
-            return this[valueName].get()
+            return this[valueName].get(globalStack.getCurrentResponder())
           },
         },
       })
