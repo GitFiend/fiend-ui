@@ -9,8 +9,8 @@
     "author": "Toby Suggate <sugto555@gmail.com>",
     "license": "Apache-2.0",
     "devDependencies": {
-        "@testing-library/dom": "^7.28.1",
-        "@types/jest": "^26.0.15",
+        "@testing-library/dom": "^8.11.3",
+        "@types/jest": "^27.4.0",
         "@types/node": "^14.14.10",
         "@types/react": "^16.8.19",
         "@types/react-dom": "^16.8.4",
