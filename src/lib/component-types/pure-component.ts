@@ -13,7 +13,6 @@ import {HostComponent} from './host/host-component'
 import {RootComponent} from './root-component'
 import {RefObject} from '../util/ref'
 import {RunStack} from '../observables/run-stack'
-import {br} from './host/host-components'
 
 export interface Rec {
   [prop: string]: unknown
@@ -48,6 +47,9 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
   abstract render(): FiendNode | FiendNode[]
 
   update() {
+    if (__DEV__ && this.removed) {
+      throw 'Called update after removed!'
+    }
     if (__DEV__) {
       time(this.constructor.name)
     }

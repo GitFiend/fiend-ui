@@ -1,6 +1,6 @@
 import {autorun, computed, IReactionDisposer, observable, runInAction} from 'mobx'
 import {$AutoRun} from './responder'
-import {$Val} from './observable'
+import {$Val} from './atom'
 import {$Calc} from './computed'
 import {makeObservable} from './$model'
 

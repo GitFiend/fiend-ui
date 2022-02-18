@@ -4,8 +4,10 @@ import {F0, OrderedResponder, ResponderType} from './responder'
 import {makeObservable} from './$model'
 import {RunStack} from './run-stack'
 
-export abstract class $Component<P extends {} = {}> extends PureComponent<P>
-  implements OrderedResponder {
+export abstract class $Component<P extends {} = {}>
+  extends PureComponent<P>
+  implements OrderedResponder
+{
   responderType = ResponderType.component as const
 
   ordered = true as const
@@ -16,7 +18,6 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
 
     this.update()
     RunStack.componentDidMountStack.push(this._ref)
-    // this.componentDidMount()
   }
 
   run() {
@@ -29,9 +30,7 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
     }
 
     this.update()
-    // globalStack.pushResponder(this)
-    // this.update()
-    // globalStack.popResponder()
+
     RunStack.componentDidUpdateStack.push(this._ref)
   }
 
@@ -43,7 +42,7 @@ export abstract class $Component<P extends {} = {}> extends PureComponent<P>
 
   remove(): void {
     this._ref.current = null
-    // this._ref = {current: null}
+
     this.disposers.forEach(d => d())
     super.remove()
   }

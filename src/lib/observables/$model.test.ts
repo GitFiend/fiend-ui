@@ -1,6 +1,6 @@
 import {makeObservable} from './$model'
 import {$AutoRun} from './responder'
-import {$Val} from './observable'
+import {$Val} from './atom'
 import {observable} from 'mobx'
 
 class A {

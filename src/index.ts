@@ -1,5 +1,5 @@
 export {$RunInAction, $Action, $AsyncAction} from './lib/observables/action'
-export {$Val} from './lib/observables/observable'
+export {$Val} from './lib/observables/atom'
 export * from './lib/component-types/host/host-component-types'
 export {render} from './lib/render'
 export {createRef} from './lib/util/ref'

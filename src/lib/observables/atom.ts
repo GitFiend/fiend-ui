@@ -10,7 +10,7 @@ export interface Observable<T> {
 }
 
 export function $Val<T>(value: T): Observable<T> {
-  const a = new Atom(value)
+  const a = new Atom(value, '$Val')
 
   function inner(): T
   function inner(newValue: T): T
@@ -30,10 +30,18 @@ export class Atom<T> implements Notifier {
   reactions = new Set<RefObject<UnorderedResponder>>()
   components = new Map<string, RefObject<$Component>>()
 
-  constructor(public value: T) {}
+  constructor(public value: T, public name: string) {}
 
   get(): T {
-    addCallingResponderToOurList(this)
+    const hasContext = addCallingResponderToOurList(this)
+
+    // TODO: Need/possible to clean up here?
+
+    // console.log(
+    //   {hasContext},
+    //   this.name,
+    //   this.computeds.size + this.components.size + this.reactions.size
+    // )
 
     return this.value
   }

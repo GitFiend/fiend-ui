@@ -1,6 +1,6 @@
 import {render} from '..'
 import {screen} from '@testing-library/dom'
-import {$Val} from '../lib/observables/observable'
+import {$Val} from '../lib/observables/atom'
 import {$Component} from '..'
 import {Div} from '..'
 

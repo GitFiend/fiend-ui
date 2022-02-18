@@ -1,5 +1,5 @@
 import {autorun, computed, IReactionDisposer, observable} from 'mobx'
-import {$Val} from './observable'
+import {$Val} from './atom'
 import {$AutoRun} from './responder'
 import {globalStack} from './global-stack'
 

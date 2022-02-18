@@ -1,4 +1,4 @@
-import {Atom} from './observable'
+import {Atom} from './atom'
 import {Computed} from './computed'
 
 export type Constructor = {new (...args: any[]): {}}
@@ -39,7 +39,7 @@ export function makeObservableInner(object: Object, Con: Constructor) {
       if (!(value instanceof Function)) {
         Object.defineProperties(object, {
           [valueName]: {
-            value: new Atom(value),
+            value: new Atom(value, valueName),
           },
           [key]: {
             get() {

@@ -1,4 +1,4 @@
-import {$Val} from './observable'
+import {$Val} from './atom'
 import {$Calc} from './computed'
 import {$AutoRun, $Reaction} from './responder'
 import {makeObservable} from './$model'

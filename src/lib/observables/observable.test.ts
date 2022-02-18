@@ -1,5 +1,5 @@
 import {$AutoRun} from './responder'
-import {$Val} from './observable'
+import {$Val} from './atom'
 import {$RunInAction} from './action'
 import {$Calc} from './computed'
 import {makeObservable} from './$model'

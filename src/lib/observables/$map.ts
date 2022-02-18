@@ -1,8 +1,11 @@
-import {Atom} from './observable'
+import {Atom} from './atom'
 
+/**
+ * @deprecated
+ */
 export class $Map<K, V> extends Map<K, V> {
   _count = 0
-  _atom = new Atom(this._count)
+  _atom = new Atom(this._count, '$Map')
 
   clear(): void {
     super.clear()

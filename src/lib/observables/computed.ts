@@ -50,7 +50,9 @@ export class Computed<T> implements UnorderedResponder, Notifier {
 
   private dirty = true
 
-  constructor(public f: () => T, public name: string) {}
+  constructor(public f: () => T, public name: string) {
+    count++
+  }
 
   run(): void {
     this.dirty = true
@@ -61,13 +63,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
       this.dirty = false
       globalStack.popResponder()
 
-      const active = this.hasActiveResponders()
-
-      if (active) {
-        this._ref.current = this
-      } else {
-        this._ref.current = null
-      }
+      this.activate(this.hasActiveResponders())
 
       if (result !== this.value) {
         this.value = result
@@ -75,7 +71,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
         notify(this)
       }
     } else {
-      this._ref.current = null
+      this.activate(false)
     }
   }
 
@@ -89,15 +85,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
       globalStack.runComputedNowIfInActionStack(this._ref)
     }
 
-    addCallingResponderToOurList(this)
-
-    const active = this.hasActiveResponders()
-
-    if (active) {
-      this._ref.current = this
-    } else {
-      this._ref.current = null
-    }
+    this.activate(addCallingResponderToOurList(this) || this.hasActiveResponders())
 
     return this.value
   }
@@ -127,7 +115,29 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     // clearNotifier(this)
     return false
   }
+
+  activate(shouldActivate: boolean) {
+    if (shouldActivate) {
+      if (this._ref.current === null) {
+        console.log(`${this.name} on`)
+        count++
+        this._ref.current = this
+      }
+    } else {
+      if (this._ref.current !== null) {
+        count--
+        console.log(`${this.name} off, ${count}`)
+        this._ref.current = null
+
+        // TODO: Is something like this required?
+        this._ref = {current: null}
+        clearNotifier(this)
+      }
+    }
+  }
 }
+
+let count = 0
 
 export interface Calc<T> {
   (): Readonly<T>
