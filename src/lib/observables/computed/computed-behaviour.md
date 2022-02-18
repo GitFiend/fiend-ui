@@ -33,7 +33,7 @@ Imagine:
 If a Computed is called outside a responder it should run because the observable
 that called it is allowed to be outside a responder.
 
-### get(responder: Responder | null = null)
+### get(null)
 get is typically called by another computed, a reaction or $Component.
 
 Example:

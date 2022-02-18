@@ -55,10 +55,20 @@ export function notify(notifier: Notifier): void {
   }
 }
 
-export function clearNotifier(notifier: Notifier) {
-  const {computeds, reactions, components} = notifier
-
+export function clearNotifier({computeds, reactions, components}: Notifier): void {
   computeds.clear()
   reactions.clear()
   components.clear()
+}
+
+export function hasActiveResponders({
+  reactions,
+  components,
+  computeds,
+}: Notifier): boolean {
+  for (const r of reactions) if (r.current !== null) return true
+  for (const c of components.values()) if (c.current !== null) return true
+  for (const r of computeds) if (r.current !== null) return true
+
+  return false
 }

@@ -3,7 +3,7 @@ import {$AutoRun} from './responder'
 import {$Val} from './atom'
 import {observable} from 'mobx'
 
-class A {
+class Model {
   $a = 5
   $b = 6
 
@@ -12,12 +12,12 @@ class A {
   }
 }
 
-class B {
+class Val {
   a = $Val(5)
   b = $Val(6)
 }
 
-class D {
+class Mobx {
   @observable
   a = 5
 
@@ -25,25 +25,16 @@ class D {
   b = 6
 }
 
-class E {
-  $a = 5
-  $b = 6
-
-  constructor() {
-    makeObservable(this)
-  }
-}
-
 describe('new fiend-ui class construction speed', () => {
   const loops = 10_000
 
-  timeConstructor(B, 'plain', loops)
-  timeConstructor(A, 'decorator', loops)
-  timeConstructor(D, 'mobx', loops)
+  timeConstructor(Val, 'plain', loops)
+  timeConstructor(Model, 'decorator', loops)
+  timeConstructor(Mobx, 'mobx', loops)
   timeConstructor2('static', loops)
 
   console.time('cold construction')
-  const e = new E()
+  new Model()
   console.timeEnd('cold construction')
 })
 
@@ -69,7 +60,7 @@ function timeConstructor2(name: string, loops: number) {
 
     let c
     for (let i = 0; i < loops; i++) {
-      c = new E()
+      c = new Model()
     }
 
     const duration = Date.now() - t
@@ -83,7 +74,7 @@ describe('access and set observable speed', () => {
 
   test('plain', () => {
     console.time('plain')
-    const c = new B()
+    const c = new Val()
 
     for (let i = 0; i < loops; i++) {
       c.a(c.a() + 1)
@@ -94,7 +85,7 @@ describe('access and set observable speed', () => {
 
   test('mobx', () => {
     console.time('mobx')
-    const c = new D()
+    const c = new Mobx()
     for (let i = 0; i < loops; i++) {
       c.a = c.a + 1
       c.b = c.a
@@ -104,7 +95,7 @@ describe('access and set observable speed', () => {
 
   test('decorator', () => {
     console.time('decorator')
-    const c = new A()
+    const c = new Model()
     for (let i = 0; i < loops; i++) {
       c.$a = c.$a + 1
       c.$b = c.$a
@@ -151,12 +142,11 @@ describe('check that only correct fields are modified', () => {
 
   class Test2 {
     $a = 2
+    e = 9
 
-    b = () => {
+    b(): number {
       return this.$a
     }
-
-    e = 9
 
     constructor() {
       makeObservable(this)
@@ -164,11 +154,10 @@ describe('check that only correct fields are modified', () => {
 
     get $c(): number {
       computedRuns++
-
       return this.$a * this.$a
     }
 
-    d(a: number) {
+    d(a: number): void {
       this.$a = a
     }
   }

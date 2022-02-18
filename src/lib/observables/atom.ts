@@ -1,5 +1,10 @@
 import {Responder, UnorderedResponder} from './responder'
-import {addCallingResponderToOurList, Notifier, notify} from './notifier'
+import {
+  addCallingResponderToOurList,
+  hasActiveResponders,
+  Notifier,
+  notify,
+} from './notifier'
 import {$Component} from './$component'
 import {RefObject} from '../util/ref'
 import {globalStack} from './global-stack'
@@ -57,5 +62,9 @@ export class Atom<T> implements Notifier {
 
       notify(this)
     }
+  }
+
+  hasActiveResponders(): boolean {
+    return hasActiveResponders(this)
   }
 }

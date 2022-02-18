@@ -1,4 +1,10 @@
-import {addCallingResponderToOurList, clearNotifier, Notifier, notify} from '../notifier'
+import {
+  addCallingResponderToOurList,
+  clearNotifier,
+  hasActiveResponders,
+  Notifier,
+  notify,
+} from '../notifier'
 import {globalStack} from '../global-stack'
 import {Responder, ResponderType, UnorderedResponder} from '../responder'
 import {$Component} from '../$component'
@@ -39,9 +45,6 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   reactions = new Set<RefObject<UnorderedResponder>>()
   components = new Map<string, RefObject<$Component>>()
 
-  // Things that call this computed when they update.
-  // notifiers = new Set<RefObject<Notifier>>()
-
   value: T | any
 
   _ref: RefObject<this> = {
@@ -52,13 +55,9 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   // I think it now only means we haven't run the first time yet.
   private dirty = true
 
-  constructor(public f: () => T, public name: string) {
-    count++
-  }
+  constructor(public f: () => T, public name: string) {}
 
   run(): void {
-    this.dirty = true
-
     if (this.hasActiveResponders()) {
       globalStack.pushResponder(this)
       const result = this.f()
@@ -73,6 +72,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
         notify(this)
       }
     } else {
+      this.dirty = true
       this.activate(false)
     }
   }
@@ -97,54 +97,28 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     return this.value
   }
 
-  hasActiveResponders(deep = false): boolean {
-    for (const r of this.reactions) {
-      if (r.current !== null) return true
-    }
-
-    for (const c of this.components.values()) {
-      if (c.current !== null) {
-        return true
-      }
-    }
-    if (deep) {
-      for (const c of this.computeds) {
-        if (c.current?.hasActiveResponders() === true) {
-          return true
-        }
-      }
-    } else {
-      for (const r of this.computeds) {
-        if (r.current !== null) return true
-      }
-    }
-
-    // clearNotifier(this)
-    return false
+  hasActiveResponders(): boolean {
+    return hasActiveResponders(this)
   }
 
   activate(shouldActivate: boolean) {
     if (shouldActivate) {
       if (this._ref.current === null) {
-        console.log(`${this.name} on`)
-        count++
+        // console.log(`${this.name} on`)
         this._ref.current = this
       }
     } else {
       if (this._ref.current !== null) {
-        count--
-        console.log(`${this.name} off, ${count}`)
+        // console.log(`${this.name} off, ${count}`)
         this._ref.current = null
 
         // TODO: Is something like this required?
-        this._ref = {current: null}
+        // this._ref = {current: null}
         clearNotifier(this)
       }
     }
   }
 }
-
-let count = 0
 
 export interface Calc<T> {
   (): Readonly<T>
