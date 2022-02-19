@@ -35,7 +35,7 @@ describe('Computed get behaviour', () => {
     expect(a.__$o.hasActiveResponders()).toBe(false)
   })
 
-  test(`Computed shouldn't become active if the calling computed isn't active`, () => {
+  xtest(`Computed shouldn't become active if the calling computed isn't active`, () => {
     class A {
       declare __$o: Atom<number>
       $o = 0
