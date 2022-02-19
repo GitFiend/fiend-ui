@@ -28,62 +28,54 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   constructor(public f: () => T, public name: string) {}
 
   run(): void {
-    if (this.hasActiveResponders()) {
-      globalStack.pushResponder(this)
-      const result = this.f()
+    const active = this.hasActiveResponders()
 
-      globalStack.popResponder()
-
-      this.activate(this.hasActiveResponders())
-
-      if (result !== this.value) {
-        this.value = result
-
-        notify(this)
-      }
-    } else {
-      this.activate(false)
+    if (active) {
+      this.runFunction(true)
+    } else if (this._ref.current !== null) {
+      this.deactivateAndClear()
     }
   }
 
-  get(responder: Responder | null): T | unknown {
-    if (this._ref.current === null) {
-      globalStack.pushResponder(this)
-      this.value = this.f()
-
-      globalStack.popResponder()
-    } else {
-      globalStack.runComputedNowIfInActionStack(this._ref)
-    }
-
+  get(responder: Responder<unknown> | null): T | unknown {
     if (responder !== null) {
-      // This shouldn't be added unless it is properly active.
-      // TODO: Write a test where responder is added even though the calling computed
-      // isn't active?
       this.addCallingResponderToOurList(responder)
     }
 
-    // TODO: Why? Is this because the responder hasn't finished becoming active yet?
-    this.activate(responder !== null || this.hasActiveResponders())
+    const previouslyDeactivated = this._ref.current === null
+    const active = this.hasActiveResponders()
+
+    if (previouslyDeactivated) {
+      if (active) {
+        this._ref.current = this
+      }
+      this.runFunction(false)
+    } else {
+      if (active) {
+        globalStack.runComputedNowIfInActionStack(this._ref)
+      } else {
+        this.deactivateAndClear()
+      }
+    }
 
     return this.value
   }
 
-  activate(shouldActivate: boolean) {
-    if (shouldActivate) {
-      if (this._ref.current === null) {
-        this._ref.current = this
-      }
-    } else {
-      if (this._ref.current !== null) {
-        this._ref.current = null
+  runFunction(shouldNotify: boolean) {
+    globalStack.pushResponder(this)
+    const value = this.f()
+    globalStack.popResponder()
 
-        this.clearNotifyList()
+    if (value !== this.value) {
+      this.value = value
+
+      if (shouldNotify) {
+        notify(this)
       }
     }
   }
 
-  addCallingResponderToOurList(responder: Responder) {
+  addCallingResponderToOurList(responder: Responder<unknown>) {
     addCallingResponderToOurList(this, responder)
   }
 
@@ -91,7 +83,23 @@ export class Computed<T> implements UnorderedResponder, Notifier {
     return hasActiveResponders(this)
   }
 
-  clearNotifyList(): void {
-    clearNotifier(this)
+  deactivateAndClear(): void {
+    this._ref.current = null
+
+    const {computeds, reactions, components} = this
+
+    reactions.clear()
+    components.clear()
+
+    for (const c of computeds) {
+      if (c.current !== null) {
+        c.current.deactivateAndClear()
+      }
+    }
+    computeds.clear()
+  }
+
+  isMarkedActive(): boolean {
+    return this._ref.current !== null
   }
 }

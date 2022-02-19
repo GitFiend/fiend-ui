@@ -7,15 +7,16 @@ import {
 } from './notifier'
 import {$Component} from './$component'
 import {RefObject} from '../util/ref'
+import {Computed} from './computed/computed'
 
 export class Atom<T> implements Notifier {
-  computeds = new Set<RefObject<UnorderedResponder>>()
+  computeds = new Set<RefObject<Computed<unknown>>>()
   reactions = new Set<RefObject<UnorderedResponder>>()
   components = new Map<string, RefObject<$Component>>()
 
   constructor(public value: T, public name: string) {}
 
-  get(responder: Responder | null): T {
+  get(responder: Responder<unknown> | null): T {
     if (responder !== null) {
       this.addCallingResponderToOurList(responder)
     }
@@ -43,7 +44,7 @@ export class Atom<T> implements Notifier {
     return hasActiveResponders(this)
   }
 
-  addCallingResponderToOurList(responder: Responder): void {
+  addCallingResponderToOurList(responder: Responder<unknown>): void {
     addCallingResponderToOurList(this, responder)
   }
 }

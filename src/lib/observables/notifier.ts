@@ -3,6 +3,7 @@ import {Responder, ResponderType, UnorderedResponder} from './responder'
 import {$Component} from './$component'
 import {RunStack} from './run-stack'
 import {RefObject} from '../util/ref'
+import {Computed} from './computed/computed'
 
 /*
 A Notifier is something with observable-like behaviour.
@@ -11,14 +12,14 @@ Could be a plain observable or a computed (Computeds are both Notifiers and Resp
 
  */
 export interface Notifier {
-  computeds: Set<RefObject<UnorderedResponder>>
+  computeds: Set<RefObject<Computed<unknown>>>
   reactions: Set<RefObject<UnorderedResponder>>
   components: Map<string, RefObject<$Component>>
 }
 
 export function addCallingResponderToOurList(
   notifier: Notifier,
-  responder: Responder
+  responder: Responder<unknown>
 ): void {
   switch (responder.responderType) {
     case ResponderType.computed:
@@ -63,7 +64,12 @@ export function hasActiveResponders({
 }: Notifier): boolean {
   for (const r of reactions) if (r.current !== null) return true
   for (const c of components.values()) if (c.current !== null) return true
-  for (const r of computeds) if (r.current !== null) return true
+  for (const r of computeds)
+    if (r.current !== null) {
+      if (hasActiveResponders(r.current)) {
+        return true
+      }
+    }
 
   return false
 }

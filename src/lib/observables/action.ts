@@ -54,7 +54,7 @@ export class ActionState {
   reactions = new Set<RefObject<UnorderedResponder>>()
   components = new Map<string, RefObject<$Component>>()
 
-  constructor(public runningResponder: Responder | null) {}
+  constructor(public runningResponder: Responder<unknown> | null) {}
 
   add(notifier: Notifier) {
     for (const r of notifier.computeds) {

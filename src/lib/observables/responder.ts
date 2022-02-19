@@ -1,6 +1,7 @@
 import {globalStack} from './global-stack'
 import {$Component} from './$component'
 import {RefObject} from '../util/ref'
+import {Computed} from './computed/computed'
 
 /*
 A Responder is an object that listens accesses to notifiers (observables). When these
@@ -17,7 +18,7 @@ export enum ResponderType {
   component,
 }
 
-export type Responder = $Component | UnorderedResponder
+export type Responder<T> = $Component | Computed<T> | AutoRun | Reaction<T>
 
 export interface OrderedResponder {
   responderType: ResponderType
@@ -67,7 +68,7 @@ export function $AutoRun(f: () => void): F0 {
 }
 
 class Reaction<T> implements UnorderedResponder {
-  responderType = ResponderType.reaction
+  responderType = ResponderType.reaction as const
   ordered = false as const
   value: T
 

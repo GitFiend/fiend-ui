@@ -5,7 +5,7 @@ import {Computed} from './computed/computed'
 import {RefObject} from '../util/ref'
 
 export class GlobalStack {
-  private responderStack: Responder[] = []
+  private responderStack: Responder<any>[] = []
   private actionStack: ActionState | null = null
   private actionDepth = 0
 
@@ -13,7 +13,7 @@ export class GlobalStack {
   We put a responder on a stack so that notifiers can register themselves
   with the current responder.
    */
-  pushResponder(responder: Responder): void {
+  pushResponder(responder: Responder<any>): void {
     this.responderStack.push(responder)
   }
 
@@ -21,7 +21,7 @@ export class GlobalStack {
     this.responderStack.pop()
   }
 
-  getCurrentResponder(): Responder | null {
+  getCurrentResponder(): Responder<any> | null {
     const len = this.responderStack.length
 
     if (len > 0) {
