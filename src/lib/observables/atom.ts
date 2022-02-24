@@ -21,14 +21,6 @@ export class Atom<T> implements Notifier {
       this.addCallingResponderToOurList(responder)
     }
 
-    // TODO: Need/possible to clean up here?
-
-    // console.log(
-    //   {hasContext},
-    //   this.name,
-    //   this.computeds.size + this.components.size + this.reactions.size
-    // )
-
     return this.value
   }
 
@@ -36,12 +28,30 @@ export class Atom<T> implements Notifier {
     if (this.value !== value) {
       this.value = value
 
-      notify(this)
+      if (this.hasActiveResponders()) {
+        notify(this)
+      } else {
+        this.deactivateAndClear()
+      }
     }
   }
 
   hasActiveResponders(): boolean {
     return hasActiveResponders(this)
+  }
+
+  deactivateAndClear(): void {
+    const {computeds, reactions, components} = this
+
+    reactions.clear()
+    components.clear()
+
+    for (const c of computeds) {
+      if (c.current !== null) {
+        c.current.deactivateAndClear()
+      }
+    }
+    computeds.clear()
   }
 
   addCallingResponderToOurList(responder: Responder<unknown>): void {
