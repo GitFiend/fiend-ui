@@ -1,13 +1,13 @@
 //
 
 export function time(name: string): void {
-  if (__DEV__) {
+  if (__DEV__ && typeof window !== 'undefined') {
     performance.mark(`${name} start`)
   }
 }
 
 export function timeEnd(name: string): void {
-  if (__DEV__) {
+  if (__DEV__ && typeof window !== 'undefined') {
     performance.mark(`${name} end`)
     performance.measure(name, `${name} start`, `${name} end`)
   }
