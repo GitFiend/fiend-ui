@@ -1,7 +1,7 @@
 import {$Reaction} from '../responder'
 
 // Wait for an observable to change with a promise.
-export function $Change<S, K extends keyof S>(
+export function $Change<S, K extends keyof S & `$${string}`>(
   store: S,
   observableName: K
 ): Promise<S[K]> {
