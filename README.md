@@ -13,17 +13,18 @@ I built this library to replace React in GitFiend because I needed something tha
 
 ```ts
 export class Store {
-   constructor() {
-      makeObservable(this)
-   }
+  constructor() {
+    // Converts and fields starting with '$' into observables.
+    makeObservable(this)
+  }
 
-   // '$' as first character creates an observable.
-   $num = 2
+  // '$' as first character creates an observable.
+  $num = 2
 
-   // '$' as first character makes this getter a computed.
-   get $square() {
-     return this.$num * this.$num
-   }
+  // '$' as first character makes this getter a computed.
+  get $square() {
+    return this.$num ** 2
+  }
 }
 
 interface MyComponentProps {
@@ -33,20 +34,21 @@ interface MyComponentProps {
 // A $Component automatically updates when any observable or computed it
 // uses is updated.
 export class MyComponent extends $Component<MyComponentProps> {
-   render() {
-      const {$num, $square} = this.props.store;
+  render() {
+    const {$num, $square} = this.props.store
 
-      return (
-         Div({className: "MyComponent", children: [
-            `Square of ${$num} equals ${$square}.`,
-            Button({children: ['increment'], onclick: this.onClickIncrement})
-         ]})
-      );
-   }
+    return Div({
+      className: 'MyComponent',
+      children: [
+        `Square of ${$num} equals ${$square}.`,
+        Button({children: ['increment'], onclick: this.onClickIncrement}),
+      ],
+    })
+  }
 
-   onClickIncrement = () => {
-      this.props.store.$num++
-   }
+  onClickIncrement = () => {
+    this.props.store.$num++
+  }
 }
 ```
 
