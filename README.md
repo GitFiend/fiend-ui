@@ -2,19 +2,20 @@
 
 Small UI library (~15kb) heavily inspired by React and Mobx that I use in both GitFiend and the GitFiend website.
 
-I built this library to replace React in GitFiend because I needed something that both scales and performs better for complex and interactive UI.
+After spending 100s of hours optimising React code I got tired of how difficult it was. This library makes it a lot
+simpler to make awesome dynamic UI.
 
 ### Features:
 
-- Familiar declarative component style.
-- Deep reactivity:
-  Modify an observable variable anywhere and any component that is using it is automatically and efficiently updated.
-- Client side rendering only.
+- Familiar declarative component style
+- Fast and lightweight
+- Easy and efficient state sharing between components:
+  Modify a variable anywhere and any component that is using it is automatically and efficiently updated.
 
 ```ts
-export class Store {
+class Store {
   constructor() {
-    // Converts and fields starting with '$' into observables.
+    // Converts any fields starting with '$' into observables.
     makeObservable(this)
   }
 
@@ -27,13 +28,11 @@ export class Store {
   }
 }
 
-interface MyComponentProps {
+// A $Component renders when any observable or computed it
+// uses from anywhere is updated.
+class MyComponent extends $Component<{
   store: Store
-}
-
-// A $Component automatically updates when any observable or computed it
-// uses is updated.
-export class MyComponent extends $Component<MyComponentProps> {
+}> {
   render() {
     const {$num, $square} = this.props.store
 
@@ -41,20 +40,27 @@ export class MyComponent extends $Component<MyComponentProps> {
       className: 'MyComponent',
       children: [
         `Square of ${$num} equals ${$square}.`,
-        Button({children: ['increment'], onclick: this.onClickIncrement}),
+        Button({children: ['increment'], onclick: this.onClick}),
       ],
     })
   }
 
-  onClickIncrement = () => {
+  onClick = () => {
     this.props.store.$num++
   }
 }
 ```
 
+#### Setup Root
+```ts
+const store = new Store()
+
+render(MyComponent.$({store}), document.getElementById('root'))
+```
+
 ### Usage
 
-I currently use this as part of a monorepo and simply reference the exports in "index.ts".
+I currently use this by cloning this repo and importing from "index.ts".
 
 ### Development
 
