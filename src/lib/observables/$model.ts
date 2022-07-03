@@ -1,6 +1,7 @@
 import {Atom} from './atom'
 import {Computed} from './computed/computed'
 import {globalStack} from './global-stack'
+import {$AutoRun, $Reaction, F0} from './responder'
 
 export type Constructor = {new (...args: any[]): {}}
 
@@ -75,4 +76,42 @@ export function getObservableUntracked<T, K extends keyof T>(object: T, key: K):
 
   // @ts-ignore
   return object[untrackedKey].value
+}
+
+export class $Model {
+  protected disposers: F0[] = []
+
+  constructor() {
+    if (__DEV__) {
+      setTimeout(() => {
+        // @ts-ignore
+        if (!Boolean(this.connected)) {
+          console.error(
+            `super.connect() wasn't called in the constructor of ${this.constructor.name}. This is require for $Model to work.`
+          )
+        }
+      })
+    }
+  }
+
+  connect() {
+    makeObservable(this)
+
+    if (__DEV__) {
+      // @ts-ignore
+      this.connected = true
+    }
+  }
+
+  $AutoRun(f: () => void) {
+    this.disposers.push($AutoRun(f))
+  }
+
+  $Reaction<T>(calc: () => T, f: (result: T) => void) {
+    this.disposers.push($Reaction(calc, f))
+  }
+
+  disposeReactions(): void {
+    this.disposers.forEach(d => d())
+  }
 }
