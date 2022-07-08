@@ -95,7 +95,7 @@ export class $Model {
   }
 
   connect() {
-    makeObservable(this)
+    makeObservableInner(this, this.constructor as Constructor)
 
     if (__DEV__) {
       // @ts-ignore
