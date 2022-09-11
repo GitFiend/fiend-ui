@@ -1,4 +1,3 @@
-import {HTMLAttributes} from 'react'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {Rec} from '../pure-component'
 import {Button} from './host-components'
@@ -12,7 +11,7 @@ describe('setAttributesFromProps', () => {
 
     parent.appendChild(div)
 
-    const props: HTMLAttributes<HTMLDivElement> = {
+    const props: Partial<HTMLDivElement> = {
       className: 'simple',
     }
 
@@ -29,7 +28,7 @@ describe('updateAttributes', () => {
 
     parent.appendChild(div)
 
-    const props: HTMLAttributes<HTMLDivElement> = {
+    const props: Partial<HTMLDivElement> = {
       className: 'simple',
     }
 
@@ -37,7 +36,7 @@ describe('updateAttributes', () => {
 
     expect(parent.innerHTML).toEqual('<div class="simple"></div>')
 
-    const newProps: HTMLAttributes<HTMLDivElement> = {
+    const newProps: Partial<HTMLDivElement> = {
       id: 'simple',
     }
 
@@ -54,7 +53,7 @@ describe('handling of undefined props', () => {
 
     parent.appendChild(div)
 
-    const props: HTMLAttributes<HTMLDivElement> = {
+    const props: Partial<HTMLDivElement> = {
       id: undefined,
     }
 
@@ -69,7 +68,7 @@ describe('handling of undefined props', () => {
 
     parent.appendChild(div)
 
-    const props: HTMLAttributes<HTMLDivElement> = {
+    const props: Partial<HTMLDivElement> = {
       id: 'simple',
     }
 
@@ -77,7 +76,7 @@ describe('handling of undefined props', () => {
 
     expect(parent.innerHTML).toEqual('<div id="simple"></div>')
 
-    const newProps: HTMLAttributes<HTMLDivElement> = {
+    const newProps: Partial<HTMLDivElement> = {
       id: undefined,
     }
 
