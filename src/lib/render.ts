@@ -66,7 +66,6 @@ export class Render {
     }
 
     for (const c of prevComponents.values()) c.remove()
-    // for (const [, c] of prevComponents) c.remove()
 
     return newComponents
   }

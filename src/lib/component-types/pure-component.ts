@@ -71,7 +71,6 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     if (!equalProps(this.props, props)) {
       this.props = props
       this.update()
-      // this.componentDidUpdate()
       RunStack.componentDidUpdateStack.push(this._ref)
     }
   }
@@ -92,19 +91,19 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 
   mount() {
     this.update()
-    // this.componentDidMount()
     RunStack.componentDidMountStack.push(this._ref)
   }
 
   removed = false
 
   remove(): void {
+    if (__DEV__ && this.removed) {
+      console.error('already removed')
+    }
     this.componentWillUnmount()
 
     for (const c of this.subComponents.values()) c.remove()
-    // for (const [, c] of this.subComponents) c.remove()
     this.subComponents.clear()
-
     this.removed = true
   }
 
@@ -141,7 +140,6 @@ export function renderCustom<P extends StandardProps>(
       prevTree.index = index
       prevTree.order = newOrder
 
-      // for (const [, c] of prevTree.subComponents) {
       for (const c of prevTree.subComponents.values()) {
         const no = Order.key(prevTree.order, c.index)
 
