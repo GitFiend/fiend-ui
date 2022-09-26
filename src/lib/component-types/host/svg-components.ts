@@ -4,17 +4,8 @@ import {ElementNamespace, ElementType, SvgElement} from '../../util/element'
 /** @deprecated as this approach doesn't work well for Svg */
 export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
   tagName: N
-): (props: SvgElementAttributes<N> | string) => SvgElement {
+): (props: SvgElementAttributes<N>) => SvgElement {
   return props => {
-    if (typeof props === 'string')
-      return {
-        elementType: ElementType.host,
-        _type: tagName,
-        namespace: ElementNamespace.svg,
-        props: {
-          children: [props],
-        },
-      }
     return {
       elementType: ElementType.host,
       _type: tagName,
@@ -56,23 +47,24 @@ export type PolygonAttributes = Omit<SvgElementAttributes<'polygon'>, 'points'> 
   fill?: string
 }
 
-export const svg = makeSvgElementConstructor('svg') as (
+export const Svg = makeSvgElementConstructor('svg') as (
   ...args: [SvgAttributes] | FiendNode[]
 ) => FiendElement
-export const polyline = makeSvgElementConstructor('polyline') as (
+export const Polyline = makeSvgElementConstructor('polyline') as (
   ...args: [PolyLineAttributes] | FiendNode[]
 ) => FiendElement
-export const polygon = makeSvgElementConstructor('polygon') as (
+export const Polygon = makeSvgElementConstructor('polygon') as (
   ...args: [PolygonAttributes] | FiendNode[]
 ) => FiendElement
-export const circle = makeSvgElementConstructor('circle') as any
-export const title = makeSvgElementConstructor('title')
-export const g = makeSvgElementConstructor('g')
+export const Circle = makeSvgElementConstructor('circle') as any
+export const Title = makeSvgElementConstructor('title')
+export const G = makeSvgElementConstructor('g')
 
-export const line = makeSvgElementConstructor2<{
+export const Line = makeSvgElementConstructor2<{
   x1?: number
   x2?: number
   y1?: number
   y2?: number
   stroke?: string
+  style?: string
 }>('line')

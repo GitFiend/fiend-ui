@@ -18,11 +18,8 @@ export type HostAttributes<N extends keyof HTMLElementTagNameMap> = Omit<
   key?: string
   style?: string
   ref?: RefObject<HTMLElementTagNameMap[N]>
-  'aria-selected'?: boolean
   'aria-labelledby'?: string
-  'aria-checked'?: 'true' | 'false' | 'mixed' | boolean
   'aria-describedby'?: string
-  'aria-modal'?: boolean
   role?: 'tab' | 'dialog' | 'checkbox' | 'button'
   children?: FiendNode[]
 }
