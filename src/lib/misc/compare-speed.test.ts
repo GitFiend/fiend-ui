@@ -210,7 +210,7 @@ describe('reaction scope', () => {
   test('init reaction', () => {
     let i = 0
 
-    const a = $AutoRun(() => {
+    const disposer = $AutoRun(() => {
       i = n()
       count++
     })
@@ -219,7 +219,7 @@ describe('reaction scope', () => {
     n(n() + 1)
     expect(count).toEqual(2)
 
-    a()
+    disposer()
   })
 
   test('out of scope', () => {

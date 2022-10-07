@@ -45,6 +45,7 @@ export abstract class $Component<P extends {} = {}>
     // this._ref = {current: null}
 
     this.disposers.forEach(d => d())
+    this.disposers = []
     super.remove()
   }
 
