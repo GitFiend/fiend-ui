@@ -1,6 +1,5 @@
 import {
   addCallingResponderToOurList,
-  clearNotifier,
   hasActiveResponders,
   Notifier,
   notify,

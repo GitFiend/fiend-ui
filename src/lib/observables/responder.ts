@@ -59,7 +59,6 @@ class AutoRun implements UnorderedResponder {
 
   end: F0 = () => {
     this._ref.current = null
-    // this._ref = {current: null}
   }
 }
 

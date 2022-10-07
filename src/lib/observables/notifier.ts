@@ -51,12 +51,6 @@ export function notify(notifier: Notifier): void {
   }
 }
 
-export function clearNotifier({computeds, reactions, components}: Notifier): void {
-  computeds.clear()
-  reactions.clear()
-  components.clear()
-}
-
 export function hasActiveResponders({
   reactions,
   components,

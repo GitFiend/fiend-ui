@@ -1,7 +1,7 @@
 import {Div} from './component-types/host/host-components'
 import {render} from './render'
 import {$Component} from './observables/$component'
-import {model} from './observables/$model'
+import {$Model} from './observables/$model'
 import {PureComponent} from './component-types/pure-component'
 import {FiendNode} from './util/element'
 
@@ -39,9 +39,13 @@ describe('render', () => {
   })
 
   test('update observables', () => {
-    @model
-    class S {
+    class S extends $Model {
       $a = true
+
+      constructor() {
+        super()
+        super.connect()
+      }
     }
 
     class A extends PureComponent {

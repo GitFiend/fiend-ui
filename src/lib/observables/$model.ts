@@ -9,17 +9,6 @@ export function makeObservable(object: Object) {
   makeObservableInner(object, object.constructor as Constructor)
 }
 
-/** @deprecated decorator */
-export function model<T extends Constructor>(constructor: T) {
-  return class extends constructor {
-    constructor(...args: any[]) {
-      super(...args)
-
-      makeObservableInner(this, constructor)
-    }
-  }
-}
-
 export function makeObservableInner(object: Object, Con: Constructor) {
   for (const key in object) {
     if (key.startsWith('$')) {
@@ -112,6 +101,7 @@ export class $Model {
   }
 
   disposeReactions(): void {
-    this.disposers.forEach(d => d())
+    for (const d of this.disposers) d()
+    this.disposers = []
   }
 }
