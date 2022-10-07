@@ -25,14 +25,14 @@ export interface OrderedResponder {
   ordered: true
   order: string
   run(): void
-  _ref: RefObject<$Component>
+  // _ref: RefObject<$Component>
 }
 
 export interface UnorderedResponder {
   responderType: ResponderType
   ordered: false
   run(): void
-  _ref: RefObject<UnorderedResponder>
+  // _ref: RefObject<UnorderedResponder>
 }
 
 export type F0 = () => void
@@ -41,16 +41,18 @@ class AutoRun implements UnorderedResponder {
   responderType = ResponderType.autoRun as const
   ordered = false as const
 
-  _ref: RefObject<this> = {
-    current: this,
-  }
+  // _ref: RefObject<this> = {
+  //   current: this,
+  // }
+
+  stopped = false
 
   constructor(public f: () => void) {
     this.run()
   }
 
   run() {
-    if (this._ref.current === null) return
+    // if (this._ref.current === null) return
 
     globalStack.pushResponder(this)
     this.f()
@@ -58,7 +60,8 @@ class AutoRun implements UnorderedResponder {
   }
 
   end: F0 = () => {
-    this._ref.current = null
+    this.stopped = true
+    // this._ref.current = null
   }
 }
 
@@ -71,9 +74,10 @@ class Reaction<T> implements UnorderedResponder {
   ordered = false as const
   value: T
 
-  _ref: RefObject<this> = {
-    current: this,
-  }
+  stopped = false
+  // _ref: RefObject<this> = {
+  //   current: this,
+  // }
 
   constructor(private calc: () => T, private f: (result: T) => void) {
     globalStack.pushResponder(this)
@@ -82,7 +86,8 @@ class Reaction<T> implements UnorderedResponder {
   }
 
   run(): void {
-    if (this._ref.current === null) return
+    if (this.stopped) return
+    // if (this._ref.current === null) return
 
     globalStack.pushResponder(this)
     const value = this.calc()
@@ -96,7 +101,8 @@ class Reaction<T> implements UnorderedResponder {
   }
 
   end: F0 = () => {
-    this._ref.current = null
+    this.stopped = true
+    // this._ref.current = null
     // this._ref = {current: null}
   }
 }

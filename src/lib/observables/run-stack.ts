@@ -4,13 +4,12 @@ import {OArray} from '../util/o-array'
 import {RootComponent} from '../component-types/root-component'
 import {HostComponent} from '../component-types/host/host-component'
 import {applyInserts} from '../util/order'
-import {RefObject} from '../util/ref'
 import {PureComponent} from '../..'
 import {time, timeEnd} from '../util/measure'
 
 export class RunStack {
-  static computeds = new Set<RefObject<UnorderedResponder>>()
-  static reactions = new Set<RefObject<UnorderedResponder>>()
+  static computeds = new Set<UnorderedResponder>()
+  static reactions = new Set<UnorderedResponder>()
   static components: $Component[] = []
 
   private static running = false
@@ -18,33 +17,46 @@ export class RunStack {
   static insertsStack = new Set<RootComponent | HostComponent>()
   static removeStack = new Set<Element | Text>()
 
-  static componentDidMountStack: RefObject<PureComponent>[] = []
-  static componentDidUpdateStack: RefObject<PureComponent>[] = []
-
-  // static depth = 0
+  static componentDidMountStack: PureComponent[] = []
+  static componentDidUpdateStack: PureComponent[] = []
 
   static runResponders(
-    computeds: Set<RefObject<UnorderedResponder>>,
-    reactions: Set<RefObject<UnorderedResponder>>,
-    components: Map<string, RefObject<$Component>>
+    computeds: Set<UnorderedResponder>,
+    reactions: Set<UnorderedResponder>,
+    components: Map<string, $Component>
   ) {
-    // this.depth++
-    // console.log('depth: ', this.depth)
-
-    // for (const [, c] of components) {
     for (const c of components.values()) {
-      if (c.current !== null) OArray.insert(this.components, c.current)
+      OArray.insert(this.components, c)
     }
-    for (const o of computeds) {
-      if (o.current !== null) this.computeds.add(o)
+    for (const c of computeds) {
+      this.computeds.add(c)
     }
-    for (const o of reactions) {
-      if (o.current !== null) this.reactions.add(o)
+    for (const r of reactions) {
+      this.reactions.add(r)
     }
 
     this.run()
+  }
 
-    // this.depth--
+  static runRefResponders(
+    computeds: Set<WeakRef<UnorderedResponder>>,
+    reactions: Set<WeakRef<UnorderedResponder>>,
+    components: Map<string, WeakRef<$Component>>
+  ) {
+    for (const cRef of components.values()) {
+      const c = cRef.deref()
+      if (c) OArray.insert(this.components, c)
+    }
+    for (const cRef of computeds) {
+      const c = cRef.deref()
+      if (c) this.computeds.add(c)
+    }
+    for (const rRef of reactions) {
+      const r = rRef.deref()
+      if (r) this.reactions.add(r)
+    }
+
+    this.run()
   }
 
   static run() {
@@ -54,16 +66,14 @@ export class RunStack {
       time('😈Reactions')
       while (this.computeds.size > 0 || this.reactions.size > 0) {
         while (this.computeds.size > 0) {
-          const computed = this.computeds.values().next()
-            .value as RefObject<UnorderedResponder>
+          const computed: UnorderedResponder = this.computeds.values().next().value
           this.computeds.delete(computed)
-          computed.current?.run()
+          computed.run()
         }
         while (this.reactions.size > 0) {
-          const reaction = this.reactions.values().next()
-            .value as RefObject<UnorderedResponder>
+          const reaction: UnorderedResponder = this.reactions.values().next().value
           this.reactions.delete(reaction)
-          reaction.current?.run()
+          reaction.run()
         }
       }
       timeEnd('😈Reactions')
@@ -85,11 +95,11 @@ export class RunStack {
       time('😈Mount/Update')
       while (this.componentDidMountStack.length > 0) {
         const ref = this.componentDidMountStack.shift()
-        ref?.current?.componentDidMount()
+        ref?.componentDidMount()
       }
       while (this.componentDidUpdateStack.length > 0) {
         const ref = this.componentDidUpdateStack.shift()
-        ref?.current?.componentDidUpdate()
+        ref?.componentDidUpdate()
       }
       timeEnd('😈Mount/Update')
 

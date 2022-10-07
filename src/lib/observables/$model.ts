@@ -67,11 +67,21 @@ export function getObservableUntracked<T, K extends keyof T>(object: T, key: K):
   return object[untrackedKey].value
 }
 
+const modelRegister = new FinalizationRegistry((message: string) => {
+  console.log(message)
+})
+
+let id = 0
+
 export class $Model {
   protected disposers: F0[] = []
 
+  id = id++
+
   constructor() {
     if (__DEV__) {
+      modelRegister.register(this, `Cleaned up model ${this.id}`)
+
       setTimeout(() => {
         // @ts-ignore
         if (!Boolean(this.connected)) {
@@ -101,7 +111,74 @@ export class $Model {
   }
 
   disposeReactions(): void {
+    console.log(`disposeReactions ${this.id}`)
     for (const d of this.disposers) d()
     this.disposers = []
   }
 }
+
+// export class $Model2 {
+//   protected disposers: F0[] = []
+//   protected stores: $Model2[] = []
+//
+//   constructor(protected parent: $Model2) {
+//     if (__DEV__) {
+//       setTimeout(() => {
+//         // @ts-ignore
+//         if (!Boolean(this.connected)) {
+//           console.error(
+//             `super.connect() wasn't called in the constructor of ${this.constructor.name}. This is require for $Model to work.`
+//           )
+//         }
+//       })
+//     }
+//   }
+//
+//   connect() {
+//     makeObservableInner(this, this.constructor as Constructor)
+//
+//     if (__DEV__) {
+//       // @ts-ignore
+//       this.connected = true
+//     }
+//   }
+//
+//   $AutoRun(f: () => void) {
+//     this.disposers.push($AutoRun(f))
+//   }
+//
+//   $Reaction<T>(calc: () => T, f: (result: T) => void) {
+//     this.disposers.push($Reaction(calc, f))
+//   }
+//
+//   disposeReactions(): void {
+//     for (const s of this.stores) s.disposeReactions()
+//     for (const d of this.disposers) d()
+//   }
+// }
+
+// class MyStore extends $Model2 {}
+//
+// const storeRoot = new $Model2({} as any)
+//
+// new MyStore(storeRoot)
+
+// class M {
+//   protected disposers: F0[] = []
+//   protected subStores: M[] = []
+//
+//   constructor(protected parent: M) {
+//     parent.subStores.push(this)
+//   }
+//
+//   cleanup() {
+//     this.subStores.forEach(s => s.cleanup())
+//     this.disposers.forEach(d => d())
+//   }
+// }
+//
+// class A extends M {
+//   constructor(parent: M) {
+//     super(parent)
+//   }
+// }

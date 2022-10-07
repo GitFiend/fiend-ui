@@ -39,18 +39,18 @@ export class GlobalStack {
     return false
   }
 
-  // "Inside reactive context"
-  insideNonComputedResponder(): boolean {
-    return this.responderStack.some(r => r.responderType !== ResponderType.computed)
-  }
+  // // "Inside reactive context"
+  // insideNonComputedResponder(): boolean {
+  //   return this.responderStack.some(r => r.responderType !== ResponderType.computed)
+  // }
 
   /*
   We don't wait till the end of an action before running a computed if accessed as
   computeds need to always return the correct value.
    */
-  runComputedNowIfInActionStack(computed: RefObject<Computed<unknown>>): boolean {
+  runComputedNowIfInActionStack(computed: Computed<unknown>): boolean {
     if (this.actionStack?.computeds.delete(computed) === true) {
-      computed.current?.run()
+      computed.run()
       return true
     }
     return false

@@ -11,7 +11,6 @@ import {time, timeEnd} from '../util/measure'
 import {Order} from '../util/order'
 import {HostComponent} from './host/host-component'
 import {RootComponent} from './root-component'
-import {RefObject} from '../util/ref'
 import {RunStack} from '../observables/run-stack'
 
 export interface Rec {
@@ -29,9 +28,9 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 
   subComponents = new Map<string, AnyComponent>()
 
-  _ref: RefObject<this> = {
-    current: this,
-  }
+  // _ref: RefObject<this> = {
+  //   current: this,
+  // }
 
   constructor(
     props: P,
@@ -71,7 +70,7 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     if (!equalProps(this.props, props)) {
       this.props = props
       this.update()
-      RunStack.componentDidUpdateStack.push(this._ref)
+      RunStack.componentDidUpdateStack.push(this)
     }
   }
 
@@ -91,7 +90,7 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
 
   mount() {
     this.update()
-    RunStack.componentDidMountStack.push(this._ref)
+    RunStack.componentDidMountStack.push(this)
   }
 
   removed = false

@@ -6,13 +6,12 @@ import {
   notify,
 } from './notifier'
 import {$Component} from './$component'
-import {RefObject} from '../util/ref'
 import {Computed} from './computed/computed'
 
 export class Atom<T> implements Notifier {
-  computeds = new Set<RefObject<Computed<unknown>>>()
-  reactions = new Set<RefObject<UnorderedResponder>>()
-  components = new Map<string, RefObject<$Component>>()
+  computeds = new Set<WeakRef<Computed<unknown>>>()
+  reactions = new Set<WeakRef<UnorderedResponder>>()
+  components = new Map<string, WeakRef<$Component>>()
 
   constructor(public value: T, public name: string) {}
 
@@ -46,9 +45,11 @@ export class Atom<T> implements Notifier {
     reactions.clear()
     components.clear()
 
-    for (const c of computeds) {
-      if (c.current !== null) {
-        c.current.deactivateAndClear()
+    for (const cRef of computeds) {
+      const c = cRef.deref()
+
+      if (c) {
+        c.deactivateAndClear()
       }
     }
     computeds.clear()

@@ -7,22 +7,23 @@ import {
 import {globalStack} from '../global-stack'
 import {Responder, ResponderType, UnorderedResponder} from '../responder'
 import {$Component} from '../$component'
-import {RefObject} from '../../util/ref'
 
 export class Computed<T> implements UnorderedResponder, Notifier {
   responderType = ResponderType.computed as const
   ordered = false as const
 
   // Things we call when this computed updates.
-  computeds = new Set<RefObject<Computed<unknown>>>()
-  reactions = new Set<RefObject<UnorderedResponder>>()
-  components = new Map<string, RefObject<$Component>>()
+  computeds = new Set<WeakRef<Computed<unknown>>>()
+  reactions = new Set<WeakRef<UnorderedResponder>>()
+  components = new Map<string, WeakRef<$Component>>()
 
   value: T | unknown
 
-  _ref: RefObject<this> = {
-    current: null,
-  }
+  // _ref: RefObject<this> = {
+  //   current: null,
+  // }
+
+  stopped = true
 
   constructor(public f: () => T, public name: string) {}
 
@@ -31,7 +32,7 @@ export class Computed<T> implements UnorderedResponder, Notifier {
 
     if (active) {
       this.runFunction(true)
-    } else if (this._ref.current !== null) {
+    } else if (!this.stopped) {
       this.deactivateAndClear()
     }
   }
@@ -41,17 +42,18 @@ export class Computed<T> implements UnorderedResponder, Notifier {
       this.addCallingResponderToOurList(responder)
     }
 
-    const previouslyDeactivated = this._ref.current === null
+    const previouslyDeactivated = this.stopped
     const active = this.hasActiveResponders()
 
     if (previouslyDeactivated) {
       if (active) {
-        this._ref.current = this
+        this.stopped = false
+        //   this._ref.current = this
       }
       this.runFunction(false)
     } else {
       if (active) {
-        globalStack.runComputedNowIfInActionStack(this._ref)
+        globalStack.runComputedNowIfInActionStack(this)
       } else {
         this.deactivateAndClear()
       }
@@ -83,22 +85,25 @@ export class Computed<T> implements UnorderedResponder, Notifier {
   }
 
   deactivateAndClear(): void {
-    this._ref.current = null
+    // this._ref.current = null
+    this.stopped = true
 
     const {computeds, reactions, components} = this
 
     reactions.clear()
     components.clear()
 
-    for (const c of computeds) {
-      if (c.current !== null) {
-        c.current.deactivateAndClear()
+    for (const cRef of computeds) {
+      const c = cRef.deref()
+      if (c) {
+        c.deactivateAndClear()
       }
     }
     computeds.clear()
   }
 
   isMarkedActive(): boolean {
-    return this._ref.current !== null
+    return !this.stopped
+    // return this._ref.current !== null
   }
 }

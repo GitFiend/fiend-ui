@@ -3,7 +3,6 @@ import {Responder, UnorderedResponder} from './responder'
 import {Notifier} from './notifier'
 import {$Component} from './$component'
 import {RunStack} from './run-stack'
-import {RefObject} from '../util/ref'
 
 type FunctionWithoutPromise<T> = T extends () => Promise<void> ? never : T
 
@@ -50,21 +49,26 @@ An Action lets us batch our notifiers.
 
  */
 export class ActionState {
-  computeds = new Set<RefObject<UnorderedResponder>>()
-  reactions = new Set<RefObject<UnorderedResponder>>()
-  components = new Map<string, RefObject<$Component>>()
+  computeds = new Set<UnorderedResponder>()
+  reactions = new Set<UnorderedResponder>()
+  components = new Map<string, $Component>()
 
   constructor(public runningResponder: Responder<unknown> | null) {}
 
   add(notifier: Notifier) {
-    for (const r of notifier.computeds) {
-      if (r.current !== this.runningResponder) this.computeds.add(r)
+    for (const cRef of notifier.computeds) {
+      const c = cRef.deref()
+      if (c && c !== this.runningResponder) this.computeds.add(c)
     }
-    for (const r of notifier.reactions) {
-      if (r.current !== this.runningResponder) this.reactions.add(r)
+    for (const rRef of notifier.reactions) {
+      const r = rRef.deref()
+      if (r && r !== this.runningResponder) this.reactions.add(r)
     }
-    for (const [key, r] of notifier.components) {
-      if (r.current !== this.runningResponder) this.components.set(key, r)
+
+    // TODO: Can we avoid the array creation here? is r.deref().key === key?
+    for (const [key, rRef] of notifier.components) {
+      const r = rRef.deref()
+      if (r && r !== this.runningResponder) this.components.set(key, r)
     }
 
     if (notifier.computeds.size > 0) {

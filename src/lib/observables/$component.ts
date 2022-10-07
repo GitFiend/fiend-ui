@@ -4,6 +4,10 @@ import {F0, OrderedResponder, ResponderType} from './responder'
 import {makeObservable} from './$model'
 import {RunStack} from './run-stack'
 
+// const registerFinalizer = new FinalizationRegistry((message: any) => {
+//   console.log(message)
+// })
+
 export abstract class $Component<P extends {} = {}>
   extends PureComponent<P>
   implements OrderedResponder
@@ -13,17 +17,21 @@ export abstract class $Component<P extends {} = {}>
   ordered = true as const
   disposers: F0[] = []
 
+  deactivated = false
+
   mount() {
+    // registerFinalizer.register(this, '$Component done')
     makeObservable(this)
 
     this.update()
-    RunStack.componentDidMountStack.push(this._ref)
+    RunStack.componentDidMountStack.push(this)
   }
 
   run() {
-    if (this._ref.current === null) {
-      return
-    }
+    if (this.deactivated) return
+    // if (this._ref.current === null) {
+    //   return
+    // }
 
     if (__FIEND_DEV__) {
       console.debug('run', this.constructor.name)
@@ -31,7 +39,7 @@ export abstract class $Component<P extends {} = {}>
 
     this.update()
 
-    RunStack.componentDidUpdateStack.push(this._ref)
+    RunStack.componentDidUpdateStack.push(this)
   }
 
   update() {
@@ -41,7 +49,9 @@ export abstract class $Component<P extends {} = {}>
   }
 
   remove(): void {
-    this._ref.current = null
+    this.deactivated = true
+    console.log('remove')
+    // this._ref.current = null
     // this._ref = {current: null}
 
     this.disposers.forEach(d => d())
