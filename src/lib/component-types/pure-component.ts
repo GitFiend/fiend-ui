@@ -67,6 +67,7 @@ export abstract class PureComponent<P = {}> implements ComponentBase {
     }
   }
 
+  // noinspection JSUnusedGlobalSymbols
   updateWithNewProps(props: PropsWithChildren<P>): void {
     if (!equalProps(this.props, props)) {
       this.props = props

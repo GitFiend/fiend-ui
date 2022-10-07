@@ -42,9 +42,8 @@ export abstract class $Component<P extends {} = {}>
 
   remove(): void {
     this._ref.current = null
-    // this._ref = {current: null}
 
-    this.disposers.forEach(d => d())
+    for (const d of this.disposers) d()
     this.disposers = []
     super.remove()
   }

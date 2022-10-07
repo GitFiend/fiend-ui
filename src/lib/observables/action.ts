@@ -63,8 +63,13 @@ export class ActionState {
     for (const r of notifier.reactions) {
       if (r.current !== this.runningResponder) this.reactions.add(r)
     }
-    for (const [key, r] of notifier.components) {
-      if (r.current !== this.runningResponder) this.components.set(key, r)
+    // for (const [order, r] of notifier.components) {
+    //   if (r.current !== this.runningResponder) this.components.set(order, r)
+    // }
+    for (const c of notifier.components.values()) {
+      if (c.current && c.current !== this.runningResponder) {
+        this.components.set(c.current?.order, c)
+      }
     }
 
     if (notifier.computeds.size > 0) {
