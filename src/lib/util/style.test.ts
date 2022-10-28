@@ -1,4 +1,4 @@
-import {c, mc, s} from './style'
+import {c, s} from './style'
 
 describe('s - tagged style string template function', () => {
   const text = 'width: 50px; height: 2px;'
@@ -59,3 +59,15 @@ describe('class merging', () => {
     console.timeEnd('mc')
   })
 })
+
+function mc(initialClass: string, mapping: Record<string, boolean>): string {
+  let classes = ''
+
+  for (const key in mapping) {
+    if (mapping.hasOwnProperty(key) && mapping[key] === true) {
+      classes += ' ' + key
+    }
+  }
+
+  return initialClass + classes
+}
