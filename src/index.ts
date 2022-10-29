@@ -1,7 +1,7 @@
 export {$RunInAction, $Action, $AsyncAction} from './lib/observables/action'
 export * from './lib/component-types/host/host-component-types'
 export {render} from './lib/render'
-export {createRef} from './lib/util/ref'
+export {createRef, RefObject} from './lib/util/ref'
 export * from './lib/component-types/host/host-components'
 export {PureComponent} from './lib/component-types/pure-component'
 export {$Component} from './lib/observables/$component'
