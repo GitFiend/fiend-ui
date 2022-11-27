@@ -6,6 +6,8 @@ export function s(
   return literals.map((str, i) => str + (placeholders[i] ?? '')).join('')
 }
 
+export const t = s
+
 export function c(names: TemplateStringsArray, ...flags: boolean[]): string {
   if (names.length === 1) return names[0]
 
