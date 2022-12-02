@@ -22,6 +22,8 @@ export const Button = makeHtmlElementConstructor('button')
 export const Canvas = makeHtmlElementConstructor('canvas')
 export const Form = makeHtmlElementConstructor('form')
 export const Input = makeHtmlElementConstructor('input')
+export const DataList = makeHtmlElementConstructor('datalist')
+export const Option = makeHtmlElementConstructor('option')
 export const Textarea = makeHtmlElementConstructor('textarea')
 export const Label = makeHtmlElementConstructor('label')
 
