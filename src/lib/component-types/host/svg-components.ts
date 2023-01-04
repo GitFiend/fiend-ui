@@ -15,7 +15,7 @@ export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
   }
 }
 
-export function makeSvgElementConstructor2<Props extends StandardProps>(
+export function makeSvgElementConstructor2<Props extends StandardProps & object>(
   tagName: keyof SVGElementTagNameMap
 ): (props: Props) => SvgElement {
   return props => {

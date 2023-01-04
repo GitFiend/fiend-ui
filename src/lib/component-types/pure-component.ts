@@ -21,7 +21,7 @@ export interface Rec {
 export type PropsWithChildren<T> = T & StandardProps
 
 // P = {} to simply prop type definitions.
-export abstract class PureComponent<P extends StandardProps = {}>
+export abstract class PureComponent<P extends StandardProps & object = {}>
   implements ComponentBase
 {
   _type = ComponentType.custom as const
@@ -192,14 +192,17 @@ function makeCustomComponent<P extends StandardProps>(
   return component
 }
 
-export function equalProps(a: Rec, b: Rec): boolean {
+export function equalProps(a: object, b: object): boolean {
   const aKeys = Object.keys(a)
   const bKeys = Object.keys(b)
 
   if (aKeys.length !== bKeys.length) return false
 
   // We should only need to loop over aKeys since the length must be the same.
-  for (const key of aKeys) if (a[key] !== b[key]) return false
+  for (const key of aKeys) {
+    // @ts-ignore
+    if (a[key] !== b[key]) return false
+  }
 
   return true
 }

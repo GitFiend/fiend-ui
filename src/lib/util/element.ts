@@ -3,7 +3,7 @@ import type {CustomComponent} from '../component-types/pure-component'
 export interface StandardProps {
   children?: FiendNode[]
   key?: string
-  [prop: string]: unknown
+  // [prop: string]: unknown
 }
 
 // export interface ChildProps {

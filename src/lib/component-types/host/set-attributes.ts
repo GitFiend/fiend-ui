@@ -3,17 +3,19 @@ import {RefObject} from '../../util/ref'
 import {ElementNamespace, StandardProps} from '../../util/element'
 
 // This should only be called the first time or if previous props were null.
-export function setAttributesFromProps(
+export function setAttributesFromProps<P extends StandardProps>(
   element: Element,
   namespace: ElementNamespace,
-  props: StandardProps
+  props: P
 ): void {
   const attributes = Object.keys(props)
 
   for (const attr of attributes) {
+    // @ts-ignore
     const value = props[attr]
 
     if (value !== undefined) {
+      // @ts-ignore
       setAttribute(element, namespace, attr, props[attr])
     }
   }
@@ -22,8 +24,8 @@ export function setAttributesFromProps(
 export function updateAttributes(
   element: Element,
   namespace: ElementNamespace,
-  newProps: Rec,
-  oldProps: Rec | null
+  newProps: object,
+  oldProps: object | null
 ): void {
   if (oldProps === null) {
     setAttributesFromProps(element, namespace, newProps)
@@ -36,14 +38,16 @@ export function updateAttributes(
 function updateAttrInner(
   element: Element,
   namespace: ElementNamespace,
-  newProps: Rec,
-  oldProps: Rec
+  newProps: object,
+  oldProps: object
 ): void {
   const newKeys = Object.keys(newProps)
   const oldKeys = Object.keys(oldProps)
 
   for (const key of newKeys) {
+    // @ts-ignore
     const oldValue = oldProps[key]
+    // @ts-ignore
     const newValue = newProps[key]
 
     if (newValue === undefined) continue
@@ -59,7 +63,9 @@ function updateAttrInner(
   }
 
   for (const key of oldKeys) {
+    // @ts-ignore
     const oldValue = oldProps[key]
+    // @ts-ignore
     const newValue = newProps[key]
 
     if (newValue === undefined && oldValue !== undefined) {

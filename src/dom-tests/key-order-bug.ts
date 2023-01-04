@@ -36,7 +36,11 @@ class Element extends PureComponent<{text: string}> {
   }
 }
 
-class ElementInner extends PureComponent<{text: string}> {
+interface Props {
+  text: string
+}
+
+class ElementInner extends PureComponent<Props> {
   render() {
     const {text} = this.props
 
