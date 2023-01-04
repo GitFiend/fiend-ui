@@ -1,12 +1,12 @@
 import {Rec} from '../pure-component'
 import {RefObject} from '../../util/ref'
-import {ElementNamespace} from '../../util/element'
+import {ElementNamespace, StandardProps} from '../../util/element'
 
 // This should only be called the first time or if previous props were null.
 export function setAttributesFromProps(
   element: Element,
   namespace: ElementNamespace,
-  props: Rec
+  props: StandardProps
 ): void {
   const attributes = Object.keys(props)
 

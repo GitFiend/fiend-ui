@@ -1,4 +1,4 @@
-import {FiendElement, FiendNode, SvgElementAttributes} from '../../..'
+import {FiendElement, FiendNode, StandardProps, SvgElementAttributes} from '../../..'
 import {ElementNamespace, ElementType, SvgElement} from '../../util/element'
 
 /** @deprecated as this approach doesn't work well for Svg */
@@ -15,7 +15,7 @@ export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
   }
 }
 
-export function makeSvgElementConstructor2<Props>(
+export function makeSvgElementConstructor2<Props extends StandardProps>(
   tagName: keyof SVGElementTagNameMap
 ): (props: Props) => SvgElement {
   return props => {

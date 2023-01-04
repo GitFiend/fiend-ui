@@ -21,7 +21,9 @@ export interface Rec {
 export type PropsWithChildren<T> = T & StandardProps
 
 // P = {} to simply prop type definitions.
-export abstract class PureComponent<P = {}> implements ComponentBase {
+export abstract class PureComponent<P extends StandardProps = {}>
+  implements ComponentBase
+{
   _type = ComponentType.custom as const
   props: PropsWithChildren<P>
   order: string
