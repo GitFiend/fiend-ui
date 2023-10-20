@@ -36,7 +36,7 @@ export class HostComponent<P extends StandardProps = {}> {
     public props: P,
     public parentHost: HostComponent | RootComponent,
     directParent: ParentComponent,
-    public index: number
+    public index: number,
   ) {
     this.order = Order.key(directParent.order, index)
     this.key = this.props.key ?? directParent.key + index
@@ -44,7 +44,7 @@ export class HostComponent<P extends StandardProps = {}> {
     if (namespace === ElementNamespace.svg) {
       this.element = document.createElementNS(
         'http://www.w3.org/2000/svg',
-        tag
+        tag,
       ) as ElementNameMap[this['tag']]
     } else {
       this.element = document.createElement(tag) as ElementNameMap[this['tag']]
@@ -79,7 +79,6 @@ export class HostComponent<P extends StandardProps = {}> {
 
     if (this.subComponents.size > 0) {
       // This is required so that observer components don't keep updating.
-      // for (const [, c] of this.subComponents) c.remove()
       for (const c of this.subComponents.values()) c.remove()
       this.subComponents.clear()
     }
@@ -89,12 +88,12 @@ export class HostComponent<P extends StandardProps = {}> {
 }
 
 // TODO: prevTree.children? parent.children? Seems there might be a bug here.
-export function renderHost<P extends StandardProps = {}>(
+export function renderHost(
   tree: HostElement | SvgElement,
   prevTree: AnyComponent | null,
   parentHost: RootComponent | HostComponent,
   directParent: ParentComponent,
-  index: number
+  index: number,
 ): HostComponent {
   const {_type, namespace, props} = tree
 

@@ -39,7 +39,8 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
     props: P,
     public parentHost: HostComponent | RootComponent,
     directParent: ParentComponent,
-    public index: number
+    // TODO: Is this safe? It doesn't get updated? So could be reassigned accidentally?
+    public index: number,
   ) {
     this.props = props
     this.order = Order.key(directParent.order, index)
@@ -61,7 +62,7 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
       this.parentHost,
       this,
       Array.isArray(res) ? res : [res],
-      this.subComponents
+      this.subComponents,
     )
 
     if (__DEV__) {
@@ -112,7 +113,7 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
 
   static $<T extends PureComponent>(
     this: new (...args: never[]) => T,
-    props: T['props']
+    props: T['props'],
   ): CustomElement {
     return {
       _type: this as any,
@@ -127,7 +128,7 @@ export function renderCustom<P extends StandardProps>(
   prevTree: AnyComponent | null,
   parentHost: HostComponent | RootComponent,
   directParent: ParentComponent,
-  index: number
+  index: number,
 ) {
   const {_type, props} = tree
 
@@ -176,7 +177,7 @@ export type CustomComponent<P extends StandardProps> = new <P>(
   props: P,
   parentHost: HostComponent | RootComponent,
   directParent: ParentComponent,
-  index: number
+  index: number,
 ) => PureComponent
 
 function makeCustomComponent<P extends StandardProps>(
@@ -184,7 +185,7 @@ function makeCustomComponent<P extends StandardProps>(
   props: P,
   parentHost: HostComponent | RootComponent,
   directParent: ParentComponent,
-  index: number
+  index: number,
 ) {
   const component = new cons<P>(props, parentHost, directParent, index)
   component.mount()

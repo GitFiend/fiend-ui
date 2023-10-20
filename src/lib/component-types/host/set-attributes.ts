@@ -1,4 +1,3 @@
-import {Rec} from '../pure-component'
 import {RefObject} from '../../util/ref'
 import {ElementNamespace, StandardProps} from '../../util/element'
 
@@ -6,7 +5,7 @@ import {ElementNamespace, StandardProps} from '../../util/element'
 export function setAttributesFromProps<P extends StandardProps>(
   element: Element,
   namespace: ElementNamespace,
-  props: P
+  props: P,
 ): void {
   const attributes = Object.keys(props)
 
@@ -25,7 +24,7 @@ export function updateAttributes(
   element: Element,
   namespace: ElementNamespace,
   newProps: object,
-  oldProps: object | null
+  oldProps: object | null,
 ): void {
   if (oldProps === null) {
     setAttributesFromProps(element, namespace, newProps)
@@ -39,7 +38,7 @@ function updateAttrInner(
   element: Element,
   namespace: ElementNamespace,
   newProps: object,
-  oldProps: object
+  oldProps: object,
 ): void {
   const newKeys = Object.keys(newProps)
   const oldKeys = Object.keys(oldProps)
@@ -79,7 +78,7 @@ function setAttribute(
   element: Element,
   namespace: ElementNamespace,
   attr: string,
-  value: any
+  value: any,
 ): void {
   switch (attr) {
     case 'key':
