@@ -15,7 +15,7 @@ export enum ComponentType {
 
 export interface ComponentBase {
   _type: ComponentType
-  parentHost: DomComponent | RootComponent
+  domParent: DomComponent | RootComponent
   order: string
 
   // Remove the component and run cleanup. Not necessarily related to element removal.

@@ -1,5 +1,5 @@
 import {AnyComponent, ParentComponent} from './component-types/base-component'
-import {DomComponent, renderHost} from './component-types/host/dom-component'
+import {DomComponent, renderDom} from './component-types/host/dom-component'
 import {renderTextComponent} from './component-types/text-component'
 import {PureComponent, renderCustom} from './component-types/pure-component'
 import {RootComponent} from './component-types/root-component'
@@ -37,7 +37,7 @@ export class Render {
     index: number,
   ): DomComponent | PureComponent {
     if (tree.elementType === ElementType.dom) {
-      return renderHost(tree, prevTree, parentHost, directParent, index)
+      return renderDom(tree, prevTree, parentHost, directParent, index)
     } else {
       return renderCustom(tree, prevTree, parentHost, directParent, index)
     }

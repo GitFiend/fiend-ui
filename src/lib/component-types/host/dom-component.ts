@@ -88,39 +88,39 @@ export class DomComponent<P extends StandardProps = {}> {
 }
 
 // TODO: prevTree.children? parent.children? Seems there might be a bug here.
-export function renderHost(
+export function renderDom(
   tree: HostElement | SvgElement,
-  prevTree: AnyComponent | null,
-  parentHost: RootComponent | DomComponent,
+  prev: AnyComponent | null,
+  domParent: RootComponent | DomComponent,
   directParent: ParentComponent,
   index: number,
 ): DomComponent {
   const {_type, namespace, props} = tree
 
-  if (prevTree === null) {
-    return new DomComponent(_type, namespace, props, parentHost, directParent, index)
+  if (prev === null) {
+    return new DomComponent(_type, namespace, props, domParent, directParent, index)
   }
 
-  if (prevTree._type === ComponentType.host && prevTree.tag === _type) {
+  if (prev._type === ComponentType.host && prev.tag === _type) {
+    const prevOrder = prev.order
     const newOrder = Order.key(directParent.order, index)
-    const prevOrder = prevTree.order
 
     if (prevOrder !== newOrder) {
-      prevTree.index = index
-      prevTree.order = newOrder
+      prev.index = index
+      prev.order = newOrder
 
-      parentHost.moveChild(prevTree)
+      domParent.moveChild(prev)
     }
 
-    updateAttributes(prevTree.element, namespace, props, prevTree.props)
-    prevTree.props = props
-    prevTree.renderSubtrees(props.children ?? [])
+    updateAttributes(prev.element, namespace, props, prev.props)
+    prev.props = props
+    prev.renderSubtrees(props.children ?? [])
 
-    return prevTree
+    return prev
   } else {
     // Type has changed. Remove it.
-    prevTree.remove()
+    prev.remove()
 
-    return new DomComponent(_type, namespace, props, parentHost, directParent, index)
+    return new DomComponent(_type, namespace, props, domParent, directParent, index)
   }
 }

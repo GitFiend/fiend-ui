@@ -37,7 +37,7 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
 
   constructor(
     props: P,
-    public parentHost: DomComponent | RootComponent,
+    public domParent: DomComponent | RootComponent,
     directParent: ParentComponent,
     // TODO: Is this safe? It doesn't get updated? So could be reassigned accidentally?
     public index: number,
@@ -59,7 +59,7 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
     const res = this.render()
 
     this.subComponents = Render.subComponents(
-      this.parentHost,
+      this.domParent,
       this,
       Array.isArray(res) ? res : [res],
       this.subComponents,

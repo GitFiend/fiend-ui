@@ -16,7 +16,7 @@ export class TextComponent implements ComponentBase {
 
   constructor(
     public text: string,
-    public parentHost: DomComponent | RootComponent,
+    public domParent: DomComponent | RootComponent,
     directParent: ParentComponent,
     public index: number,
   ) {
@@ -26,45 +26,45 @@ export class TextComponent implements ComponentBase {
     this.order = order
     this.element = document.createTextNode(text)
 
-    parentHost.insertChild(this)
+    domParent.insertChild(this)
   }
 
   remove(): void {
-    this.parentHost.removeChild(this)
+    this.domParent.removeChild(this)
   }
 }
 
 export function renderTextComponent(
   text: string,
-  prevTree: AnyComponent | null,
+  prev: AnyComponent | null,
   domParent: DomComponent | RootComponent,
   directParent: ParentComponent,
   index: number,
 ): TextComponent {
-  if (prevTree === null) {
+  if (prev === null) {
     return new TextComponent(text, domParent, directParent, index)
   }
 
-  if (prevTree._type === ComponentType.text) {
-    const prevOrder = prevTree.order
+  if (prev._type === ComponentType.text) {
+    const prevOrder = prev.order
     const newOrder = Order.key(directParent.order, index)
 
     if (prevOrder !== newOrder) {
-      prevTree.index = index
-      prevTree.order = newOrder
+      prev.index = index
+      prev.order = newOrder
 
-      domParent.moveChild(prevTree)
+      domParent.moveChild(prev)
     }
 
-    if (prevTree.text === text) {
-      return prevTree
+    if (prev.text === text) {
+      return prev
     } else {
-      prevTree.element.nodeValue = text
-      prevTree.text = text
-      return prevTree
+      prev.element.nodeValue = text
+      prev.text = text
+      return prev
     }
   }
 
-  prevTree.remove()
+  prev.remove()
   return new TextComponent(text, domParent, directParent, index)
 }
