@@ -1,5 +1,5 @@
 import {PureComponent} from './pure-component'
-import {Div} from './host/host-components'
+import {Div} from './host/dom-components'
 import {FiendNode} from '../..'
 import {mkRoot} from '../../dom-tests/test-helpers'
 
@@ -20,7 +20,7 @@ describe('test re-rendering keyed lists', () => {
             Div({
               children: [s],
               key: s,
-            })
+            }),
           )
         }
 
@@ -61,7 +61,7 @@ describe('test re-rendering keyed lists', () => {
           elements.push(
             Div({
               children: [s],
-            })
+            }),
           )
         }
 
@@ -125,7 +125,7 @@ describe('test re-rendering keyed lists', () => {
             DivC.$({
               text: s,
               key: s,
-            })
+            }),
           )
         }
 

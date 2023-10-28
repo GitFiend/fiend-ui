@@ -1,5 +1,5 @@
 import {$F} from './fragment'
-import {Div} from './host/host-components'
+import {Div} from './host/dom-components'
 import {$Component} from '../..'
 import {makeObservable} from '../..'
 import {mkRoot} from '../../dom-tests/test-helpers'
@@ -42,7 +42,7 @@ describe('fragment', () => {
     root.render(t)
 
     expect(root.element.innerHTML).toEqual(
-      '<div>a</div><div>b</div><div>c</div><div>d</div>'
+      '<div>a</div><div>b</div><div>c</div><div>d</div>',
     )
 
     t = $F(Div('d'), Div('a'), Div('b'), Div('c'))
@@ -50,7 +50,7 @@ describe('fragment', () => {
     root.render(t)
 
     expect(root.element.innerHTML).toEqual(
-      '<div>d</div><div>a</div><div>b</div><div>c</div>'
+      '<div>d</div><div>a</div><div>b</div><div>c</div>',
     )
   })
 

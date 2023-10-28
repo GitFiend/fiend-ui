@@ -9,7 +9,7 @@ import {
 import {Render} from '../render'
 import {time, timeEnd} from '../util/measure'
 import {Order} from '../util/order'
-import {HostComponent} from './host/host-component'
+import {DomComponent} from './host/dom-component'
 import {RootComponent} from './root-component'
 import {RefObject} from '../util/ref'
 import {RunStack} from '../observables/run-stack'
@@ -37,7 +37,7 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
 
   constructor(
     props: P,
-    public parentHost: HostComponent | RootComponent,
+    public parentHost: DomComponent | RootComponent,
     directParent: ParentComponent,
     // TODO: Is this safe? It doesn't get updated? So could be reassigned accidentally?
     public index: number,
@@ -58,7 +58,7 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
     }
     const res = this.render()
 
-    this.subComponents = Render.subtrees(
+    this.subComponents = Render.subComponents(
       this.parentHost,
       this,
       Array.isArray(res) ? res : [res],
@@ -126,7 +126,7 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
 export function renderCustom<P extends StandardProps>(
   tree: CustomElement,
   prevTree: AnyComponent | null,
-  parentHost: HostComponent | RootComponent,
+  parentHost: DomComponent | RootComponent,
   directParent: ParentComponent,
   index: number,
 ) {
@@ -175,7 +175,7 @@ export function renderCustom<P extends StandardProps>(
 
 export type CustomComponent<P extends StandardProps> = new <P>(
   props: P,
-  parentHost: HostComponent | RootComponent,
+  parentHost: DomComponent | RootComponent,
   directParent: ParentComponent,
   index: number,
 ) => PureComponent
@@ -183,7 +183,7 @@ export type CustomComponent<P extends StandardProps> = new <P>(
 function makeCustomComponent<P extends StandardProps>(
   cons: CustomComponent<P>,
   props: P,
-  parentHost: HostComponent | RootComponent,
+  parentHost: DomComponent | RootComponent,
   directParent: ParentComponent,
   index: number,
 ) {

@@ -5,7 +5,7 @@ import {
   ParentComponent,
 } from './base-component'
 import {Order} from '../util/order'
-import {HostComponent} from './host/host-component'
+import {DomComponent} from './host/dom-component'
 import {RootComponent} from './root-component'
 
 export class TextComponent implements ComponentBase {
@@ -16,9 +16,9 @@ export class TextComponent implements ComponentBase {
 
   constructor(
     public text: string,
-    public parentHost: HostComponent | RootComponent,
+    public parentHost: DomComponent | RootComponent,
     directParent: ParentComponent,
-    public index: number
+    public index: number,
   ) {
     const order = Order.key(directParent.order, index)
 
@@ -37,12 +37,12 @@ export class TextComponent implements ComponentBase {
 export function renderTextComponent(
   text: string,
   prevTree: AnyComponent | null,
-  parentHost: HostComponent | RootComponent,
+  domParent: DomComponent | RootComponent,
   directParent: ParentComponent,
-  index: number
+  index: number,
 ): TextComponent {
   if (prevTree === null) {
-    return new TextComponent(text, parentHost, directParent, index)
+    return new TextComponent(text, domParent, directParent, index)
   }
 
   if (prevTree._type === ComponentType.text) {
@@ -53,7 +53,7 @@ export function renderTextComponent(
       prevTree.index = index
       prevTree.order = newOrder
 
-      parentHost.moveChild(prevTree)
+      domParent.moveChild(prevTree)
     }
 
     if (prevTree.text === text) {
@@ -66,5 +66,5 @@ export function renderTextComponent(
   }
 
   prevTree.remove()
-  return new TextComponent(text, parentHost, directParent, index)
+  return new TextComponent(text, domParent, directParent, index)
 }

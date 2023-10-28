@@ -3,11 +3,11 @@ import {ElementNamespace, ElementType, SvgElement} from '../../util/element'
 
 /** @deprecated as this approach doesn't work well for Svg */
 export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
-  tagName: N
+  tagName: N,
 ): (props: SvgElementAttributes<N>) => SvgElement {
   return props => {
     return {
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       _type: tagName,
       namespace: ElementNamespace.svg,
       props,
@@ -16,11 +16,11 @@ export function makeSvgElementConstructor<N extends keyof SVGElementTagNameMap>(
 }
 
 export function makeSvgElementConstructor2<Props extends StandardProps & object>(
-  tagName: keyof SVGElementTagNameMap
+  tagName: keyof SVGElementTagNameMap,
 ): (props: Props) => SvgElement {
   return props => {
     return {
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       _type: tagName,
       namespace: ElementNamespace.svg,
       props,

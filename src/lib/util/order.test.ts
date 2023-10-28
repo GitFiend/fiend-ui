@@ -1,5 +1,5 @@
 import {Order} from './order'
-import {HostComponent} from '../component-types/host/host-component'
+import {DomComponent} from '../component-types/host/dom-component'
 import {ElementNamespace} from './element'
 import {ElementComponent} from '../component-types/base-component'
 import {RunStack} from '../observables/run-stack'
@@ -18,27 +18,27 @@ describe('Order.add comparisons', () => {
 describe('insert', () => {
   const root = mkRoot()
 
-  const parent = new HostComponent('div', ElementNamespace.html, {}, root, root, 0)
+  const parent = new DomComponent('div', ElementNamespace.html, {}, root, root, 0)
   RunStack.run()
   const {inserted} = parent
 
   test('try different insert indices', () => {
-    new HostComponent('div', ElementNamespace.html, {}, parent, parent, 3)
+    new DomComponent('div', ElementNamespace.html, {}, parent, parent, 3)
     RunStack.run()
     expect(inserted.map(i => i.order)).toEqual(['103'])
     checkOrder(inserted)
 
-    new HostComponent('div', ElementNamespace.html, {}, parent, parent, 4)
+    new DomComponent('div', ElementNamespace.html, {}, parent, parent, 4)
     RunStack.run()
     expect(inserted.map(i => i.order)).toEqual(['103', '104'])
     checkOrder(inserted)
 
-    new HostComponent('div', ElementNamespace.html, {}, parent, parent, 1)
+    new DomComponent('div', ElementNamespace.html, {}, parent, parent, 1)
     RunStack.run()
     expect(inserted.map(i => i.order)).toEqual(['101', '103', '104'])
     checkOrder(inserted)
 
-    new HostComponent('div', ElementNamespace.html, {}, parent, parent, 2)
+    new DomComponent('div', ElementNamespace.html, {}, parent, parent, 2)
     RunStack.run()
     expect(inserted.map(i => i.order)).toEqual(['101', '102', '103', '104'])
     checkOrder(inserted)

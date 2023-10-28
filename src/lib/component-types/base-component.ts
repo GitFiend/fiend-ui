@@ -1,11 +1,11 @@
-import {HostComponent} from './host/host-component'
+import {DomComponent} from './host/dom-component'
 import {TextComponent} from './text-component'
 import {PureComponent} from './pure-component'
 import {RootComponent} from './root-component'
 
-export type AnyComponent = HostComponent | TextComponent | PureComponent
-export type ParentComponent = PureComponent | RootComponent | HostComponent
-export type ElementComponent = HostComponent | TextComponent
+export type AnyComponent = DomComponent | TextComponent | PureComponent
+export type ParentComponent = PureComponent | RootComponent | DomComponent
+export type ElementComponent = DomComponent | TextComponent
 
 export enum ComponentType {
   host,
@@ -15,7 +15,7 @@ export enum ComponentType {
 
 export interface ComponentBase {
   _type: ComponentType
-  parentHost: HostComponent | RootComponent
+  parentHost: DomComponent | RootComponent
   order: string
 
   // Remove the component and run cleanup. Not necessarily related to element removal.

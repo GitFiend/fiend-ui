@@ -1,6 +1,6 @@
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
 import {Rec} from '../pure-component'
-import {Button} from './host-components'
+import {Button} from './dom-components'
 import {render} from '../../render'
 import {ElementNamespace} from '../../util/element'
 

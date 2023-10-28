@@ -1,4 +1,4 @@
-import {Div} from './component-types/host/host-components'
+import {Div} from './component-types/host/dom-components'
 import {render} from './render'
 import {$Component} from './observables/$component'
 import {$Model} from './observables/$model'

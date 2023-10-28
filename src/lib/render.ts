@@ -1,5 +1,5 @@
 import {AnyComponent, ParentComponent} from './component-types/base-component'
-import {HostComponent, renderHost} from './component-types/host/host-component'
+import {DomComponent, renderHost} from './component-types/host/dom-component'
 import {renderTextComponent} from './component-types/text-component'
 import {PureComponent, renderCustom} from './component-types/pure-component'
 import {RootComponent} from './component-types/root-component'
@@ -29,25 +29,25 @@ class RenderManager {
 const renderManager = new RenderManager()
 
 export class Render {
-  static tree(
+  static component(
     tree: FiendElement,
     prevTree: AnyComponent | null,
-    parentHost: HostComponent | RootComponent,
+    parentHost: DomComponent | RootComponent,
     directParent: ParentComponent,
-    index: number
-  ): HostComponent | PureComponent {
-    if (tree.elementType === ElementType.host) {
+    index: number,
+  ): DomComponent | PureComponent {
+    if (tree.elementType === ElementType.dom) {
       return renderHost(tree, prevTree, parentHost, directParent, index)
     } else {
       return renderCustom(tree, prevTree, parentHost, directParent, index)
     }
   }
 
-  static subtrees(
-    parentHost: HostComponent | RootComponent,
+  static subComponents(
+    parentHost: DomComponent | RootComponent,
     directParent: ParentComponent,
     children: FiendNode[],
-    prevComponents: Map<string, AnyComponent>
+    prevComponents: Map<string, AnyComponent>,
   ): Map<string, AnyComponent> {
     const newComponents = new Map<string, AnyComponent>()
 
@@ -61,7 +61,14 @@ export class Render {
       const child = children[i]
 
       if (child !== null) {
-        this.subtree(parentHost, directParent, child, prevComponents, newComponents, i)
+        this.subComponent(
+          parentHost,
+          directParent,
+          child,
+          prevComponents,
+          newComponents,
+          i,
+        )
       }
     }
 
@@ -70,13 +77,13 @@ export class Render {
     return newComponents
   }
 
-  private static subtree(
-    parentHost: HostComponent | RootComponent,
+  private static subComponent(
+    parentHost: DomComponent | RootComponent,
     directParent: ParentComponent,
     subtree: FiendElement | string,
     prevChildren: Map<string, AnyComponent>,
     newChildren: Map<string, AnyComponent>,
-    index: number
+    index: number,
   ): AnyComponent {
     if (typeof subtree === 'string') {
       const key = index.toString()
@@ -86,7 +93,7 @@ export class Render {
         prevChildren.get(key) ?? null,
         parentHost,
         directParent,
-        index
+        index,
       )
       prevChildren.delete(key)
       newChildren.set(key, s)
@@ -94,12 +101,12 @@ export class Render {
     }
 
     const key: string = subtree.props.key ?? index.toString()
-    const s = this.tree(
+    const s = this.component(
       subtree,
       prevChildren.get(key) ?? null,
       parentHost,
       directParent,
-      index
+      index,
     )
     prevChildren.delete(key)
     newChildren.set(key, s)

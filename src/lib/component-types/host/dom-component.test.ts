@@ -1,4 +1,4 @@
-import {Div} from './host-components'
+import {Div} from './dom-components'
 import {PureComponent} from '../pure-component'
 import {FiendNode} from '../../..'
 import {ElementNamespace, ElementType} from '../../util/element'
@@ -9,7 +9,7 @@ describe('div renders', () => {
     const el = Div({children: []})
 
     expect(el).toEqual({
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       _type: 'div',
       namespace: ElementNamespace.html,
       props: {children: []},
@@ -20,7 +20,7 @@ describe('div renders', () => {
     const el = Div('hello')
 
     expect(el).toEqual({
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       _type: 'div',
       namespace: ElementNamespace.html,
       props: {children: ['hello']},
@@ -31,7 +31,7 @@ describe('div renders', () => {
     const el = Div({className: 'hi'})
 
     expect(el).toEqual({
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       _type: 'div',
       namespace: ElementNamespace.html,
       props: {className: 'hi'},
@@ -42,7 +42,7 @@ describe('div renders', () => {
     const el = Div({className: 'hi', children: ['hello']})
 
     expect(el).toEqual({
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       _type: 'div',
       namespace: ElementNamespace.html,
       props: {className: 'hi', children: ['hello']},
@@ -53,7 +53,7 @@ describe('div renders', () => {
     const el = Div({children: ['hello', 'hello']})
 
     expect(el).toEqual({
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       _type: 'div',
       namespace: ElementNamespace.html,
       props: {children: ['hello', 'hello']},

@@ -1,4 +1,4 @@
-import {Div, H1, P} from './component-types/host/host-components'
+import {Div, H1, P} from './component-types/host/dom-components'
 import {ElementNamespace, ElementType} from './util/element'
 
 // const numLoops = 300000
@@ -15,7 +15,7 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'h1',
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       namespace: ElementNamespace.html,
       props: {children: ['Heading']},
     })
@@ -26,13 +26,13 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'div',
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       namespace: ElementNamespace.html,
       props: {
         children: [
           {
             _type: 'h1',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['Heading'],
@@ -40,7 +40,7 @@ describe('create element', () => {
           },
           {
             _type: 'p',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['paragraph'],
@@ -56,13 +56,13 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'div',
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       namespace: ElementNamespace.html,
       props: {
         children: [
           {
             _type: 'div',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['1'],
@@ -70,7 +70,7 @@ describe('create element', () => {
           },
           {
             _type: 'div',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['2'],
@@ -78,7 +78,7 @@ describe('create element', () => {
           },
           {
             _type: 'div',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['3'],
@@ -94,13 +94,13 @@ describe('create element', () => {
 
     expect(d).toEqual({
       _type: 'div',
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       namespace: ElementNamespace.html,
       props: {
         children: [
           {
             _type: 'h1',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['Heading'],
@@ -108,7 +108,7 @@ describe('create element', () => {
           },
           {
             _type: 'div',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['1'],
@@ -116,7 +116,7 @@ describe('create element', () => {
           },
           {
             _type: 'div',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['2'],
@@ -124,7 +124,7 @@ describe('create element', () => {
           },
           {
             _type: 'div',
-            elementType: ElementType.host,
+            elementType: ElementType.dom,
             namespace: ElementNamespace.html,
             props: {
               children: ['3'],

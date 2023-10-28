@@ -6,7 +6,7 @@ import {
 } from '../base-component'
 import {Render} from '../../render'
 import {setAttributesFromProps, updateAttributes} from './set-attributes'
-import {ElementNameMap} from './host-component-types'
+import {ElementNameMap} from './dom-component-types'
 import {Order} from '../../util/order'
 import {TextComponent} from '../text-component'
 import {RootComponent} from '../root-component'
@@ -18,7 +18,7 @@ import {
   SvgElement,
 } from '../../util/element'
 
-export class HostComponent<P extends StandardProps = {}> {
+export class DomComponent<P extends StandardProps = {}> {
   _type = ComponentType.host as const
   element: ElementNameMap[this['tag']]
   order: string
@@ -34,7 +34,7 @@ export class HostComponent<P extends StandardProps = {}> {
     public tag: keyof ElementNameMap,
     public namespace: ElementNamespace,
     public props: P,
-    public parentHost: HostComponent | RootComponent,
+    public domParent: DomComponent | RootComponent,
     directParent: ParentComponent,
     public index: number,
   ) {
@@ -54,28 +54,28 @@ export class HostComponent<P extends StandardProps = {}> {
 
     this.renderSubtrees(props.children ?? [])
 
-    parentHost.insertChild(this)
+    domParent.insertChild(this)
   }
 
   renderSubtrees(children: FiendNode[]) {
-    this.subComponents = Render.subtrees(this, this, children, this.subComponents)
+    this.subComponents = Render.subComponents(this, this, children, this.subComponents)
   }
 
   // What if our sub component has lots of elements to insert?
-  insertChild(child: HostComponent | TextComponent) {
+  insertChild(child: DomComponent | TextComponent) {
     Order.insert(this, child)
   }
 
-  moveChild(child: HostComponent | TextComponent) {
+  moveChild(child: DomComponent | TextComponent) {
     Order.move(this, child)
   }
 
-  removeChild(child: HostComponent | TextComponent): void {
+  removeChild(child: DomComponent | TextComponent): void {
     Order.remove(this, child)
   }
 
   remove(): void {
-    this.parentHost.removeChild(this)
+    this.domParent.removeChild(this)
 
     if (this.subComponents.size > 0) {
       // This is required so that observer components don't keep updating.
@@ -91,14 +91,14 @@ export class HostComponent<P extends StandardProps = {}> {
 export function renderHost(
   tree: HostElement | SvgElement,
   prevTree: AnyComponent | null,
-  parentHost: RootComponent | HostComponent,
+  parentHost: RootComponent | DomComponent,
   directParent: ParentComponent,
   index: number,
-): HostComponent {
+): DomComponent {
   const {_type, namespace, props} = tree
 
   if (prevTree === null) {
-    return new HostComponent(_type, namespace, props, parentHost, directParent, index)
+    return new DomComponent(_type, namespace, props, parentHost, directParent, index)
   }
 
   if (prevTree._type === ComponentType.host && prevTree.tag === _type) {
@@ -121,6 +121,6 @@ export function renderHost(
     // Type has changed. Remove it.
     prevTree.remove()
 
-    return new HostComponent(_type, namespace, props, parentHost, directParent, index)
+    return new DomComponent(_type, namespace, props, parentHost, directParent, index)
   }
 }

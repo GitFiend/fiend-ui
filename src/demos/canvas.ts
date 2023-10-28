@@ -1,7 +1,7 @@
 import {PureComponent} from '../lib/component-types/pure-component'
 import {createRef} from '../lib/util/ref'
 import {render} from '../lib/render'
-import {Canvas} from '../lib/component-types/host/host-components'
+import {Canvas} from '../lib/component-types/host/dom-components'
 import {s} from '../lib/util/style'
 
 interface TextCanvasProps {
@@ -49,7 +49,7 @@ function drawBoxes(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  top: number
+  top: number,
 ) {
   // console.time('draw boxes')
   ctx.clearRect(0, 0, width, height)
@@ -72,7 +72,7 @@ function drawBox(
   x: number,
   y: number,
   w: number,
-  h: number
+  h: number,
 ) {
   ctx.rect(x, y, w, h)
 
@@ -85,7 +85,7 @@ export function canvasTest(root: HTMLElement) {
 
   render(
     TextCanvas.$({width: window.innerWidth, height: window.innerHeight}),
-    document.body
+    document.body,
   )
 
   console.timeEnd('render')
@@ -94,7 +94,7 @@ export function canvasTest(root: HTMLElement) {
 export function getCanvasContext(
   canvas: HTMLCanvasElement,
   width: number,
-  height: number
+  height: number,
 ): CanvasRenderingContext2D | null {
   const scale = window.devicePixelRatio
 

@@ -1,4 +1,4 @@
-import {Div} from '../lib/component-types/host/host-components'
+import {Div} from '../lib/component-types/host/dom-components'
 import {FiendNode} from '../lib/util/element'
 import {PureComponent} from '../lib/component-types/pure-component'
 
@@ -17,7 +17,7 @@ export class ScaleElements extends PureComponent<{position: number}> {
         Element.$({
           text,
           key: text,
-        })
+        }),
       )
     }
 

@@ -2,7 +2,7 @@ import {UnorderedResponder} from './responder'
 import {$Component} from './$component'
 import {OArray} from '../util/o-array'
 import {RootComponent} from '../component-types/root-component'
-import {HostComponent} from '../component-types/host/host-component'
+import {DomComponent} from '../component-types/host/dom-component'
 import {applyInserts} from '../util/order'
 import {RefObject} from '../util/ref'
 import {PureComponent} from '../..'
@@ -15,7 +15,7 @@ export class RunStack {
 
   private static running = false
 
-  static insertsStack = new Set<RootComponent | HostComponent>()
+  static insertsStack = new Set<RootComponent | DomComponent>()
   static removeStack = new Set<Element | Text>()
 
   static componentDidMountStack: RefObject<PureComponent>[] = []
@@ -26,7 +26,7 @@ export class RunStack {
   static runResponders(
     computeds: Set<RefObject<UnorderedResponder>>,
     reactions: Set<RefObject<UnorderedResponder>>,
-    components: Map<string, RefObject<$Component>>
+    components: Map<string, RefObject<$Component>>,
   ) {
     // this.depth++
     // console.log('depth: ', this.depth)

@@ -1,4 +1,4 @@
-import {HostComponent} from '../component-types/host/host-component'
+import {DomComponent} from '../component-types/host/dom-component'
 import {RootComponent} from '../component-types/root-component'
 import {ElementComponent} from '../component-types/base-component'
 import {RunStack} from '../observables/run-stack'
@@ -23,7 +23,7 @@ import {RunStack} from '../observables/run-stack'
 //   }
 // }
 
-export function applyInserts(parent: RootComponent | HostComponent): void {
+export function applyInserts(parent: RootComponent | DomComponent): void {
   const {inserted, siblings, element} = parent
 
   const len = inserted.length
@@ -57,7 +57,7 @@ export class Order {
     return parentOrder + String.fromCharCode(index + 48)
   }
 
-  static insert(parent: RootComponent | HostComponent, child: ElementComponent): void {
+  static insert(parent: RootComponent | DomComponent, child: ElementComponent): void {
     const {inserted} = parent
     const {order, key} = child
 
@@ -91,7 +91,7 @@ export class Order {
     RunStack.insertsStack.add(parent)
   }
 
-  static move(parent: RootComponent | HostComponent, child: ElementComponent) {
+  static move(parent: RootComponent | DomComponent, child: ElementComponent) {
     const {inserted} = parent
     const {key} = child
 
@@ -104,7 +104,7 @@ export class Order {
     this.insert(parent, child)
   }
 
-  static remove(parent: RootComponent | HostComponent, child: ElementComponent): void {
+  static remove(parent: RootComponent | DomComponent, child: ElementComponent): void {
     const {inserted, siblings} = parent
     const {key} = child
 

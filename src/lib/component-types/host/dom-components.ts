@@ -1,4 +1,4 @@
-import {makeHtmlElementConstructor} from './host-component-types'
+import {makeHtmlElementConstructor} from './dom-component-types'
 
 export const H1 = makeHtmlElementConstructor('h1')
 export const H2 = makeHtmlElementConstructor('h2')

@@ -35,12 +35,12 @@ export type SvgElementAttributes<N extends keyof SVGElementTagNameMap> = Omit<
 }
 
 export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap>(
-  tagName: N
+  tagName: N,
 ): (props?: HostAttributes<N> | string) => HostElement {
   return props => {
     if (props === undefined)
       return {
-        elementType: ElementType.host,
+        elementType: ElementType.dom,
         _type: tagName,
         namespace: ElementNamespace.html,
         props: {},
@@ -48,7 +48,7 @@ export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap
 
     if (typeof props === 'string')
       return {
-        elementType: ElementType.host,
+        elementType: ElementType.dom,
         _type: tagName,
         namespace: ElementNamespace.html,
         props: {
@@ -57,7 +57,7 @@ export function makeHtmlElementConstructor<N extends keyof HTMLElementTagNameMap
       }
 
     return {
-      elementType: ElementType.host,
+      elementType: ElementType.dom,
       _type: tagName,
       namespace: ElementNamespace.html,
       props,

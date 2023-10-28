@@ -1,5 +1,5 @@
 import {PureComponent} from './pure-component'
-import {Div} from './host/host-components'
+import {Div} from './host/dom-components'
 import {$Component, makeObservable} from '../..'
 import {mkRoot} from '../../dom-tests/test-helpers'
 // import {$Model} from '../..'

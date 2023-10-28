@@ -1,6 +1,6 @@
 import {PureComponent} from '../lib/component-types/pure-component'
 import {render} from '../lib/render'
-import {Div} from '../lib/component-types/host/host-components'
+import {Div} from '../lib/component-types/host/dom-components'
 import {s} from '../lib/util/style'
 import {FiendElement} from '../lib/util/element'
 
