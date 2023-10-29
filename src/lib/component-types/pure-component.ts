@@ -90,6 +90,7 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
     // to run if this element has been removed before it runs.
     if (this.removed) return
 
+    // Doesn't componentDidUpdate get called after update?
     this.update()
   }
 
@@ -123,29 +124,29 @@ export abstract class PureComponent<P extends StandardProps & object = {}>
   }
 }
 
-export function renderCustom<P extends StandardProps>(
+export function renderCustom(
   tree: CustomElement,
-  prevTree: AnyComponent | null,
-  parentHost: DomComponent | RootComponent,
+  prev: AnyComponent | null,
+  domParent: DomComponent | RootComponent,
   directParent: ParentComponent,
   index: number,
 ) {
   const {_type, props} = tree
 
-  if (prevTree === null) {
-    return makeCustomComponent(_type, props, parentHost, directParent, index)
+  if (prev === null) {
+    return makeCustomComponent(_type, props, domParent, directParent, index)
   }
 
-  if (prevTree._type === ComponentType.custom && prevTree instanceof _type) {
+  if (prev._type === ComponentType.custom && prev instanceof _type) {
     const newOrder = Order.key(directParent.order, index)
-    const prevOrder = prevTree.order
+    const prevOrder = prev.order
 
     if (newOrder !== prevOrder) {
-      prevTree.index = index
-      prevTree.order = newOrder
+      prev.index = index
+      prev.order = newOrder
 
-      for (const c of prevTree.subComponents.values()) {
-        const no = Order.key(prevTree.order, c.index)
+      for (const c of prev.subComponents.values()) {
+        const no = Order.key(prev.order, c.index)
 
         if (c.order !== no) {
           c.order = no
@@ -153,7 +154,7 @@ export function renderCustom<P extends StandardProps>(
           switch (c._type) {
             case ComponentType.host:
             case ComponentType.text:
-              parentHost.moveChild(c)
+              domParent.moveChild(c)
               break
             case ComponentType.custom:
               c.update()
@@ -163,14 +164,14 @@ export function renderCustom<P extends StandardProps>(
       }
     }
 
-    prevTree.updateWithNewProps(props)
+    prev.updateWithNewProps(props)
 
-    return prevTree
+    return prev
   }
 
-  prevTree.remove()
+  prev.remove()
 
-  return makeCustomComponent(_type, props, parentHost, directParent, index)
+  return makeCustomComponent(_type, props, domParent, directParent, index)
 }
 
 export type CustomComponent<P extends StandardProps> = new <P>(
