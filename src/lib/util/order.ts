@@ -75,11 +75,10 @@ export class Order {
         if (key !== current.key) {
           if (next != null) {
             inserted.splice(i + 1, 0, child)
-
             RunStack.insertsStack.add(parent)
           } else {
-            RunStack.insertsStack.add(parent)
             inserted.push(child)
+            RunStack.insertsStack.add(parent)
           }
         }
 
